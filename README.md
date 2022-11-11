@@ -1,4 +1,4 @@
-# web16-Codari
+# web16-Codocs
 함께 🤝, 코드 👨‍💻, 문서 📝를 작성하세요. Codocs.
 
 [팀 노션](https://5-line-poem-with-bstcp.notion.site/codocs-d5051e495a0640ebacc8cadebde4b54e)
