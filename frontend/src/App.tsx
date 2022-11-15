@@ -1,11 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import GlobalStyles from './GlobalStyles';
 
 function App() {
   return (
     <RecoilRoot>
       <div className="App">
+        <GlobalStyles />
         <Routes>
           <Route path="/" element="" />
           <Route path="/document" element="">

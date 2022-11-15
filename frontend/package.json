@@ -15,6 +15,8 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.6",
+    "styled-components": "^5.3.6",
+    "styled-reset": "^4.4.2",
     "typescript": "^4.8.4",
     "web-vitals": "^2.1.4"
   },
@@ -43,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.27.0",
