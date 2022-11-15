@@ -20,7 +20,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './backend/api/package-lock.json'
+
     - run: | 
-            cd /root/web16-Codocs/backend/api
+            cd ./backend/api
             npm ci
             npm test
