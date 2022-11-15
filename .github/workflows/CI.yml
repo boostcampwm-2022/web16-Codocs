@@ -6,13 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  api_test:
     runs-on: ubuntu-latest
-    
     strategy:
       matrix:
         node-version: [18.x]
-        
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -26,3 +24,57 @@ jobs:
             cd ./backend/api
             npm ci
             npm test
+  socket_test:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [18.x]
+      steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: './backend/socket/package-lock.json'
+
+      - run: | 
+              cd ./backend/socket
+              npm ci
+              npm test
+  compiler_test:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [18.x]
+      steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: './backend/compiler/package-lock.json'
+
+      - run: | 
+              cd ./backend/compiler
+              npm ci
+              npm test
+  client_test:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          node-version: [18.x]
+      steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: './frontend/package-lock.json'
+
+      - run: | 
+              cd ./frontend
+              npm ci
+              npm test
