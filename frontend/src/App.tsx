@@ -7,6 +7,7 @@ function App() {
   return (
     <RecoilRoot>
       <div className="App">
+        Lighthouse Test
         <GlobalStyles />
         <Routes>
           <Route path="/" element="" />

@@ -1,0 +1,18 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "./build",
+      "url": ["http://localhost:3000"],
+      "numberOfRuns": 5
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "assert": {
+      "assertions": {
+        "first-contentful-paint": ["warn", { "minScore": 0.75 }],
+        "largest-contentful-paint": ["warn", { "minScore": 0.75 }]
+      }
+    }
+  }
+}
