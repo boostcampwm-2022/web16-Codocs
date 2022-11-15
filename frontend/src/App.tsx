@@ -1,23 +1,26 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element="" />
-        <Route path="/document" element="">
-          <Route element="">
-            <Route path="main" element="" />
-            <Route path="private" element="" />
-            <Route path="shared" element="" />
-            <Route path="bookmark" element="" />
-            <Route path="trash" element="" />
+    <RecoilRoot>
+      <div className="App">
+        <Routes>
+          <Route path="/" element="" />
+          <Route path="/document" element="">
+            <Route element="">
+              <Route path="main" element="" />
+              <Route path="private" element="" />
+              <Route path="shared" element="" />
+              <Route path="bookmark" element="" />
+              <Route path="trash" element="" />
+            </Route>
+            <Route path="/document/:document_id" element="" />
           </Route>
-          <Route path="/document/:document_id" element="" />
-        </Route>
-      </Routes>
-    </div>
+        </Routes>
+      </div>
+    </RecoilRoot>
   );
 }
 
