@@ -9,7 +9,12 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>
   ) {}
-  create(user: User): Promise<User> {
+  list(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+  create(name: string): Promise<User> {
+    const user = new User();
+    user.name = name;
     return this.userRepository.save(user);
   }
 }
