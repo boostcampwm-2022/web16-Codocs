@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 18.7.0
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: 18.7.0
 
       - name: Install packages
         run: |
@@ -27,6 +27,7 @@ jobs:
 
       - name: Build
         run: |
+          cd ./frontend
           npm run build
         env: 
           CI: false
@@ -35,5 +36,6 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         run: |
+          cd ./frontend
           npm install -g @lhci/cli
           lhci autorun || echo "🚨 Fail to Run Lighthouse CI!"
