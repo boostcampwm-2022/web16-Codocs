@@ -1,0 +1,38 @@
+name: Run lighthouse CI When Pull Request
+
+on:
+  pull_request:
+    branches: ['dev']
+    paths:
+      - './frontend/**'
+  workflow_dispatch:
+
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install packages
+        run: |
+          cd ./frontend
+          npm ci
+
+      - name: Build
+        run: |
+          npm run build
+
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun || echo "🚨 Fail to Run Lighthouse CI!"
+          
