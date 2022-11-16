@@ -53,9 +53,9 @@ jobs:
 
             results.forEach((result) => {
               const { summary, jsonPath } = result;
-              const { audits } = details;
-
               const details = JSON.parse(fs.readFileSync(jsonPath));
+              const { audits } = details;
+              
               const formatScore = (res) => Math.round(res * 100);
 
               Object.keys(summary).forEach(
@@ -82,6 +82,7 @@ jobs:
               `${detailRow("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
 
               comments += report + "\n" + detail + "\n";
+              console.log(comments);
             });
             core.setOutput('comments', comments)
 
