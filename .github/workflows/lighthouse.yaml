@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
@@ -35,4 +35,3 @@ jobs:
         run: |
           npm install -g @lhci/cli
           lhci autorun || echo "🚨 Fail to Run Lighthouse CI!"
-          
