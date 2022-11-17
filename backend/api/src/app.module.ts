@@ -8,17 +8,18 @@ import { DocumentService } from './document/document.service';
 import { DocumentModule } from './document/document.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserdocumentModule } from './userdocument/userdocument.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
-  // TODO: env 적용하기
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '1092',
-      database: 'api',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true
     }),

@@ -4,7 +4,8 @@
   "description": "함께 🤝, 코드 👨‍💻, 문서 📝를 작성하세요. Codocs.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start ecosystem.config.js"
   },
   "repository": {
     "type": "git",
