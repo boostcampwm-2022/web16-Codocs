@@ -43,7 +43,7 @@ jobs:
         uses: iyu88/lighthouse-report-formatter@1.0.0
         with:
           lh_directory: ./frontend/
-          mainfest_path: lhci_reports
+          manifest_path: lhci_reports
 
       - name: comment PR
         uses: unsplash/comment-on-pr@v1.3.0
