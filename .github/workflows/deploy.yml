@@ -21,5 +21,5 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /root/web16-Codocs/ && git pull
-            pm2 start "npm run start"
+            cd /root/codocs/ && git checkout dev && git pull
+            npm run start
