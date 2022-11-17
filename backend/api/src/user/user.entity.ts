@@ -24,7 +24,7 @@ export class User {
   bookmarks: Bookmark[];
 
   @OneToMany(() => UserDocument, (userDocument) => userDocument.user)
-  history: UserDocument[];
+  documentRelations: UserDocument[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

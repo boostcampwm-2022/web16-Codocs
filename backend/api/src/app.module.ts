@@ -10,6 +10,7 @@ import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserdocumentModule } from './userdocument/userdocument.module';
 
 @Module({
+  // TODO: env 적용하기
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
