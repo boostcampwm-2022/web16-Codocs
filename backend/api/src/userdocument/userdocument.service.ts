@@ -5,11 +5,11 @@ import { UserDocument } from './userdocument.entity';
 
 @Injectable()
 export class UserdocumentService {
-  constructor(
-    @InjectRepository(UserDocument)
-    private userDocumentRepository: Repository<UserDocument>
-  ) {}
-  list(): Promise<UserDocument[]> {
-    return this.userDocumentRepository.find();
-  }
+  // constructor(
+  //   @InjectRepository(UserDocument)
+  //   private userDocumentRepository: Repository<UserDocument>
+  // ) {}
+  // list(): Promise<UserDocument[]> {
+  //   return this.userDocumentRepository.find();
+  // }
 }
