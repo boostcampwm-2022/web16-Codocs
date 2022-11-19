@@ -26,3 +26,5 @@ jobs:
           cd ./frontend
           npm ci
           npm test
+        env:
+          CI: false
