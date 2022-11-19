@@ -42,49 +42,10 @@ jobs:
 
       - name: Format lighthouse score
         id: format_lighthouse_score
-        uses: actions/github-script@v6
+        uses: iyu88/lighthouse-report-formatter@1.0.0
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-
-            const fs = require('fs');
-            const results = JSON.parse(fs.readFileSync("./frontend/lhci_reports/manifest.json"));
-            let comments = "";
-
-            results.forEach((result) => {
-              const { summary, jsonPath } = result;
-              const details = JSON.parse(fs.readFileSync(jsonPath));
-              const { audits } = details;
-              
-              const formatScore = (res) => Math.round(res * 100);
-
-              Object.keys(summary).forEach(
-                (key) => (summary[key] = formatScore(summary[key]))
-              );
-
-              const scoreEmoji = (res) => (res >= 90 ? "🟢" : res >= 50 ? "🟠" : "🔴");
-              const reportRow = (label, score) => `| ${scoreEmoji(score)} ${label} | ${score} |`;
-              const detailRow = (label, score, displayValue) => `${reportRow(label, score)} ${displayValue} |`;
-
-              const report = [`⚡️ Lighthouse Report!`,
-              `| Category | Score |`,
-              `| -------- | ----- |`,
-              `${reportRow('Performance', summary.performance)}`,
-              `${reportRow('Accessibility', summary.accessibility)}`,
-              `${reportRow('Best practices', summary['best-practices'])}`,
-              `${reportRow('SEO', summary.seo)}`,
-              `${reportRow('PWA', summary.pwa)}`].join('\n');
-
-              const detail = [`🔎 Performance Details`,
-              `| Category | Score | DisplayValue |`,
-              `| -------- | ----- | ------------ |`,
-              `${detailRow("First Contentful Paint", audits['first-contentful-paint'].score * 100, audits['first-contentful-paint'].displayValue)}`,
-              `${detailRow("Largest Contentful Paint", audits['largest-contentful-paint'].score * 100, audits['largest-contentful-paint'].displayValue)}`].join('\n');
-
-              comments += report + "\n" + detail + "\n";
-              console.log(comments);
-            });
-            core.setOutput('comments', comments)
+          lh_directory: ./frontend/
+          manifest_path: lhci_reports
 
       - name: comment PR
         uses: unsplash/comment-on-pr@v1.3.0
