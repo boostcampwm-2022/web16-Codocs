@@ -3,7 +3,9 @@ import reset from 'styled-reset';
 
 const GlobalStyles = createGlobalStyle` 
   ${reset}
-
+    body {
+        font-family: 'Inter', sans-serif;
+    } 
     a{
         text-decoration: none;
         color: inherit;

@@ -7,7 +7,6 @@ function App() {
   return (
     <RecoilRoot>
       <div className="App">
-        Lighthouse Test for GitHub Actions PR Reports
         <GlobalStyles />
         <Routes>
           <Route path="/" element="" />
