@@ -1,29 +1,35 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import trash from '../../assets/trash.svg';
 import bookmark from '../../assets/bookmark.svg';
 
 interface docListItemProps  {
+  id: string,
   title: string,
   lastVisited: string
   role: string
 }
 
-const DocListItem = ({title, lastVisited, role}: docListItemProps) => {
-  return (<DocListItemWrapper>
-    <Title>{title}</Title>
-    <LowerLayout>
-      <LastVisited>최근 방문일: {lastVisited}</LastVisited>
-      <div>
-        {role === 'onwer' && <button>
-          <ImgOnBtn src={trash} alt="삭제하기 버튼"></ImgOnBtn>
-        </button>}
-        <button>
-          <ImgOnBtn src={bookmark} alt="즐겨찾기 버튼"></ImgOnBtn>
-        </button>
-      </div>
-    </LowerLayout>
-  </DocListItemWrapper>);
+const DocListItem = ({id, title, lastVisited, role}: docListItemProps) => {
+  return (
+    <Link to={id}>
+      <DocListItemWrapper>
+        <Title>{title}</Title>
+        <LowerLayout>
+          <LastVisited>최근 방문일: {lastVisited}</LastVisited>
+          <div>
+            {role === 'onwer' && <button>
+              <ImgOnBtn src={trash} alt="삭제하기 버튼"></ImgOnBtn>
+            </button>}
+            <button>
+              <ImgOnBtn src={bookmark} alt="즐겨찾기 버튼"></ImgOnBtn>
+            </button>
+          </div>
+        </LowerLayout>
+      </DocListItemWrapper>
+    </Link>
+  );
 };
 
 const DocListItemWrapper = styled.div`

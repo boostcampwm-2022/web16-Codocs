@@ -31,7 +31,7 @@ const MainPage = () => {
   return (
     <div>
       {docList.length ? docList.map(doc => {
-        return <DocListItem key={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
+        return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
       }) : <div>...loading</div>}
     </div>
   );
