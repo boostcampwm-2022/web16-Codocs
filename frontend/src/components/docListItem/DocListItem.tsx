@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import trash from '../../assets/trash.svg';
-import bookmark from '../../assets/bookmark.svg';
+import trashIcon from '../../assets/trash.svg';
+import bookmarkIcon from '../../assets/bookmark.svg';
 
 interface docListItemProps  {
   id: string,
@@ -20,10 +20,10 @@ const DocListItem = ({id, title, lastVisited, role}: docListItemProps) => {
           <LastVisited>최근 방문일: {lastVisited}</LastVisited>
           <div>
             {role === 'onwer' && <button>
-              <ImgOnBtn src={trash} alt="삭제하기 버튼"></ImgOnBtn>
+              <ImgOnBtn src={trashIcon} alt="삭제하기 버튼" />
             </button>}
             <button>
-              <ImgOnBtn src={bookmark} alt="즐겨찾기 버튼"></ImgOnBtn>
+              <ImgOnBtn src={bookmarkIcon} alt="즐겨찾기 버튼" />
             </button>
           </div>
         </LowerLayout>
