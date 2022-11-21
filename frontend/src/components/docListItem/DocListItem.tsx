@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import trashIcon from '../../assets/trash.svg';
 import bookmarkIcon from '../../assets/bookmark.svg';
 
-interface docListItemProps  {
+interface docListItemProps {
   id: string,
   title: string,
   lastVisited: string
@@ -33,12 +33,12 @@ const DocListItem = ({id, title, lastVisited, role}: docListItemProps) => {
 };
 
 const DocListItemWrapper = styled.div`
-  width: 15em;
-  height: 4.5em;
+  width: 15rem;
+  height: 4.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.75em;
+  padding: 0.75rem;
   border: 1px solid #B6B6B6;
   border-radius: 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -54,7 +54,7 @@ const LowerLayout = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding-top: 1.5em;
+  padding-top: 1.5rem;
 `;
 
 const LastVisited = styled.div`
@@ -64,9 +64,12 @@ const LastVisited = styled.div`
 `;
 
 const ImgOnBtn = styled.img`
-  width: 0.75em;
-  height: 0.75em;
-  margin-left: 0.5em;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.5rem;
+  &:hover {
+    background-color: red;
+  }
 `;
 
 export { DocListItem };
