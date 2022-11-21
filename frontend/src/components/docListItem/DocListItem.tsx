@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import trashIcon from '../../assets/trash.svg';
 import bookmarkIcon from '../../assets/bookmark.svg';
+import { FILTER_TO_CAUTION, FILTER_TO_ACTIVE } from '../../constants/styled';
 
 interface docListItemProps {
   id: string,
@@ -13,22 +14,22 @@ interface docListItemProps {
 
 const DocListItem = ({id, title, lastVisited, role}: docListItemProps) => {
   return (
-    <Link to={id}>
-      <DocListItemWrapper>
+    <DocListItemWrapper>
+      <Link to={id}>
         <Title>{title}</Title>
         <LowerLayout>
           <LastVisited>최근 방문일: {lastVisited}</LastVisited>
           <div>
             {role === 'onwer' && <button>
-              <ImgOnBtn src={trashIcon} alt="삭제하기 버튼" />
+              <ImgOnBtn color={FILTER_TO_CAUTION} src={trashIcon} alt="삭제하기 버튼" />
             </button>}
             <button>
-              <ImgOnBtn src={bookmarkIcon} alt="즐겨찾기 버튼" />
+              <ImgOnBtn color={FILTER_TO_ACTIVE} src={bookmarkIcon} alt="즐겨찾기 버튼" />
             </button>
           </div>
         </LowerLayout>
-      </DocListItemWrapper>
-    </Link>
+      </Link>
+    </DocListItemWrapper>
   );
 };
 
@@ -68,7 +69,7 @@ const ImgOnBtn = styled.img`
   height: 0.75rem;
   margin-left: 0.5rem;
   &:hover {
-    background-color: red;
+    filter: ${props => props.color};
   }
 `;
 
