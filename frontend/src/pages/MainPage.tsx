@@ -5,6 +5,7 @@ interface docListItemState {
   id: string
   title: string
   lastVisited: string
+  role: string,
 }
 
 const MainPage = () => {
@@ -16,9 +17,12 @@ const MainPage = () => {
       return new Promise((resolve) => {
         resolve(setDocList(() => [{id:'1234',
           title: '알고리즘 스터디 기록',
-          lastVisited: '2022-11-10'}, {id:'5678',
+          lastVisited: '2022-11-10',
+          role: 'onwer',  
+        }, {id:'5678',
           title: 'Untitled',
-          lastVisited: '2022-11-19'}]));
+          lastVisited: '2022-11-19',
+          role: 'edit'}]));
       });
     };
     fetchDocList();
@@ -27,7 +31,7 @@ const MainPage = () => {
   return (
     <div>
       {docList.length ? docList.map(doc => {
-        return <DocListItem key={doc.id} title={doc.title} lastVisited={doc.lastVisited}></DocListItem>;
+        return <DocListItem key={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
       }) : <div>...loading</div>}
     </div>
   );
