@@ -3,11 +3,16 @@ import styled from 'styled-components';
 import trash from '../../assets/trash.svg';
 import bookmark from '../../assets/bookmark.svg';
 
-const DocListItem = () => {
+interface docListItemProps  {
+  title: string,
+  lastVisited: string
+}
+
+const DocListItem = ({title, lastVisited}: docListItemProps) => {
   return (<DocListItemWrapper>
-    <Title>알고리즘 스터디 기록</Title>
+    <Title>{title}</Title>
     <LowerLayout>
-      <LastVisited>최근 방문일: 2022-11-10</LastVisited>
+      <LastVisited>최근 방문일: {lastVisited}</LastVisited>
       <div>
         <button>
           <ImgOnBtn src={trash} alt="삭제하기 버튼"></ImgOnBtn>
