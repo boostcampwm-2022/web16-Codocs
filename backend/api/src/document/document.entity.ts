@@ -15,8 +15,8 @@ export class Document {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User)
-  writer: User;
+  // @ManyToOne(() => User)
+  // writer: User;
 
   @Column()
   title: string;

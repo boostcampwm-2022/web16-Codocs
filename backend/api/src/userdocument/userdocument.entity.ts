@@ -8,11 +8,12 @@ import {
   Column,
   JoinColumn
 } from 'typeorm';
+import { UserRole } from './enum/role.enum';
 
 @Entity()
 export class UserDocument {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
@@ -28,6 +29,6 @@ export class UserDocument {
   @Column({ name: 'last_visited' })
   lastVisited: Date;
 
-  @Column({ default: false })
-  editable: boolean;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
+  role: UserRole;
 }

@@ -14,8 +14,8 @@ export class DocumentService {
     private documentRepository: Repository<Document>
   ) {}
 
-  create(DocumentCreateDTO: DocumentCreateDTO) {
-    this.documentRepository.save(DocumentCreateDTO);
+  create(documentCreateDTO: DocumentCreateDTO) {
+    this.documentRepository.save(documentCreateDTO);
   }
 
   async list(): Promise<DocumentResponseDTO[]> {

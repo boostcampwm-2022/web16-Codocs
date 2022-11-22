@@ -1,7 +1,12 @@
+import { plainToClass } from '@nestjs/class-transformer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { Bookmark } from './bookmark.entity';
+import { BookmarkCreateDTO } from './dto/bookmark-create.dto';
+import { BookmarkResponseDTO } from './dto/bookmark-response.dto';
+import { Document } from 'src/document/document.entity';
 
 @Injectable()
 export class BookmarkService {
@@ -9,7 +14,33 @@ export class BookmarkService {
     @InjectRepository(Bookmark)
     private boookmarkRepository: Repository<Bookmark>
   ) {}
-  list(): Promise<Bookmark[]> {
-    return this.boookmarkRepository.find();
+  async create(bookmarkCreateDTO: BookmarkCreateDTO) {
+    const bookmark: Bookmark = this.boookmarkRepository.create({ ...bookmarkCreateDTO });
+
+    try {
+      await this.boookmarkRepository.save(bookmark);
+    } catch (e) {
+      console.error(e.code);
+    }
+  }
+
+  async list(): Promise<BookmarkResponseDTO[]> {
+    const bookmarks = await this.boookmarkRepository.find({
+      relations: ['user', 'document'],
+      loadRelationIds: true
+    });
+    return bookmarks.map((entity) => plainToClass(BookmarkResponseDTO, entity));
+  }
+
+  findOne(id: string) {
+    return this.boookmarkRepository.find({
+      relations: ['user', 'document'],
+      loadRelationIds: true,
+      where: { id }
+    });
+  }
+
+  remove(id: string) {
+    return this.boookmarkRepository.delete(id);
   }
 }

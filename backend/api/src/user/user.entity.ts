@@ -5,8 +5,8 @@ import { UserDocument } from '../userdocument/userdocument.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
@@ -17,8 +17,8 @@ export class User {
   @Column({ name: 'profile_url' })
   profileURL: string;
 
-  @OneToMany(() => Document, (document) => document.writer)
-  documents: Document[];
+  // @OneToMany(() => Document, (document) => document.writer)
+  // documents: Document[];
 
   @OneToMany(() => Bookmark, (bookmark) => bookmark.user)
   bookmarks: Bookmark[];

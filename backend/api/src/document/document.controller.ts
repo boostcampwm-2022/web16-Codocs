@@ -13,8 +13,8 @@ export class DocumentController {
     return this.documentService.list();
   }
   @Post()
-  create(@Body() createResourceDto: DocumentCreateDTO) {
-    return this.documentService.create(createResourceDto);
+  create(@Body() documentCreateDTO: DocumentCreateDTO) {
+    return this.documentService.create(documentCreateDTO);
   }
 
   @Get(':id')
