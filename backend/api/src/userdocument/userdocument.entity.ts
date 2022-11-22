@@ -6,11 +6,14 @@ import {
   CreateDateColumn,
   ManyToOne,
   Column,
-  JoinColumn
+  JoinColumn,
+  UpdateDateColumn,
+  Unique
 } from 'typeorm';
 import { UserRole } from './enum/role.enum';
 
 @Entity()
+@Unique(['user', 'document'])
 export class UserDocument {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -26,7 +29,7 @@ export class UserDocument {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'last_visited' })
+  @UpdateDateColumn({ name: 'last_visited' })
   lastVisited: Date;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
