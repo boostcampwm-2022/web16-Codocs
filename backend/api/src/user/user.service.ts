@@ -17,6 +17,11 @@ export class UserService {
     this.userRepository.save(userCreateDTO);
   }
 
+  async findAll() {
+    const users = await this.userRepository.find();
+    return users.map((entity) => plainToClass(UserResponseDTO, entity));
+  }
+
   findOne(id: string) {
     const entity = this.userRepository.findOneBy({ id });
     return plainToClass(UserResponseDTO, entity);
