@@ -28,14 +28,10 @@ const SideBar = () => {
 };
 
 const SideBarWrapper = styled.nav`
-  position: fixed;
-  left: 0;
-  top: 0;
   height: 100vh;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  background-color: gray;
   border-right: 1px solid #BBBBBB;
 `;
 
