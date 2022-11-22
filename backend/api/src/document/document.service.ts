@@ -25,7 +25,8 @@ export class DocumentService {
   }
 
   findOne(id: string) {
-    return this.documentRepository.findOneBy({ id });
+    const entity = this.documentRepository.findOneBy({ id });
+    return plainToClass(DocumentResponseDTO, entity);
   }
 
   update(id: string, documentUpdateDTO: DocumentUpdateDTO) {

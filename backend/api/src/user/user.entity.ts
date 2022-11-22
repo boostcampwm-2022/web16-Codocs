@@ -1,9 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToMany } from 'typeorm';
-import { Document } from '../document/document.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  OneToMany,
+  Unique,
+  DeleteDateColumn
+} from 'typeorm';
 import { Bookmark } from '../bookmark/bookmark.entity';
 import { UserDocument } from '../userdocument/userdocument.entity';
 
 @Entity()
+@Unique(['email'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -28,4 +36,7 @@ export class User {
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', default: null })
+  deletedAt: Date;
 }

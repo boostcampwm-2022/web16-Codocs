@@ -33,11 +33,12 @@ export class BookmarkService {
   }
 
   findOne(id: string) {
-    return this.boookmarkRepository.find({
+    const entity = this.boookmarkRepository.find({
       relations: ['user', 'document'],
       loadRelationIds: true,
       where: { id }
     });
+    return plainToClass(BookmarkResponseDTO, entity);
   }
 
   remove(id: string) {
