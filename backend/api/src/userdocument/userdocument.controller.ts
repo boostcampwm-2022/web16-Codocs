@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { UserDocumentCreateDTO } from './dto/userdocument-create.dto';
 import { UserDocumentResponseDTO } from './dto/userdocument-response.dto';
 import { UserDocumentUpdateDTO } from './dto/userdocument-update.dto';
 import { UserDocumentService } from './userdocument.service';
 
+@ApiTags('UserDocument 관계 API')
 @Controller('userdocument')
 export class UserdocumentController {
   constructor(private readonly userDocumentService: UserDocumentService) {}

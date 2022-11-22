@@ -3,12 +3,17 @@ import { DocumentService } from './document.service';
 import { DocumentResponseDTO } from './dto/document-response.dto';
 import { DocumentCreateDTO } from './dto/document-create.dto';
 import { DocumentUpdateDTO } from './dto/document-update.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Document } from './document.entity';
 
+@ApiTags('Document API')
 @Controller('document')
 export class DocumentController {
   constructor(private readonly documentService: DocumentService) {}
 
   @Get()
+  @ApiOperation({ summary: '문서 목록 API', description: '문서 목록을 반환한다.' })
+  @ApiResponse({ description: '문서 목록을 반환한다.', type: Document })
   async list(): Promise<DocumentResponseDTO[]> {
     return this.documentService.list();
   }
