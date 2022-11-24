@@ -12,13 +12,15 @@ const Editor = () => {
   useEffect(() => {
     if (editor) {
       socket.on('remote-insert', (data) => {
-        console.log('INSERT');
+        console.log('INSERT EVENT');
         crdt.remoteInsert(data, editor.getDoc());
+        console.log('RemoteInserted crdt: ', crdt.printStruct());
       });
 
       socket.on('remote-delete', (data) => {
-        console.log('DELETE');
+        console.log('DELETE EVENT');
         crdt.remoteDelete(data, editor.getDoc());
+        console.log('RemoteDeleted crdt: ', crdt.printStruct());
       });
     }
 
@@ -43,6 +45,7 @@ const Editor = () => {
         break;
       default:
       }
+      console.log(`${eventName} crdt:  ${crdt.printStruct()}`);
       socket.emit(eventName, char);
     });
     return (()=>{

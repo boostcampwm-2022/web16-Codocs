@@ -46,8 +46,10 @@ class CRDT {
     const index = this.searchInsertIndex(char);
     this.struct.splice(index, 0, char);
 
-    const position = doc.posFromIndex(index);
-    doc.replaceRange(char.value, position, position, 'remote');
+    
+    const position = doc?.posFromIndex(index);
+    doc?.replaceRange(char.value, position, position, 'remote');
+    
   }
 
   remoteDelete(char: Char, doc: CodeMirror.Doc) {
@@ -108,8 +110,7 @@ class CRDT {
    */
   generateIndex(
     startIndex: number[],
-    endIndex: number[],
-    newIndex: number[] = []
+    endIndex: number[]
   ): number[] {
     console.log(startIndex, endIndex);
 
@@ -123,19 +124,49 @@ class CRDT {
       return [startIndex[0] + 1];
     }
 
-    if (startIndex[0] === endIndex[0]) {
-      return this.generateIndex(startIndex.slice(1), endIndex.slice(1), [
-        ...newIndex,
-        startIndex[0],
-      ]);
-    }
-    const mid = (startIndex[0] + endIndex[0]) / 2;
+    const mid = this.getMidIndex(startIndex, endIndex);
+    // console.log(mid);
+    // return [...newIndex, ...mid.toString().split('.').map(Number)];
 
-    return [...newIndex, ...mid.toString().split('.').map(Number)];
+    return mid;
   }
 
+  getMidIndex(startIndex: number[], endIndex: number[]) : number[] {
+    const [shortIndex, longIndex] = startIndex.length > endIndex.length ? [endIndex, startIndex] : [startIndex, endIndex];
+    // const sumIndex = longIndex.map((num, i)=> num + shortIndex[i] ?? 0);
+    const midIndex = [...longIndex];
+    for(let i=0;i<shortIndex.length;i++){
+      midIndex[i] += shortIndex[i];
+    }
+    for(let i=0;i<midIndex.length;i++){
+      midIndex[i] /= 2;
+    }
+    for(let i=0;i<midIndex.length;i++){
+      if(midIndex[i]%1 === 0){
+        continue;
+      }
+      midIndex[i] = Math.floor(midIndex[i]);
+      if(i+1 === midIndex.length){
+        midIndex.push(5);
+        break;
+      }
+      midIndex[i+1] += 5;
+    }
+    for(let i=midIndex.length-1;i>0;i--){
+      const carry = Math.floor(midIndex[i] / 10);
+      midIndex[i-1] += carry;
+      midIndex[i] %= 10;
+    }
+
+    return midIndex;
+  }
+  
   toString() {
     return this.struct.map((char) => char.value).join('');
+  }
+
+  printStruct(){
+    return JSON.stringify(this.struct);
   }
 }
 
