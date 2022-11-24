@@ -30,14 +30,15 @@ class CRDT {
 
   //
   localInsert(index: number, value: string) {
-    const char = this.generateChar(index, value);
-    this.struct.splice(index, 0, char);
+    const insertedChar = this.generateChar(index, value);
+    this.struct.splice(index, 0, insertedChar);
 
-    // broadcast char
+    return insertedChar;
   }
 
   localDelete(startIndex: number, endIndex: number) {
-    this.struct.splice(startIndex, endIndex - startIndex);
+    const [ deletedChar ] = this.struct.splice(startIndex, endIndex - startIndex);
+    return deletedChar;
   }
 
   remoteInsert(char: Char, doc: CodeMirror.Doc) {
@@ -46,8 +47,7 @@ class CRDT {
     this.struct.splice(index, 0, char);
 
     const position = doc.posFromIndex(index);
-    doc.replaceRange(char.value, position);
-    // TODO: posFromIndex => editor.replaceRange();
+    doc.replaceRange(char.value, position, position, 'remote');
   }
 
   remoteDelete(char: Char, doc: CodeMirror.Doc) {
@@ -57,9 +57,10 @@ class CRDT {
     }
     this.struct.splice(index, 1);
 
-    const position = doc.posFromIndex(index);
-    doc.replaceRange('', position);
-    // TODO: posFromIndex => editor.replaceRange();
+    const positionFrom = doc.posFromIndex(index);
+    const positionTo= doc.posFromIndex(index+1);
+
+    doc.replaceRange('', positionFrom, positionTo, 'remote');
   }
 
   searchDeleteIndex(char: Char) {
@@ -68,8 +69,13 @@ class CRDT {
     );
   }
 
+  convertIndexToNumber = (char: Char) => {
+    return char.index.length > 1 ? parseFloat(char.index[0].toString().concat('.' + char.index.slice(1).join(''))) : char.index[0];
+  };
+
   searchInsertIndex(char: Char) {
-    const index = this.struct.findIndex((c) => c.index > char.index);
+    const convertedChar = this.convertIndexToNumber(char);
+    const index = this.struct.findIndex((c) => this.convertIndexToNumber(c) > convertedChar);
     return index === -1 ? this.struct.length : index;
   }
 

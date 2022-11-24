@@ -8,9 +8,11 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 
 io.on('connection', client => {
   client.on('local-insert', data => { 
+    console.log(data);
     client.broadcast.emit('remote-insert', data);  
   });
   client.on('local-delete', data => { 
+    console.log(data);
     client.broadcast.emit('remote-delete', data);
   });
   client.on('disconnect', () => {

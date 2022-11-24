@@ -23,24 +23,27 @@ const Editor = () => {
     }
 
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
-      if (change.origin === 'setValue') {
+      if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to); // 여러 글자 insert시 다름
       const content = change.text.join('\n');
+      let eventName = '';
+      let char;
       switch (change.origin) {
       case '+input':
       case '*compose': // 한글은 합성 처리 => 원본 글자를 지우고 삽입해야 함.
-        crdt.localInsert(fromIdx, content);
+        char = crdt.localInsert(fromIdx, content);
+        eventName = 'local-insert';
         break;
       case '+delete':
-        crdt.localDelete(fromIdx, toIdx);
-        console.log('delete');
+        char = crdt.localDelete(fromIdx, toIdx);
+        eventName = 'local-delete';
         break;
       default:
       }
-      console.log(fromIdx, toIdx, content);
+      socket.emit(eventName, char);
     });
     return (()=>{
       socket.off('remote-insert');
