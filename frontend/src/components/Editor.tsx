@@ -5,7 +5,6 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 
 const Editor = () => {
-  const [value, setValue] = useState<string>('Initial value');
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
@@ -22,10 +21,6 @@ const Editor = () => {
     });
   }, [editor]);
 
-  const handleChange = useCallback((value: string) => {
-    setValue(value);
-  }, []);
-
   const autofocusNoSpellcheckerOptions = useMemo(() => {
     return {
       autofocus: true,
@@ -37,8 +32,6 @@ const Editor = () => {
     <>
       <SimpleMDEReact
         options={autofocusNoSpellcheckerOptions}
-        value={value}
-        onChange={handleChange}
         getCodemirrorInstance={getCmInstanceCallback}
       />
     </>
