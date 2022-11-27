@@ -1,5 +1,5 @@
 import { DocumentController } from './document.controller';
-import { DocumentService } from './Document.service';
+import { DocumentService } from './document.service';
 import { DocumentResponseDTO } from './dto/document-response.dto';
 
 describe('DocumentController', () => {
