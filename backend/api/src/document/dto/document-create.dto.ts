@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity';
+import { User } from '../../user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
 
