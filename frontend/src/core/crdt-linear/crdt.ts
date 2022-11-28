@@ -4,7 +4,6 @@ import { v1 as uuidv1 } from 'uuid';
 class CRDT {
   siteId: string;
 
-  //   localCounter: number;
   struct: Char[];
    
   constructor() {
@@ -12,31 +11,15 @@ class CRDT {
     // this.localCounter = 0;
     this.struct = [];
   }
-  // a b c d e
-  // 0 1 2 3 4
-  // [3,5]
-  // [0]
-  // case
-  // 1. [0], [1]: 1이하로 차이나는 경우 [0, 5]
-  //   1-1. [0, 5], [0, 7] index 0에서 같고 -> index 1에서 2번
-  //   1-2. [0, 5], [0, 6] index 0에서 같고 -> index 1에서 1번 (pos1 바로 단계에 5추가 후 return)
-  //   1-3. [0, 5], [0, 5] index 0에서 같고 -> index 1에서 같은데 둘다 마지막 인덱스 return pos1
-  // 2. [0], [4]: 1보다 많이 차이 - 대충 나누기 2 [2]
-
-  // if
-  // [] [] -> 0
-  // [0] [] -> 1
-  // [] [1] -> 0
-
-  //
-  localInsert(index: number, value: string) {
+  
+  localInsert(index: number, value: string) : Char {
     const insertedChar = this.generateChar(index, value);
     this.struct.splice(index, 0, insertedChar);
 
     return insertedChar;
   }
 
-  localDelete(startIndex: number, endIndex: number) {
+  localDelete(startIndex: number, endIndex: number) : Char {
     const [ deletedChar ] = this.struct.splice(startIndex, endIndex - startIndex);
     return deletedChar;
   }
@@ -71,9 +54,9 @@ class CRDT {
     );
   }
 
-  convertIndexToNumber = (char: Char) => {
+  convertIndexToNumber(char: Char) {
     return char.index.length > 1 ? parseFloat(char.index[0].toString().concat('.' + char.index.slice(1).join(''))) : char.index[0];
-  };
+  }
 
   searchInsertIndex(char: Char) {
     const convertedChar = this.convertIndexToNumber(char);
@@ -81,11 +64,6 @@ class CRDT {
     return index === -1 ? this.struct.length : index;
   }
 
-  /**
-   * 1. 비어 있는 경우
-   * 1-1. 처음 입력할 떄
-   * 1-2. 양 끝에 입력할 때
-   */
   generateChar(index: number, value: string): Char {
     const startIndex = this.struct[index - 1]
       ? this.struct[index - 1].index
@@ -96,24 +74,10 @@ class CRDT {
     return new Char(newIndex, this.siteId, value);
   }
 
-  /**
-   * 1. 0번 인덱스를 비교한다 1.24 => [1, 2, 4]
-   * 2. 같으면 다음 인덱스를 비교한다
-   * 3. 인덱스라는 변수는 => [1, 3]
-   * [1, 0], [1, 1] => [1, 0, 5] 나누어진 수가 정수가 아닌 경우, 소수부를 push한다
-   * 3. 다르면 [1, 2] -> [1, 5] -> [1, 5]
-   * 4. 0.5랑 0.7 = 0.6 [0, 6]
-   * 5. 비어있는 경우
-   *   1. [] [] => newIndex = [0]
-   *   2. [] [0, 5, 5] = newIndex[right - 1] [-1]
-   *   3. [0] [] = newIndex[left + 1]
-   */
   generateIndex(
-    startIndex: number[],
-    endIndex: number[]
-  ): number[] {
-    console.log(startIndex, endIndex);
-
+    startIndex: CRDTIndex,
+    endIndex: CRDTIndex
+  ): CRDTIndex {
     if (startIndex.length === 0 && endIndex.length === 0) {
       return [0];
     }
@@ -125,15 +89,13 @@ class CRDT {
     }
 
     const mid = this.getMidIndex(startIndex, endIndex);
-    // console.log(mid);
-    // return [...newIndex, ...mid.toString().split('.').map(Number)];
 
     return mid;
   }
 
-  getMidIndex(startIndex: number[], endIndex: number[]) : number[] {
+  getMidIndex(startIndex: CRDTIndex, endIndex: CRDTIndex) : CRDTIndex {
     const [shortIndex, longIndex] = startIndex.length > endIndex.length ? [endIndex, startIndex] : [startIndex, endIndex];
-    // const sumIndex = longIndex.map((num, i)=> num + shortIndex[i] ?? 0);
+    
     const midIndex = [...longIndex];
     for(let i=0;i<shortIndex.length;i++){
       midIndex[i] += shortIndex[i];
