@@ -25,8 +25,8 @@ class CRDT {
     return insertedChar;
   }
 
-  localDelete(startIndex: number, endIndex: number) : Char {
-    const [ deletedChar ] = this.struct.splice(startIndex, endIndex - startIndex);
+  localDelete(startIndex: number, endIndex: number) : Char[] {
+    const  deletedChar  = this.struct.splice(startIndex, endIndex - startIndex);
     return deletedChar;
   }
 
