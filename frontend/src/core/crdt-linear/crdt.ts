@@ -50,7 +50,7 @@ class CRDT {
 
   searchDeleteIndex(char: Char) {
     return this.struct.findIndex(
-      (c) => JSON.stringify(c.index) === JSON.stringify(char.index)
+      (c) => JSON.stringify(c.index) === JSON.stringify(char?.index)
     );
   }
 
