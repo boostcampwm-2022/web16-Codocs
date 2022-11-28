@@ -11,9 +11,14 @@ class CRDT {
     // this.localCounter = 0;
     this.struct = [];
   }
+  // index: 0, value: abc => [0,a], [1, b], [2, c]
+  // 
+
+  localInsertRange(index: number, value: string): Char[] {
+    return value.split('').map((c, i)=> this.localInsert(index+i, c));
+  }
   
   localInsert(index: number, value: string) : Char {
-    
     const insertedChar = this.generateChar(index, value);
     this.struct.splice(index, 0, insertedChar);
 
@@ -25,14 +30,14 @@ class CRDT {
     return deletedChar;
   }
 
-  remoteInsert(char: Char, doc: CodeMirror.Doc) {
+  remoteInsert(chars: Char[], doc: CodeMirror.Doc) {
     // binary?
-    const index = this.searchInsertIndex(char);
-    this.struct.splice(index, 0, char);
-
     
+    const index = this.searchInsertIndex(chars[0]);
+    this.struct.splice(index, 0, ...chars);
+
     const position = doc?.posFromIndex(index);
-    doc?.replaceRange(char.value, position, position, 'remote');
+    doc?.replaceRange(chars.map((char)=>char.value).join(''), position, position, 'remote');
     
   }
 

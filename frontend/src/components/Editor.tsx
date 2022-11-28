@@ -33,11 +33,11 @@ const Editor = () => {
       let char;
       switch (change.origin) {
       case 'paste':
-        char = crdt.localInsert(fromIdx, content);
+        char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
         break;
       case '+input':
-        char = crdt.localInsert(fromIdx, content);
+        char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
         break;
 
