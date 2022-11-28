@@ -42,11 +42,13 @@ const Editor = () => {
         break;
 
       case '*compose': 
+        if (fromIdx !== toIdx) {
+          char = crdt.localDelete(fromIdx, toIdx);
+          socket.emit('local-delete', char);
+        }
         char = crdt.localInsert(fromIdx, content);
-        console.log('이현빈이 추가한 :', fromIdx, content);
         eventName = 'local-insert';
         break;
-      
       case '+delete':
         char = crdt.localDelete(fromIdx, toIdx);
         eventName = 'local-delete';

@@ -13,6 +13,7 @@ class CRDT {
   }
   
   localInsert(index: number, value: string) : Char {
+    
     const insertedChar = this.generateChar(index, value);
     this.struct.splice(index, 0, insertedChar);
 
