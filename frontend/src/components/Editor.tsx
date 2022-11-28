@@ -18,7 +18,7 @@ const Editor = () => {
       });
 
       socket.on('remote-delete', (data) => {
-        crdt.remoteDelete(data, editor.getDoc());
+        crdt.remoteDeleteRange(data, editor.getDoc());
       });
     }
 

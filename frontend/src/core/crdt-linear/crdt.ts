@@ -26,8 +26,8 @@ class CRDT {
   }
 
   localDelete(startIndex: number, endIndex: number) : Char[] {
-    const  deletedChar  = this.struct.splice(startIndex, endIndex - startIndex);
-    return deletedChar;
+    const  deletedChars = this.struct.splice(startIndex, endIndex - startIndex);
+    return deletedChars;
   }
 
   remoteInsert(chars: Char[], doc: CodeMirror.Doc) {
@@ -41,11 +41,16 @@ class CRDT {
     
   }
 
+  remoteDeleteRange(chars: Char[], doc: CodeMirror.Doc){
+    chars.forEach(char => this.remoteDelete(char, doc));
+  }
+
   remoteDelete(char: Char, doc: CodeMirror.Doc) {
     const index = this.searchDeleteIndex(char);
     if (index === -1) {
       return;
     }
+    
     this.struct.splice(index, 1);
 
     const positionFrom = doc.posFromIndex(index);
