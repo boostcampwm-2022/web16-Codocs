@@ -94,10 +94,10 @@ class CRDT {
     endIndex: CRDTIndex
   ): CRDTIndex {
     if (startIndex.length === 0 && endIndex.length === 0) {
-      return [0];
+      return [0, 5];
     }
     if (startIndex.length === 0) {
-      return [endIndex[0] - 1];
+      return this.getMidIndex([0], endIndex);
     }
     if (endIndex.length === 0) {
       return [startIndex[0] + 1];

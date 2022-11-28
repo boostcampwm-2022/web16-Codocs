@@ -12,15 +12,13 @@ const Editor = () => {
   useEffect(() => {
     if (editor) {
       socket.on('remote-insert', (data) => {
-        console.log('INSERT EVENT');
         crdt.remoteInsert(data, editor.getDoc());
-        console.log('RemoteInserted crdt: ', crdt.printStruct());
+        console.log(crdt.printStruct());
+
       });
 
       socket.on('remote-delete', (data) => {
-        console.log('DELETE EVENT');
         crdt.remoteDelete(data, editor.getDoc());
-        console.log('RemoteDeleted crdt: ', crdt.printStruct());
       });
     }
 
@@ -34,18 +32,31 @@ const Editor = () => {
       let eventName = '';
       let char;
       switch (change.origin) {
-      case '+input':
-      case '*compose': // 한글은 합성 처리 => 원본 글자를 지우고 삽입해야 함.
+      case 'paste':
         char = crdt.localInsert(fromIdx, content);
         eventName = 'local-insert';
         break;
+      case '+input':
+        char = crdt.localInsert(fromIdx, content);
+        eventName = 'local-insert';
+        break;
+
+      case '*compose': 
+        char = crdt.localInsert(fromIdx, content);
+        console.log('이현빈이 추가한 :', fromIdx, content);
+        eventName = 'local-insert';
+        break;
+      
       case '+delete':
         char = crdt.localDelete(fromIdx, toIdx);
         eventName = 'local-delete';
         break;
       default:
       }
-      console.log(`${eventName} crdt:  ${crdt.printStruct()}`);
+      console.log('EVENT_NAME :', change.origin);
+      console.log('from : ', fromIdx);
+      console.log('to : ', toIdx);
+      console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
     return (()=>{
