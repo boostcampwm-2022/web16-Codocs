@@ -155,9 +155,9 @@ describe('remoteInsert() Test:', () => {
     crdt.struct = [];
     crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s')), doc);
     crdt.remoteInsert((new Char([0,7,5],'abc','m')), doc);
-    //crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')), doc);
+    crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')), doc);
 
-    expect(crdt.toString()).toEqual('sm');
+    expect(crdt.toString()).toEqual('esm');
   });
 });
 

@@ -54,11 +54,6 @@ class CRDT {
     );
   }
 
-  // convertIndexToNumber(char: Char) {
-  //   return char.index.length > 1 ? parseFloat(char.index[0].toString().concat('.' + char.index.slice(1).join(''))) : char.index[0];
-  // }
-
-
   searchInsertIndex(char: Char) {
     const index = this.struct.findIndex((c) => this.compareCRDTIndex(c.index, char.index));
     return index === -1 ? this.struct.length : index;
