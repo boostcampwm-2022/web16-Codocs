@@ -54,14 +54,34 @@ class CRDT {
     );
   }
 
-  convertIndexToNumber(char: Char) {
-    return char.index.length > 1 ? parseFloat(char.index[0].toString().concat('.' + char.index.slice(1).join(''))) : char.index[0];
-  }
+  // convertIndexToNumber(char: Char) {
+  //   return char.index.length > 1 ? parseFloat(char.index[0].toString().concat('.' + char.index.slice(1).join(''))) : char.index[0];
+  // }
+
 
   searchInsertIndex(char: Char) {
-    const convertedChar = this.convertIndexToNumber(char);
-    const index = this.struct.findIndex((c) => this.convertIndexToNumber(c) > convertedChar);
+    const index = this.struct.findIndex((c) => this.compareCRDTIndex(c.index, char.index));
     return index === -1 ? this.struct.length : index;
+  }
+
+  compareCRDTIndex(originIndex: CRDTIndex, insertedIndex: CRDTIndex) : boolean {
+    const insertedIndexLength = insertedIndex.length;
+    const originIndexLength = originIndex.length;
+    for (let i = 0; i < insertedIndexLength; i++) {
+      if (originIndex[i] > insertedIndex[i]) {
+        return true;
+      }
+      if (originIndex[i] < insertedIndex[i]) {
+        return false;
+      }
+      if (originIndex[i] === undefined) {
+        return false;
+      }
+    }
+    if (originIndexLength === insertedIndexLength) {
+      return false;
+    }
+    return true;
   }
 
   generateChar(index: number, value: string): Char {

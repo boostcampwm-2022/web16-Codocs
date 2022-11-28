@@ -155,9 +155,9 @@ describe('remoteInsert() Test:', () => {
     crdt.struct = [];
     crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s')), doc);
     crdt.remoteInsert((new Char([0,7,5],'abc','m')), doc);
-    crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')), doc);
+    //crdt.remoteInsert((new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')), doc);
 
-    expect(crdt.toString()).toEqual('esm');
+    expect(crdt.toString()).toEqual('sm');
   });
 });
 
@@ -201,13 +201,25 @@ describe('getMidIndex() Test:', () => {
   });
 });
 
-describe('convertIndexToNumber() Test:', () => {
+describe('convertCRDTIndex() Test:', () => {
   let crdt: CRDT;
   beforeEach(() => {
     crdt = new CRDT();
   });
 
-  it('1. convertIndexToNumber', () => {
-    expect(crdt.convertIndexToNumber(new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','a'))).toEqual(0.74999999995836663657655662973411381244659423828125);
+  it('1. [1, 2, 3] - [1, 2, 4]', () => {
+    expect(crdt.compareCRDTIndex([1, 2, 3], [1, 2, 4])).toEqual(false);
+  });
+  
+  it('2. [1, 2] - [1, 2, 4]', () => {
+    expect(crdt.compareCRDTIndex([1, 2], [1, 2, 4])).toEqual(false);
+  });
+
+  it('3. [1, 2, 3] - [1, 2]', () => {
+    expect(crdt.compareCRDTIndex([1, 2, 3], [1, 2])).toEqual(true);
+  });
+  
+  it('4. [0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5] - [0,7,5]',() => {
+    expect(crdt.compareCRDTIndex([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5], [0, 7, 5])).toEqual(false);
   });
 });
