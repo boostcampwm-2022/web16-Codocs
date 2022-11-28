@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { UserdocumentService } from './userdocument.service';
+import { UserDocumentService } from './userdocument.service';
 import { UserdocumentController } from './userdocument.controller';
+import { UserDocument } from './userdocument.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  providers: [UserdocumentService],
+  imports: [TypeOrmModule.forFeature([UserDocument])],
+  providers: [UserDocumentService],
   controllers: [UserdocumentController]
 })
 export class UserdocumentModule {}
