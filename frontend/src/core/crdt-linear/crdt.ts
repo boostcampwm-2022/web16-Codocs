@@ -186,6 +186,10 @@ class CRDT {
   printStruct(){
     return JSON.stringify(this.struct);
   }
+
+  syncDocument(document : Char[]) {
+    this.struct = [...document];
+  }
 }
 
 const crdt = new CRDT();
