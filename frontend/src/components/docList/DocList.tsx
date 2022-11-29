@@ -6,9 +6,13 @@ const DocList = () => {
 
   useEffect(() => {
     const fetchDocList = async () => {
-      const response = await fetch('/document/main');
-      const data = await response.json();
-      setDocList(data);
+      try {
+        const response = await fetch('/document/main');
+        const data = await response.json();
+        setDocList(data);
+      } catch (err) {
+        console.log(err);
+      }
     };
     fetchDocList();
   }, []);
