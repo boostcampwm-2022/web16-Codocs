@@ -12,22 +12,25 @@ const Editor = () => {
   useEffect(() => {
     if (editor) {
       socket.on('remote-insert', (data) => {
-        crdt.remoteInsert(data, editor.getDoc());
-        console.log(crdt.printStruct());
-
+        //console.log('REMOTE INSERT!!!!', data);
+        //console.log('REMOTE CURSOR: ', editor.getCursor());
+        crdt.remoteInsert(data, editor);
       });
 
       socket.on('remote-delete', (data) => {
+        //console.log('DELETE THIS :', data);
         crdt.remoteDeleteRange(data, editor.getDoc());
       });
     }
-
+    
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
+      // console.log(change);
+      //console.log('CURRENT CURSOR: ', editor.getCursor());
       const fromIdx = editor.indexFromPos(change.from);
-      const toIdx = editor.indexFromPos(change.to); // 여러 글자 insert시 다름
+      const toIdx = editor.indexFromPos(change.to);
       const content = change.text.join('\n');
       let eventName = '';
       let char;
@@ -42,10 +45,15 @@ const Editor = () => {
         break;
 
       case '*compose': 
-        if (fromIdx !== toIdx) {
-          char = crdt.localDelete(fromIdx, toIdx);
-          socket.emit('local-delete', char);
-        }
+        // if (fromIdx !== toIdx) {
+        //   editor?.replaceRange(content, tempFrom, tempTo);
+        // }
+        //   return;
+        //   // char = crdt.localDelete(fromIdx, toIdx);
+        //   // socket.emit('local-delete', char);
+        // }
+        char = crdt.localDelete(fromIdx, toIdx);
+        socket.emit('local-delete', char);
         if (content === ''){
           return;
         }
@@ -69,7 +77,7 @@ const Editor = () => {
       socket.off('remote-delete');
     });
   }, [editor]);
-
+  
   const editorOptions = useMemo(() => {
     return {
       autofocus: true,
@@ -79,13 +87,17 @@ const Editor = () => {
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
     setEditor(cm);
+    
+    
   }, []);
-
   return (
     <>
       <SimpleMDEReact
         options={editorOptions}
         getCodemirrorInstance={getCmInstanceCallback}
+        onCompositionStart={() => console.log('COMPOSITION START') }
+        onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
+        onCompositionEnd={() => console.log('COMPOSITION END')}
       />
     </>
   );

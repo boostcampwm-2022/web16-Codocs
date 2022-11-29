@@ -1,5 +1,6 @@
 import Char from './char';
 import { v1 as uuidv1 } from 'uuid';
+import CodeMirror from 'codemirror';
 
 class CRDT {
   siteId: string;
@@ -7,7 +8,8 @@ class CRDT {
   struct: Char[];
    
   constructor() {
-    this.siteId = uuidv1();
+    // this.siteId = uuidv1();
+    this.siteId = '123';
     // this.localCounter = 0;
     this.struct = [];
   }
@@ -30,15 +32,17 @@ class CRDT {
     return deletedChars;
   }
 
-  remoteInsert(chars: Char[], doc: CodeMirror.Doc) {
+  remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
     // binary?
+    
     
     const index = this.searchInsertIndex(chars[0]);
     this.struct.splice(index, 0, ...chars);
 
-    const position = doc?.posFromIndex(index);
-    doc?.replaceRange(chars.map((char)=>char.value).join(''), position, position, 'remote');
-    
+    const position = editor?.getDoc()?.posFromIndex(index);
+
+    this.addChange(editor, position, position, chars.map((char)=>char.value).join(''));
+    // ?.replaceRange(chars.map((char)=>char.value).join(''), position, position, 'remote');
   }
 
   remoteDeleteRange(chars: Char[], doc: CodeMirror.Doc){
@@ -147,6 +151,32 @@ class CRDT {
     }
 
     return midIndex;
+  }
+
+  addChange(editor: CodeMirror.Editor, from : CodeMirror.Position, to : CodeMirror.Position, text : string) {
+    if(editor === undefined){
+      return;
+    }
+    const adjust = editor.getDoc().listSelections().findIndex(({anchor, head}) => {
+      return CodeMirror.cmpPos(anchor, head) == 0 && CodeMirror.cmpPos(anchor, from) == 0;
+    });
+    editor.operation(() => {
+      editor.getDoc().replaceRange(text, from, to, 'remote');
+      if (adjust > -1) {
+        const range = editor.getDoc().listSelections()[adjust];
+        if (range && CodeMirror.cmpPos(range.head, CodeMirror.changeEnd({from,
+          to,
+          text:[text]})) == 0) {
+          const ranges: CodeMirror.Range[] = editor.getDoc().listSelections().slice();
+          ranges[adjust] = {
+            ...ranges[adjust], 
+            anchor: from, 
+            head: to
+          };
+          editor.getDoc().setSelections(ranges);
+        }
+      }
+    });
   }
   
   toString() {

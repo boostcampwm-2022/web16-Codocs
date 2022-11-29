@@ -129,36 +129,37 @@ describe('remoteInsert() Test:', () => {
     crdt.localInsert(2, 'C');
   });
   let doc: CodeMirror.Doc;
+  let editor: CodeMirror.Editor;
 
   it('1. remoteInsert된 Char의 인덱스가 기존 struct 사이에 존재하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 7], '123', 'D')], doc);
+    crdt.remoteInsert([new Char([0, 7], '123', 'D')], editor);
     expect(crdt.toString()).toEqual('ADBC');
   });
   it('2. remoteInsert : 맨 앞에 입력받는 경우', () => {
-    crdt.remoteInsert([new Char([0, 2, 5], '123', 'D')], doc);
+    crdt.remoteInsert([new Char([0, 2, 5], '123', 'D')], editor);
     expect(crdt.toString()).toEqual('DABC');
   });
   it('3. remoteInsert : 맨 뒤에 입력받는 경우', () => {
-    crdt.remoteInsert([new Char([9999, 5], '123', 'D')], doc);
+    crdt.remoteInsert([new Char([9999, 5], '123', 'D')], editor);
     expect(crdt.toString()).toEqual('ABCD');
   });
   it('4. remoteInsert : 오류 케이스 1', () => {
     crdt.struct = [];
-    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s')], doc);
-    crdt.remoteInsert([new Char([0,7,5],'abc','m')], doc);
-    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')], doc);
+    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s')], editor);
+    crdt.remoteInsert([new Char([0,7,5],'abc','m')], editor);
+    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')], editor);
     expect(crdt.toString()).toEqual('esm');
   });
   it('5. remoteInsert : 여러 개를 맨 뒤에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([9999, 5], '123', 'D'), new Char([9999, 7, 5], '123', 'E'), new Char([9999, 9], '123', 'F')], doc);
+    crdt.remoteInsert([new Char([9999, 5], '123', 'D'), new Char([9999, 7, 5], '123', 'E'), new Char([9999, 9], '123', 'F')], editor);
     expect(crdt.toString()).toEqual('ABCDEF');
   });
   it('5. remoteInsert : 여러 개 사이에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 7], '123', 'D'), new Char([0, 8], '123', 'E'), new Char([0, 9], '123', 'F')], doc);
+    crdt.remoteInsert([new Char([0, 7], '123', 'D'), new Char([0, 8], '123', 'E'), new Char([0, 9], '123', 'F')], editor);
     expect(crdt.toString()).toEqual('ADEFBC');
   });
   it('5. remoteInsert : 여러 개 맨 앞에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 1], '123', 'D'), new Char([0, 2], '123', 'E'), new Char([0, 3], '123', 'F')], doc);
+    crdt.remoteInsert([new Char([0, 1], '123', 'D'), new Char([0, 2], '123', 'E'), new Char([0, 3], '123', 'F')], editor);
     expect(crdt.toString()).toEqual('DEFABC');
   });
 });
