@@ -2,15 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DocListItem } from '../docListItem';
 
-interface docListItemProps {
-  id: string,
-  title: string,
-  lastVisited: string
-  role: string
-}
-
 const DocList = () => {
-  const [docList, setDocList] = useState<docListItemProps[]>([]);
+  const [docList, setDocList] = useState<DocListItem[]>([]);
 
   useEffect(() => {
     const fetchDocList = async () => {

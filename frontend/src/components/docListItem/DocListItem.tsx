@@ -5,14 +5,8 @@ import trashIcon from '../../assets/trash.svg';
 import bookmarkIcon from '../../assets/bookmark.svg';
 import { FILTER_TO_CAUTION, FILTER_TO_ACTIVE } from '../../constants/styled';
 
-interface docListItemProps {
-  id: string,
-  title: string,
-  lastVisited: string
-  role: string
-}
 
-const DocListItem = ({id, title, lastVisited, role}: docListItemProps) => {
+const DocListItem = ({id, title, lastVisited, role}: DocListItem) => {
   return (
     <DocListItemWrapper>
       <Link to={id}>
