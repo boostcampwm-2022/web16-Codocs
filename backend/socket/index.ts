@@ -10,7 +10,6 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 const crdts = {};
 // 클라이언트 목록, 룸 목록 관리
 
-
 io.on('connection', client => {
   client.on('joinroom', (room)=>{
     if (!crdts.hasOwnProperty(room)) {

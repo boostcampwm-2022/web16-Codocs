@@ -50,6 +50,8 @@ const Editor = () => {
         char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
         break;
+      
+      
       case '+input':
         char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
@@ -69,6 +71,13 @@ const Editor = () => {
         eventName = 'local-delete';
         break;
       default:
+        if (fromIdx === toIdx) {
+          char = crdt.localInsertRange(fromIdx, content);
+          eventName = 'local-insert';
+        } else {
+          char = crdt.localDelete(fromIdx, toIdx);
+          eventName = 'local-delete';
+        }
       }
       console.log('EVENT_NAME :', change.origin);
       console.log('from : ', fromIdx);
