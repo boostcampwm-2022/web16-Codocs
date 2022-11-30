@@ -3,6 +3,8 @@ name: Run lighthouse CI When Pull Request
 on:
   pull_request:
     branches: ['dev']
+    paths:
+      - './frontend/**'
   workflow_dispatch:
 
 jobs:
@@ -40,10 +42,10 @@ jobs:
 
       - name: Format lighthouse score
         id: format_lighthouse_score
-        uses: iyu88/lighthouse-report-formatter@v1.0.0
+        uses: iyu88/lighthouse-report-formatter@1.0.0
         with:
           lh_directory: ./frontend/
-          mainfest_path: lhci_reports
+          manifest_path: lhci_reports
 
       - name: comment PR
         uses: unsplash/comment-on-pr@v1.3.0
