@@ -16,31 +16,31 @@ const SideBar = () => {
   };
 
   return <SideBarWrapper>
-    <NavMenu to="/main">
+    <NavMenu to="/document/main">
       <IconButton {...sideBarIconStyles}>
         <HouseIcon />
       </IconButton>
     </NavMenu>
 
-    <NavMenu to="/private">
+    <NavMenu to="/document/private">
       <IconButton {...sideBarIconStyles}>
         <LockIcon />
       </IconButton>
     </NavMenu>
 
-    <NavMenu to="/shared">
+    <NavMenu to="/document/shared">
       <IconButton {...sideBarIconStyles}>
         <TogetherIcon />
       </IconButton>
     </NavMenu>
 
-    <NavMenu to="/bookmark">
+    <NavMenu to="/document/bookmark">
       <IconButton {...sideBarIconStyles}>
         <BookmarkIcon />
       </IconButton>
     </NavMenu>
 
-    <NavMenu to="/trash">
+    <NavMenu to="/document/trash">
       <IconButton {...sideBarIconStyles}>
         <TrashBagIcon />
       </IconButton>
