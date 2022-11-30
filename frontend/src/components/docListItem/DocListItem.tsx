@@ -1,26 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import trashIcon from '../../assets/trash.svg';
-import bookmarkIcon from '../../assets/bookmark.svg';
-import { FILTER_TO_CAUTION, FILTER_TO_ACTIVE } from '../../constants/styled';
-
+import { Link } from 'react-router-dom';
+import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
+import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
+import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
+import { IconButton } from '../iconButton';
 
 const DocListItem = ({id, title, lastVisited, role}: DocListItem) => {
+  const docListItemStyles = {
+    fill: '#A5A5A5',
+    width: '0.75',
+    height: '0.75',
+  };
+
   return (
     <DocListItemWrapper>
       <Link to={id}>
         <Title>{title}</Title>
         <LowerLayout>
           <LastVisited>최근 방문일: {lastVisited}</LastVisited>
-          <div>
-            {role === 'onwer' && <button>
-              <ImgOnBtn color={FILTER_TO_CAUTION} src={trashIcon} alt="삭제하기 버튼" />
-            </button>}
-            <button>
-              <ImgOnBtn color={FILTER_TO_ACTIVE} src={bookmarkIcon} alt="즐겨찾기 버튼" />
-            </button>
-          </div>
+          <IconGroup>
+            <li>
+              {role === 'onwer' && 
+              <IconButton {...docListItemStyles} hover={COLOR_CAUTION}>
+                <TrashIcon />
+              </IconButton>
+              }
+            </li>
+            <li>
+              <IconButton {...docListItemStyles} hover={COLOR_ACTIVE}>
+                <BookmarkIcon />
+              </IconButton>
+            </li>
+          </IconGroup>
         </LowerLayout>
       </Link>
     </DocListItemWrapper>
@@ -58,12 +70,11 @@ const LastVisited = styled.div`
   color: #A5A5A5;
 `;
 
-const ImgOnBtn = styled.img`
-  width: 0.75rem;
-  height: 0.75rem;
-  margin-left: 0.5rem;
-  &:hover {
-    filter: ${props => props.color};
+const IconGroup = styled.ul`
+  list-style-type: none;
+  display: flex; 
+  li {
+    margin-left: 0.4rem;
   }
 `;
 
