@@ -3,14 +3,11 @@ export default class Char {
 
   siteId: string;
 
-  counter: number;
-
   value: string;
 
-  constructor(index: CRDTIndex, siteId: string, value: string, counter: number) {
+  constructor(index: CRDTIndex, siteId: string, value: string) {
     this.index = index;
     this.siteId = siteId;
-    this.counter = counter;
     this.value = value;
   }
 }

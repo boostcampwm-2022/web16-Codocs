@@ -15,30 +15,23 @@ class CRDT {
     this.struct = [];
   }
 
-  increaseCounter() {
-    this.localCounter++;
-  }
-
   localInsertRange(index: number, value: string): Char[] {
     return value.split('').map((c, i)=> this.localInsert(index+i, c));
   }
   
   localInsert(index: number, value: string) : Char {
-    this.increaseCounter();
     const insertedChar = this.generateChar(index, value);
     this.struct.splice(index, 0, insertedChar);
     return insertedChar;
   }
 
   localDelete(startIndex: number, endIndex: number) : Char[] {
-    this.increaseCounter();
     const deletedChars = this.struct.splice(startIndex, endIndex - startIndex);
     return deletedChars;
   }
 
   remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
     // binary?
-    this.increaseCounter();
     const index = this.searchInsertIndex(chars[0]);
     this.struct.splice(index, 0, ...chars);
 
@@ -53,7 +46,6 @@ class CRDT {
   }
 
   remoteDelete(char: Char, doc: CodeMirror.Doc) {
-    this.increaseCounter();
     const index = this.searchDeleteIndex(char);
     if (index === -1) {
       return;
@@ -106,7 +98,7 @@ class CRDT {
     const endIndex = this.struct[index] ? this.struct[index].index : [];
     const newIndex = this.generateIndex(startIndex, endIndex);
 
-    return new Char(newIndex, this.siteId, value, this.localCounter);
+    return new Char(newIndex, this.siteId, value);
   }
 
   generateIndex(
