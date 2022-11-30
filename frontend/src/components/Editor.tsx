@@ -51,13 +51,7 @@ const Editor = () => {
         char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
         break;
-      
-      
       case '+input':
-        char = crdt.localInsertRange(fromIdx, content);
-        eventName = 'local-insert';
-        break;
-
       case '*compose': 
         char = crdt.localDelete(fromIdx, toIdx);
         socket.emit('local-delete', char);
