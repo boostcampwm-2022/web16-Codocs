@@ -107,15 +107,13 @@ describe('searchIndex() Test:', () => {
   });
 
   it('1. remoteInsert된 Char의 인덱스가 기존 struct 사이에 존재하는 경우', () => {
-    expect(crdt.searchInsertIndex(new Char([0, 5], '123', 'D'))).toEqual(1);
+    expect(crdt.searchInsertIndex(new Char([0, 7, 5], '123', 'D', 4))).toEqual(1);
   });
   it('2. crdt struct 인덱스를 초과하는 Char 입력 (맨 뒤에 입력)', () => {
-    expect(crdt.searchInsertIndex(new Char([9999, 5, 5], '123', 'D'))).toEqual(
-      3
-    );
+    expect(crdt.searchInsertIndex(new Char([9999, 5, 5], '123', 'D', 5))).toEqual(3);
   });
   it('3. crdt struct 인덱스를 초과하는 Char 입력 (맨 앞에 입력)', () => {
-    expect(crdt.searchInsertIndex(new Char([-1, 5, 5], '123', 'D'))).toEqual(0);
+    expect(crdt.searchInsertIndex(new Char([-1, 5, 5], '123', 'D', 6))).toEqual(0);
   });
 });
 
@@ -132,34 +130,34 @@ describe('remoteInsert() Test:', () => {
   let editor: CodeMirror.Editor;
 
   it('1. remoteInsert된 Char의 인덱스가 기존 struct 사이에 존재하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 7], '123', 'D')], editor);
+    crdt.remoteInsert([new Char([0, 7], '123', 'D', 3)], editor);
     expect(crdt.toString()).toEqual('ADBC');
   });
   it('2. remoteInsert : 맨 앞에 입력받는 경우', () => {
-    crdt.remoteInsert([new Char([0, 2, 5], '123', 'D')], editor);
+    crdt.remoteInsert([new Char([0, 2, 5], '123', 'D', 4)], editor);
     expect(crdt.toString()).toEqual('DABC');
   });
   it('3. remoteInsert : 맨 뒤에 입력받는 경우', () => {
-    crdt.remoteInsert([new Char([9999, 5], '123', 'D')], editor);
+    crdt.remoteInsert([new Char([9999, 5], '123', 'D', 5)], editor);
     expect(crdt.toString()).toEqual('ABCD');
   });
   it('4. remoteInsert : 오류 케이스 1', () => {
     crdt.struct = [];
-    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s')], editor);
-    crdt.remoteInsert([new Char([0,7,5],'abc','m')], editor);
-    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e')], editor);
+    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5],'abc','s', 6)], editor);
+    crdt.remoteInsert([new Char([0,7,5],'abc','m', 7)], editor);
+    crdt.remoteInsert([new Char([0,7,4,9,9,9,9,9,9,9,9,5,8,3,6,6,6,3,6,5,7,6,5,5,6,6,2,9,7,3,4,1,1,3,8,1,2,4,4,6,5,9,4,2,3,8,2,8,1,2,5],'abc','e', 8)], editor);
     expect(crdt.toString()).toEqual('esm');
   });
   it('5. remoteInsert : 여러 개를 맨 뒤에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([9999, 5], '123', 'D'), new Char([9999, 7, 5], '123', 'E'), new Char([9999, 9], '123', 'F')], editor);
+    crdt.remoteInsert([new Char([9999, 5], '123', 'D', 3), new Char([9999, 7, 5], '123', 'E', 4), new Char([9999, 9], '123', 'F', 5)], editor);
     expect(crdt.toString()).toEqual('ABCDEF');
   });
   it('5. remoteInsert : 여러 개 사이에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 7], '123', 'D'), new Char([0, 8], '123', 'E'), new Char([0, 9], '123', 'F')], editor);
+    crdt.remoteInsert([new Char([0, 7], '123', 'D',3 ), new Char([0, 8], '123', 'E', 4), new Char([0, 9], '123', 'F', 5)], editor);
     expect(crdt.toString()).toEqual('ADEFBC');
   });
   it('5. remoteInsert : 여러 개 맨 앞에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char([0, 1], '123', 'D'), new Char([0, 2], '123', 'E'), new Char([0, 3], '123', 'F')], editor);
+    crdt.remoteInsert([new Char([0, 1], '123', 'D', 3), new Char([0, 2], '123', 'E', 4), new Char([0, 3], '123', 'F', 5)], editor);
     expect(crdt.toString()).toEqual('DEFABC');
   });
 });
@@ -192,18 +190,55 @@ describe('convertCRDTIndex() Test:', () => {
   });
 
   it('1. [1, 2, 3] - [1, 2, 4]', () => {
-    expect(crdt.compareCRDTIndex([1, 2, 3], [1, 2, 4])).toEqual(false);
+    expect(crdt.compareCRDTIndex(new Char([1, 2, 3], '123', 'a', 1), new Char([1, 2, 4], '124', 'b', 2))).toEqual(false);
   });
   
   it('2. [1, 2] - [1, 2, 4]', () => {
-    expect(crdt.compareCRDTIndex([1, 2], [1, 2, 4])).toEqual(false);
+    expect(crdt.compareCRDTIndex(new Char([1, 2], '123', 'a', 2), new Char([1, 2, 4], '123', 'b', 3))).toEqual(false);
   });
 
   it('3. [1, 2, 3] - [1, 2]', () => {
-    expect(crdt.compareCRDTIndex([1, 2, 3], [1, 2])).toEqual(true);
+    expect(crdt.compareCRDTIndex(new Char([1, 2, 3], '123', 'a', 1), new Char([1, 2], '124', 'b', 2))).toEqual(true);
   });
   
   it('4. [0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5] - [0,7,5]',() => {
-    expect(crdt.compareCRDTIndex([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5], [0, 7, 5])).toEqual(false);
+    expect(crdt.compareCRDTIndex(new Char([0,7,4,9,9,9,9,9,9,9,9,9,9,9,9,9,9,1,6,7,3,3,2,7,3,1,5,3,1,1,3,2,5,9,4,6,8,2,2,7,6,2,4,8,9,3,1,8,8,4,7,6,5,6,2,5], '123', 'a', 1), new Char([0, 7, 5], '124', 'b', 2))).toEqual(false);
   });
+});
+
+describe('중복 인덱스 테스트 Test:', () => {
+  let crdt1: CRDT;
+  let crdt2: CRDT;
+  
+  beforeEach(() => {
+    crdt1 = new CRDT();
+    crdt2 = new CRDT();
+  });
+
+  let editor: CodeMirror.Editor;
+
+  it('같은 인덱스를 가진 두 Char를 순서를 바꿔 Insert 테스트 (교환법칙 성립 확인)', () => {
+
+    crdt1.remoteInsert([new Char([0,5], '456', 'B', 0)], editor);
+    crdt1.remoteInsert([new Char([0,5], '123', 'A', 0)], editor);
+
+    crdt2.remoteInsert([new Char([0,5], '123', 'A', 0)], editor);
+    crdt2.remoteInsert([new Char([0,5], '456', 'B', 0)], editor);
+
+    expect(crdt1.toString()).toEqual('AB');
+    expect(crdt2.toString()).toEqual('AB');
+    expect(crdt1.struct).toEqual(crdt2.struct);
+  });
+
+  it('2. 두 인덱스가 같고, originChar의 siteID가 더 큰 경우', () => {
+    const originChar = new Char([1, 2, 4], 'b', '', 2);
+    const insertedChar = new Char([1, 2, 4], 'a', '', 3);
+    expect(crdt1.compareCRDTIndex(originChar, insertedChar)).toEqual(true);
+  }); 
+
+  it('3. 두 인덱스가 같고, originChar의 siteID가 더 작은 경우', () => {
+    const originChar = new Char([1, 2, 4], 'a', '', 2);
+    const insertedChar = new Char([1, 2, 4], 'b', '', 3);
+    expect(crdt1.compareCRDTIndex(originChar, insertedChar)).toEqual(false);
+  }); 
 });
