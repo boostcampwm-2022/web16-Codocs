@@ -5,16 +5,15 @@ import CodeMirror from 'codemirror';
 class CRDT {
   siteId: string;
 
+  localCounter: number;
+
   struct: Char[];
    
   constructor() {
-    // this.siteId = uuidv1();
-    this.siteId = '123';
-    // this.localCounter = 0;
+    this.siteId = uuidv1();
+    this.localCounter = 0;
     this.struct = [];
   }
-  // index: 0, value: abc => [0,a], [1, b], [2, c]
-  // 
 
   localInsertRange(index: number, value: string): Char[] {
     return value.split('').map((c, i)=> this.localInsert(index+i, c));
@@ -23,19 +22,16 @@ class CRDT {
   localInsert(index: number, value: string) : Char {
     const insertedChar = this.generateChar(index, value);
     this.struct.splice(index, 0, insertedChar);
-
     return insertedChar;
   }
 
   localDelete(startIndex: number, endIndex: number) : Char[] {
-    const  deletedChars = this.struct.splice(startIndex, endIndex - startIndex);
+    const deletedChars = this.struct.splice(startIndex, endIndex - startIndex);
     return deletedChars;
   }
 
   remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
     // binary?
-    
-    
     const index = this.searchInsertIndex(chars[0]);
     this.struct.splice(index, 0, ...chars);
 
@@ -65,16 +61,17 @@ class CRDT {
 
   searchDeleteIndex(char: Char) {
     return this.struct.findIndex(
-      (c) => JSON.stringify(c.index) === JSON.stringify(char?.index)
+      (c) => ( JSON.stringify(c.index) === JSON.stringify(char?.index) ) && c.siteId === char?.siteId
     );
   }
 
   searchInsertIndex(char: Char) {
-    const index = this.struct.findIndex((c) => this.compareCRDTIndex(c.index, char.index));
+    const index = this.struct.findIndex((c) => this.compareCRDTIndex(c, char));
     return index === -1 ? this.struct.length : index;
   }
 
-  compareCRDTIndex(originIndex: CRDTIndex, insertedIndex: CRDTIndex) : boolean {
+  compareCRDTIndex(originChar: Char, insertedChar: Char) : boolean {
+    const [originIndex, insertedIndex] = [originChar.index, insertedChar.index];
     const insertedIndexLength = insertedIndex.length;
     const originIndexLength = originIndex.length;
     for (let i = 0; i < insertedIndexLength; i++) {
@@ -89,9 +86,9 @@ class CRDT {
       }
     }
     if (originIndexLength === insertedIndexLength) {
-      return false;
+      return originChar.siteId > insertedChar.siteId; // 작은게 앞에 옴
     }
-    return true;
+    return true; // Origin이 더 큼
   }
 
   generateChar(index: number, value: string): Char {
