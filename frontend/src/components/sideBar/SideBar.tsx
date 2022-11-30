@@ -59,6 +59,11 @@ const SideBarWrapper = styled.nav`
 
 const NavMenu = styled(NavLink)`
   margin: 1rem 0;
+  &.active {
+    svg {
+      fill: black;
+    }
+  }
 `;
 
 export { SideBar };
