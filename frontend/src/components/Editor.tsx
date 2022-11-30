@@ -27,6 +27,7 @@ const Editor = () => {
     }
 
     editor.setValue(crdt.toString());
+    editor.focus();
     
     socket.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
@@ -91,10 +92,22 @@ const Editor = () => {
   }, [editor]);
   
   const editorOptions = useMemo(() => {
-    return {
-      autofocus: true,
-      spellChecker: false
+    const opts = {
+      spellChecker: false,
+      placeholder: 'Write document here and share!',
+      toolbar: [
+        'side-by-side',
+        'preview',
+        'fullscreen',
+      ],
+      unorderedListStyle: '-',
+      status: false,
+      shortcuts: {
+        toggleUnorderedList: null,
+      },
     } as SimpleMDE.Options;
+
+    return opts;
   }, []);
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
