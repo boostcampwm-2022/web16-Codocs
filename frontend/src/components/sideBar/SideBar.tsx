@@ -1,29 +1,51 @@
 import React from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import {ReactComponent as HouseIcon} from '../../assets/house.svg';
-import {ReactComponent as LockIcon} from '../../assets/lock.svg';
-import {ReactComponent as TogetherIcon} from '../../assets/together.svg';
-import {ReactComponent as BookmarkIcon} from '../../assets/bookmark.svg';
-import {ReactComponent as TrashBagIcon} from '../../assets/trashbag.svg';
+import { ReactComponent as HouseIcon } from '../../assets/house.svg';
+import { ReactComponent as LockIcon } from '../../assets/lock.svg';
+import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
+import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
+import { ReactComponent as TrashBagIcon } from '../../assets/trashbag.svg';
+import { IconButton } from '../iconButton';
 
 const SideBar = () => {
+  const sideBarIconStyles = {
+    fill: '#A5A5A5',
+    width: '1.5',
+    height: '1.5',
+  };
+
   return <SideBarWrapper>
-    <NavIcon to="/main">
-      <HouseIcon />
-    </NavIcon>
-    <NavIcon to="/private">
-      <LockIcon />
-    </NavIcon>
-    <NavIcon to="/shared">
-      <TogetherIcon />
-    </NavIcon>
-    <NavIcon to="/bookmark">
-      <BookmarkIcon />
-    </NavIcon>
-    <NavIcon to="/trash">
-      <TrashBagIcon />
-    </NavIcon>
+    <NavMenu to="/main">
+      <IconButton {...sideBarIconStyles}>
+        <HouseIcon />
+      </IconButton>
+    </NavMenu>
+
+    <NavMenu to="/private">
+      <IconButton {...sideBarIconStyles}>
+        <LockIcon />
+      </IconButton>
+    </NavMenu>
+
+    <NavMenu to="/shared">
+      <IconButton {...sideBarIconStyles}>
+        <TogetherIcon />
+      </IconButton>
+    </NavMenu>
+
+    <NavMenu to="/bookmark">
+      <IconButton {...sideBarIconStyles}>
+        <BookmarkIcon />
+      </IconButton>
+    </NavMenu>
+
+    <NavMenu to="/trash">
+      <IconButton {...sideBarIconStyles}>
+        <TrashBagIcon />
+      </IconButton>
+    </NavMenu>
+
   </SideBarWrapper>;
 };
 
@@ -35,23 +57,8 @@ const SideBarWrapper = styled.nav`
   border-right: 1px solid #BBBBBB;
 `;
 
-const NavIcon = styled(NavLink)`
+const NavMenu = styled(NavLink)`
   margin: 1rem 0;
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    fill: #A5A5A5;
-  }
-  &:hover {
-    svg {
-      fill: black;
-    }
-  }
-  &.active {
-    svg {
-      fill: black;
-    }
-  }
 `;
 
 export { SideBar };
