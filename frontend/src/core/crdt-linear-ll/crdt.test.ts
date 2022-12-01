@@ -50,6 +50,21 @@ describe('localInsert() Test:', () => {
     crdt.localInsert(1, 'F');
     expect(crdt.toString()).toEqual('AFBC');
   });
+
+  it('4. localInsertRange(1, "F") 테스트 : 여러 문자 한번에 사이에 삽입 ( Paste )', () => {
+    crdt.localInsertRange(1, 'FSOMANYTEXTS');
+    expect(crdt.toString()).toEqual('AFSOMANYTEXTSBC');
+  });
+
+  it('5. localInsertRange(1, "F") 테스트 : 여러 문자 한번에 맨 앞에 삽입 ( Paste )', () => {
+    crdt.localInsertRange(0, 'FSOMANYTEXTS');
+    expect(crdt.toString()).toEqual('FSOMANYTEXTSABC');
+  });
+
+  it('6. localInsertRange(1, "F") 테스트 : 여러 문자 한번에 맨 뒤에 삽입 ( Paste )', () => {
+    crdt.localInsertRange(3, 'FSOMANYTEXTS');
+    expect(crdt.toString()).toEqual('ABCFSOMANYTEXTS');
+  });
 });
 
 describe('localDelete() Test:', () => {
