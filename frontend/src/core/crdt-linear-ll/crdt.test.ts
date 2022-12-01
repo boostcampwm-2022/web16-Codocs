@@ -52,6 +52,37 @@ describe('localInsert() Test:', () => {
   });
 });
 
+describe('localDelete() Test:', () => {
+  let crdt: CRDT;
+  beforeEach(() => {
+    crdt = new CRDT();
+    crdt.localInsert(0, 'A');
+    crdt.localInsert(1, 'B');
+    crdt.localInsert(2, 'C');
+  });
+
+  it('1. localDelete(0, 0) 테스트 : 삭제하지 않는 경우 ', () => {
+    crdt.localDelete(0, 0);
+    expect(crdt.toString()).toEqual('ABC');
+  });
+  it('2. localDelete(0, 1) 테스트 : 맨 앞 하나만 지우기', () => {
+    crdt.localDelete(0, 1);
+    expect(crdt.toString()).toEqual('BC');
+  });
+  it('3. localDelete(1, 2) 테스트 : 중간에 있는 글자 하나만 삭제', () => {
+    crdt.localDelete(1, 2);
+    expect(crdt.toString()).toEqual('AC');
+  });
+  it('4. localDelete(1, 3) 테스트 : BC 2개 삭제 ', () => {
+    crdt.localDelete(1, 3);
+    expect(crdt.toString()).toEqual('A');
+  });
+  it('5. localDelete(0, 3) 테스트 : 싹 다 지우기', () => {
+    crdt.localDelete(0, 3);
+    expect(crdt.toString()).toEqual('');
+  });
+});
+
 
 /*
 연결리스트 삽입
