@@ -129,12 +129,41 @@ class CRDT {
       currentNode = this.charMap[currentNode.rightId];
     }
     
-    
-    throw new Error('Error: Can not find Index. Please report it to our GitHub.');
+    throw new Error('Error: Can not find Index. That is Huge Error Case. Please report it to our GitHub.');
   }
 
-  
+  remoteDelete(chars: Char[], doc: CodeMirror.Doc) {
+    let currentNode = this.head;
+    let deleteStartIndex = 0;
+    let currentIndex = 0;
+    while (currentNode.rightId !== 'END') {
+      if (chars[0].id === currentNode.id) {
+        deleteStartIndex = currentIndex;
+        break;
+      }
+      if (!currentNode.tombstone) {
+        currentIndex++;
+      }
+      currentNode = this.charMap[currentNode.rightId];
+    }
+    const deleteEndIndex = deleteStartIndex + chars.length;
 
+    chars.forEach(char => {
+      this.charMap[char.id].tombstone = true;
+    });
+    
+    const positionFrom = doc?.posFromIndex(deleteStartIndex);
+    const positionTo= doc?.posFromIndex(deleteEndIndex);
+    
+    doc?.replaceRange('', positionFrom, positionTo, 'remote');
+
+    return [deleteStartIndex, deleteEndIndex];
+  }
+
+  // remotedelete => (1, 4)
+  // abcdef
+  // a1f
+  // aef
   /**
    * 1. 받은 맨 왼쪽 노드를 꺼낸다.
    * 2. 받은 배열 마지막 노드를 꺼낸다.
