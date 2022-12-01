@@ -32,7 +32,7 @@ class CRDT {
   }
 
   localInsert (index: number, value: string):Char {
-    const [leftChar, rightChar] = this.searchInsertIndex(index);
+    const [leftChar, rightChar] = this.searchInsertPosition(index);
     const insertedChar = new Char(leftChar.id, rightChar.id, this.siteId, value);
     this.insertChar(insertedChar, leftChar, rightChar);
     
@@ -45,7 +45,7 @@ class CRDT {
     rightChar.leftId = insertedChar.id;
   }
 
-  searchInsertIndex (index: number) { // index -> editor index
+  searchInsertPosition (index: number) { // editor index => CRDT Position
     let counter = 0;
     let currentNode = this.head;
     
@@ -90,6 +90,61 @@ class CRDT {
     
     return deletedChars;
   }
+
+  remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
+    const charsLen = chars.length;
+    const [firstChar, lastChar] = [chars[0], chars[charsLen - 1]];
+    
+    this.charMap[firstChar.leftId].rightId = firstChar.id;
+    this.charMap[lastChar.rightId].leftId = lastChar.id;
+
+    const charsObject = chars.reduce((acc, curr) => ({
+      ...acc, 
+      [curr.id] : curr
+    }), {});
+    
+    this.charMap = {
+      ...this.charMap,
+      ...charsObject
+    };
+    
+    const index = this.searchIndexByChar(firstChar);
+    const position = editor?.getDoc().posFromIndex(index);
+    editor?.replaceRange(chars.map((char)=>char.value).join(''), position, position, 'remote');
+  }
+
+  searchIndexByChar (char: Char): number {
+    let currentNode = this.head;
+    let currentIndex = 0;
+    
+    while (currentNode.rightId !== 'END') {
+      if (currentNode.tombstone) {
+        currentNode = this.charMap[currentNode.rightId];
+        continue;
+      }
+      if(currentNode.id === char.id) {
+        return currentIndex;
+      }
+      currentIndex++;
+      currentNode = this.charMap[currentNode.rightId];
+    }
+    
+    
+    throw new Error('Error: Can not find Index. Please report it to our GitHub.');
+  }
+
+  
+
+  /**
+   * 1. 받은 맨 왼쪽 노드를 꺼낸다.
+   * 2. 받은 배열 마지막 노드를 꺼낸다.
+   * 3. 맨 왼쪽 노드의 left를 charMap에서 꺼낸다.
+   * 4. 꺼낸 left의 right를 맨 왼쪽 노드의 id를 가리키게 한다.
+   * 5. 맨 오른쪽 노드의 right를 charMap에서 꺼낸다.
+   * 6. 꺼낸 right의 left를 맨 오른쪽 노드의 id로 바꾼다.
+   * 7. 연결해줬으면, chars 배열을 charMap에 때려박는다. 
+   */
+
 
   toString (): string {
     let str = '';
