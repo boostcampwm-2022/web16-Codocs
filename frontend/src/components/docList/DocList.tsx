@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { DocListItem } from '../docListItem';
 
 const DocList = () => {
@@ -17,13 +18,18 @@ const DocList = () => {
     fetchDocList();
   }, []);
 
-  return (<div>
+  return (<DocListWrapper>
     {docList.length > 0 ? docList.map(doc => {
       return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
     }) : 
       <div> 문서가 존재하지 않습니다 😥 </div>
     }
-  </div>);
+  </DocListWrapper>);
 };
+
+const DocListWrapper = styled.section`
+  display: grid; 
+  grid-auto-flow: column;
+`;
 
 export { DocList };

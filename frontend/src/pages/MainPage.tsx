@@ -1,42 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import styled from 'styled-components';
 import { DocList } from '../components/docList';
-import { DocListItem } from '../components/docListItem';
-
-// interface docListItemState {
-//   id: string
-//   title: string
-//   lastVisited: string
-//   role: string,
-// }
+import { SideBar } from '../components/sideBar';
 
 const MainPage = () => {
-  // const [docList, setDocList] = useState<docListItemState[]>([]);
-
-  // useEffect(() => {
-  //   const fetchDocList = async () => {
-  //     // TODO : request docList from API server
-  //     return new Promise((resolve) => {
-  //       resolve(setDocList(() => [{id:'1234',
-  //         title: '알고리즘 스터디 기록',
-  //         lastVisited: '2022-11-10',
-  //         role: 'onwer',  
-  //       }, {id:'5678',
-  //         title: 'Untitled',
-  //         lastVisited: '2022-11-19',
-  //         role: 'edit'}]));
-  //     });
-  //   };
-  //   fetchDocList();
-  // }, []);
-
   return (
-    <div>
-      {/* {docList.length ? docList.map(doc => {
-        return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role} />;
-      }) : <div>...loading</div>} */}
-      <DocList />
-    </div>
+    <>
+      {/* TODO: <Header /> */}
+      <Container>
+        <SideBar />
+        <ContentWrapper>
+          <ContentHeaderGroup>
+            <Title>최근 문서 목록</Title>
+            <div>여기에 dropdown</div>
+          </ContentHeaderGroup>
+          <DocList />
+        </ContentWrapper>
+      </Container>
+    </>
   );
 };
 
+const Container = styled.main`
+`;
+
+const ContentWrapper = styled.section`
+  margin: 2rem 3.5rem;
+`;
+
+const ContentHeaderGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-weight: 800;
+  font-size: 2rem;
+`;
+  
 export default MainPage;
