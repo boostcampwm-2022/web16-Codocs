@@ -50,6 +50,8 @@ const SideBar = () => {
 };
 
 const SideBarWrapper = styled.nav`
+  position: sticky;
+  top: 0;
   height: 100vh;
   padding: 1rem;
   display: flex;

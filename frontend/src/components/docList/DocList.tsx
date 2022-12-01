@@ -34,6 +34,7 @@ const DocListWrapper = styled.section`
   grid-template-columns: repeat(auto-fill, 240px);
   gap: 3rem 4.5rem;
   justify-content: space-evenly;
+  margin-bottom: 2rem;
 `;
 
 export { DocList };

@@ -29,6 +29,7 @@ const Container = styled.main`
 const ContentWrapper = styled.section`
   flex: 1;
   margin: 2rem 3.5rem;
+  overflow-y: scroll;
 `;
 
 const ContentHeaderGroup = styled.div`
