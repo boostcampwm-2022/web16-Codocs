@@ -4,7 +4,7 @@ import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import {crdt} from '../core/crdt-linear/crdt';
+import {crdt} from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 
 const Editor = () => {
@@ -14,7 +14,7 @@ const Editor = () => {
   
   useEffect(()=>{
     socket.on('new-user', (data) => {
-      crdt.syncDocument(data);
+      // crdt.syncDocument(data);
       setIsLoading((loading) => !loading);
     });
     console.log(document_id);
@@ -30,11 +30,11 @@ const Editor = () => {
     editor.focus();
     
     socket.on('remote-insert', (data) => {
-      crdt.remoteInsert(data, editor);
+      // crdt.remoteInsert(data, editor);
     });
 
     socket.on('remote-delete', (data) => {
-      crdt.remoteDeleteRange(data, editor.getDoc());
+      // crdt.remoteDeleteRange(data, editor.getDoc());
     });
     
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
@@ -48,29 +48,30 @@ const Editor = () => {
       let char;
       switch (change.origin) {
       case 'paste':
-        char = crdt.localInsertRange(fromIdx, content);
+        // char = crdt.localInsertRange(fromIdx, content);
         eventName = 'local-insert';
         break;
       case '+input':
       case '*compose': 
-        char = crdt.localDelete(fromIdx, toIdx);
+        // char = crdt.localDelete(fromIdx, toIdx);
         socket.emit('local-delete', char);
         if (content === ''){
           return;
         }
-        char = crdt.localInsertRange(fromIdx, content);
+        // char = crdt.localInsertRange(fromIdx, content);
+        char = crdt.localInsert(fromIdx, content);
         eventName = 'local-insert';
         break;
       case '+delete':
-        char = crdt.localDelete(fromIdx, toIdx);
+        // char = crdt.localDelete(fromIdx, toIdx);
         eventName = 'local-delete';
         break;
       default:
         if (fromIdx === toIdx) {
-          char = crdt.localInsertRange(fromIdx, content);
+          // char = crdt.localInsertRange(fromIdx, content);
           eventName = 'local-insert';
         } else {
-          char = crdt.localDelete(fromIdx, toIdx);
+          // char = crdt.localDelete(fromIdx, toIdx);
           eventName = 'local-delete';
         }
       }

@@ -27,19 +27,19 @@ class CRDT {
     };
   }
 
-  //   localInsert (index: number, value: string):Char {
-  //     const insertedChar = this.generateChar(index, value);
-  //     this.insert(insertedChar);
+  localInsert (index: number, value: string):Char {
+    const [leftChar, rightChar] = this.searchInsertIndex(index);
+    const insertedChar = new Char(leftChar.id, rightChar.id, this.siteId, value);
+    this.insertChar(insertedChar, leftChar, rightChar);
     
-  //     return insertedChar;
-  //   }
-  
-  //   generateChar (index: number, value: string) :Char {
-    
-    
+    return insertedChar; 
+  }
 
-  //     return new Char();
-  //   }
+  insertChar(insertedChar: Char, leftChar: Char, rightChar: Char) {
+    this.charMap[insertedChar.id] = insertedChar; 
+    leftChar.rightId = insertedChar.id;
+    rightChar.leftId = insertedChar.id;
+  }
 
   searchInsertIndex (index: number) { // index -> editor index
     let counter = 0;
@@ -51,7 +51,7 @@ class CRDT {
 
     while (currentNode.rightId !== 'END') {
       if (counter === index) {
-        return [this.charMap[currentNode.leftId], currentNode]; // 글자 사이면 이전 노드와 현재 노드를 반환 
+        return [this.charMap[currentNode.leftId], currentNode]; // 글자 사이면 이전 노드와 현재 노드를 반환, 현재 노드 앞에 삽입
       }
       if (!currentNode.tombstone) {
         counter++;
@@ -62,18 +62,33 @@ class CRDT {
     return [this.charMap[this.tail.leftId], this.tail]; // 맨 뒤
   }
 
-  // 1 c 
-  // ab
-  
 
-  /*
-  1. [] => (0) a
-  if (index===0) => head. head.rightID;
-  
-  */
+  toString(): string {
+    let str = '';
+    let currentNode = this.head;
+    while (currentNode.rightId !== 'END') {
+      if (!currentNode.tombstone) {
+        str += currentNode.value;
+      }
+      currentNode = this.charMap[currentNode.rightId];
+    }
+    
+    return str;
+  }
+
+  getAllNode(): Char[] {
+    const nodeList = [];
+    let currentNode = this.head;
+    while (currentNode.rightId !== 'END') {
+      nodeList.push(currentNode);
+      currentNode = this.charMap[currentNode.rightId];
+    }
+    
+    return nodeList;
+  }
 }
 
 const crdt = new CRDT();
-console.log(crdt.charMap);
+
 
 export { crdt, CRDT };
