@@ -15,7 +15,7 @@ describe('render test for <DocList> and <DocListItem>', () => {
   
     await waitFor(async () => {
       const docListLinks = screen.getAllByRole('link');
-      expect(docListLinks).toHaveLength(2);
+      expect(docListLinks).toHaveLength(5);
     });
   });
 });
