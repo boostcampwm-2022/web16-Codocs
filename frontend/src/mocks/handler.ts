@@ -8,6 +8,18 @@ const docList: DocListItem[] = [{id:'1234',
   title: 'Untitled',
   lastVisited: '2022-11-19',
   role: 'edit'
+}, {id:'9012',
+  title: 'Untitled',
+  lastVisited: '2022-11-19',
+  role: 'edit'
+}, {id:'3456',
+  title: 'Untitled',
+  lastVisited: '2022-11-19',
+  role: 'edit'
+}, {id:'7890',
+  title: 'Untitled',
+  lastVisited: '2022-11-19',
+  role: 'edit'
 }];
 
 export const handler = [
