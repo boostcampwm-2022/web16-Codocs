@@ -27,6 +27,10 @@ class CRDT {
     };
   }
 
+  localInsertRange(index: number, value: string): Char[] {
+    return value.split('').map((c, i)=> this.localInsert(index+i, c));
+  }
+
   localInsert (index: number, value: string):Char {
     const [leftChar, rightChar] = this.searchInsertIndex(index);
     const insertedChar = new Char(leftChar.id, rightChar.id, this.siteId, value);
@@ -64,8 +68,6 @@ class CRDT {
 
 
   localDelete (startIndex: number, endIndex: number) : Char[] {
-    // const deletedChars = this.struct.splice(startIndex, endIndex - startIndex);
-    // return deletedChars;
     const deletedChars: Char[] = [];
     let currentIndex = 0;
     let currentNode = this.head;
@@ -88,17 +90,6 @@ class CRDT {
     
     return deletedChars;
   }
-  // *1* 2 3 4 [ 0~1 ] 
-  // head 
-  // 한번에 지우는 방법
-  /*
-  만약에 로컬에서 1(deleteStart)부터 4(deleteEnd)까지 지우라는 Delete 요청을 받는다면?
-  counter를 0으로 둔 상태에서 연결리스트를 Head부터 순회한다.
-  1. Tombstone이 아닌 노드를 만나면 Counter++;
-  2. 만약 내 카운터가 deleteStart와 같으면, 
-  그때부터 Tombstone이 아닌 노드를 만날때마다 Tombstone 처리 해주고, Counter++한다.
-  3. Counter가 deleteEnd까지 도달하였으면, 종료한다. 
-  */
 
   toString (): string {
     let str = '';
