@@ -18,18 +18,22 @@ const DocList = () => {
     fetchDocList();
   }, []);
 
-  return (<DocListWrapper>
-    {docList.length > 0 ? docList.map(doc => {
-      return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
-    }) : 
-      <div> 문서가 존재하지 않습니다 😥 </div>
-    }
-  </DocListWrapper>);
+  return (
+    <DocListWrapper>
+      {docList.length > 0 ? docList.map(doc => {
+        return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role}></DocListItem>;
+      }) : 
+        <div> 문서가 존재하지 않습니다 😥 </div>
+      }
+    </DocListWrapper>
+  );
 };
 
 const DocListWrapper = styled.section`
-  display: grid; 
-  grid-auto-flow: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 240px);
+  gap: 3rem 4.5rem;
+  justify-content: space-evenly;
 `;
 
 export { DocList };

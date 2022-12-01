@@ -12,7 +12,8 @@ const MainPage = () => {
         <ContentWrapper>
           <ContentHeaderGroup>
             <Title>최근 문서 목록</Title>
-            <div>여기에 dropdown</div>
+            <div>드롭다운</div>
+            {/* TODO: <Dropdown /> */}
           </ContentHeaderGroup>
           <DocList />
         </ContentWrapper>
@@ -22,9 +23,11 @@ const MainPage = () => {
 };
 
 const Container = styled.main`
+  display: flex;
 `;
 
 const ContentWrapper = styled.section`
+  flex: 1;
   margin: 2rem 3.5rem;
 `;
 
