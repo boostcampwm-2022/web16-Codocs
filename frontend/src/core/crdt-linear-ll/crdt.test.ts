@@ -70,13 +70,13 @@ describe('localInsert() Test:', () => {
 describe('remoteInsert() Test:', () => { 
   let crdt: CRDT;
   let A: Char, B: Char, C: Char;
+  let editor: CodeMirror.Editor;
   beforeEach(() => {
     crdt = new CRDT();
     A = crdt.localInsert(0, 'A');
     B = crdt.localInsert(1, 'B');
     C = crdt.localInsert(2, 'C');
   });
-  let editor: CodeMirror.Editor;
 
   it('1. remoteInsert : A랑 B 사이에 문자 하나가 삽입되는 경우', () => {
     crdt.remoteInsert([new Char(A.id, B.id, 'siteId', 'D')], editor);
@@ -107,7 +107,6 @@ describe('remoteInsert() Test:', () => {
     expect(crdt.toString()).toEqual('ADEFBC');
   });
 });
-
 
 describe('localDelete() Test:', () => {
   let crdt: CRDT;
@@ -140,6 +139,32 @@ describe('localDelete() Test:', () => {
   });
 });
 
+
+describe('remoteDelete() Test:', () => {
+  let crdt: CRDT;
+  let A: Char, B: Char, C: Char;
+  let doc: CodeMirror.Doc;
+
+  beforeEach(() => {
+    crdt = new CRDT();
+    A = crdt.localInsert(0, 'A');
+    B = crdt.localInsert(1, 'B');
+    C = crdt.localInsert(2, 'C');
+  });
+
+  it('1. remoteDelete 테스트 : 맨 앞에 있는 글자 하나만 삭제  ', () => {
+    expect(crdt.remoteDelete([A], doc)).toEqual([0, 1]);
+    expect(crdt.toString()).toEqual('BC');
+  });
+  it('2. remoteDelete 테스트 : 다 지우기', () => {
+    expect(crdt.remoteDelete([A, B, C], doc)).toEqual([0, 3]);
+    expect(crdt.toString()).toEqual('');
+  });
+  it('3. remoteDelete 테스트 : 맨 뒤에 있는 글자 하나만 삭제', () => {
+    expect(crdt.remoteDelete([C], doc)).toEqual([2, 3]);
+    expect(crdt.toString()).toEqual('AB');
+  });
+});
 
 /*
 연결리스트 삽입
