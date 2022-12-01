@@ -21,10 +21,17 @@ class CRDT {
     this.tail = new Char('HEAD', 'END', this.siteId, '', 'TAIL');
     this.head.tombstone = true;
     this.tail.tombstone = true;
+    
     this.charMap = {
       [this.head.id] : this.head,
       [this.tail.id] : this.tail
     };
+  }
+
+  syncDocument(document : CharMap) {
+    this.charMap = {...document};
+    this.head = this.charMap['HEAD'];
+    this.tail = this.charMap['TAIL'];
   }
 
   localInsertRange(index: number, value: string): Char[] {
@@ -136,6 +143,9 @@ class CRDT {
     let currentNode = this.head;
     let deleteStartIndex = 0;
     let currentIndex = 0;
+    if(chars.length===0){
+      return -1;
+    }
     while (currentNode.rightId !== 'END') {
       if (chars[0].id === currentNode.id) {
         deleteStartIndex = currentIndex;
@@ -159,21 +169,6 @@ class CRDT {
 
     return [deleteStartIndex, deleteEndIndex];
   }
-
-  // remotedelete => (1, 4)
-  // abcdef
-  // a1f
-  // aef
-  /**
-   * 1. 받은 맨 왼쪽 노드를 꺼낸다.
-   * 2. 받은 배열 마지막 노드를 꺼낸다.
-   * 3. 맨 왼쪽 노드의 left를 charMap에서 꺼낸다.
-   * 4. 꺼낸 left의 right를 맨 왼쪽 노드의 id를 가리키게 한다.
-   * 5. 맨 오른쪽 노드의 right를 charMap에서 꺼낸다.
-   * 6. 꺼낸 right의 left를 맨 오른쪽 노드의 id로 바꾼다.
-   * 7. 연결해줬으면, chars 배열을 charMap에 때려박는다. 
-   */
-
 
   toString (): string {
     let str = '';
