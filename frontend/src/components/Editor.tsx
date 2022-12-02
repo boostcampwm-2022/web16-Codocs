@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import { crdt } from '../core/crdt-linear-ll/crdt';
+import {crdt} from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 
 const Editor = () => {
@@ -88,7 +88,7 @@ const Editor = () => {
   }, [editor]);
   
   const editorOptions = useMemo(() => {
-    const opts = {
+    return {
       spellChecker: false,
       placeholder: 'Write document here and share!',
       toolbar: [
@@ -102,8 +102,6 @@ const Editor = () => {
         toggleUnorderedList: null,
       },
     } as SimpleMDE.Options;
-
-    return opts;
   }, []);
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
@@ -112,7 +110,7 @@ const Editor = () => {
 
   return (
     <>
-      {isLoading === true ? <div>로딩중...</div> : (<SimpleMDEReact
+      {isLoading ? <div>로딩중...</div> : (<SimpleMDEReact
         options={editorOptions}
         getCodemirrorInstance={getCmInstanceCallback}
         onCompositionStart={() => console.log('COMPOSITION START') }
