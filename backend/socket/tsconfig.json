@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "outDir": "./build",
     "emitDecoratorMetadata": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "downlevelIteration": true
     }
 }
