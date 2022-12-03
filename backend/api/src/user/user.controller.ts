@@ -1,5 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Request,
+  Patch,
+  Post,
+  UseGuards
+} from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserCreateDTO } from './dto/user-create.dto';
 import { UserResponseDTO } from './dto/user-response.dto';
 import { UserUpdateDTO } from './dto/user-update.dto';
@@ -16,6 +28,12 @@ export class UserController {
   @ApiResponse({ description: '유저 목록', type: [UserResponseDTO] })
   findAll(): Promise<UserResponseDTO[]> {
     return this.userService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return this.userService.findOneByEmail(req.user.email);
   }
 
   @Post()
