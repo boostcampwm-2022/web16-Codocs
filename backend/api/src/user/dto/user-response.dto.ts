@@ -18,8 +18,4 @@ export class UserResponseDTO {
   @ApiProperty()
   @Expose()
   profileURL: string;
-
-  @ApiProperty()
-  @Expose()
-  createdAt: Date;
 }

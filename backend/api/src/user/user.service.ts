@@ -24,12 +24,12 @@ export class UserService {
   }
 
   findOne(id: string) {
-    const entity = this.userRepository.findOneByOrFail({ id });
+    const entity = this.userRepository.findOneBy({ id });
     return plainToClass(UserResponseDTO, entity);
   }
 
   findOneByEmail(email: string) {
-    const entity = this.userRepository.findOneByOrFail({ email });
+    const entity = this.userRepository.findOneBy({ email });
     return plainToClass(UserResponseDTO, entity);
   }
 
