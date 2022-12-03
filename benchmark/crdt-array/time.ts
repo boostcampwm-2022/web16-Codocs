@@ -4,20 +4,32 @@ interface Template {
   [key: string] : string
 }
 
-const calcTimeDiff = (testFunc : any, funcParams: any[], time: number, isStable : boolean) : string => {
+interface TestType {
+  [key: string] : Function
+}
+
+const testType: TestType = {
+  "BEST" : (index: number, testFunc : any, funcParams: any[]) => {
+    testFunc(index, ...funcParams);
+  },
+  "WORST" : (index: number, testFunc : any, funcParams: any[]) => {
+    testFunc(0, ...funcParams);
+  },
+  "RANDOM" : (index: number, testFunc : any, funcParams: any[]) => {
+    testFunc(Math.floor(Math.random() * (index + 1)), ...funcParams);
+  }
+}
+
+const calcTimeDiff = (testFunc : any, funcParams: any[], time: number, type : string) : string => {
   const startTime = performance.now();
   for (let i = 0; i < time ; i++) {
-    if (isStable) {
-      testFunc(i, ...funcParams);
-    }else {
-      testFunc(...funcParams);
-    }
+    testType[type](i, testFunc, funcParams);
   }
   const endTime = performance.now();
   return `${endTime - startTime}ms`;
 }
 
-const localInsertBestCase = () => {
+const localInsertBenchmark = (type : string) => {
   const template : Template = {
     '10' : "",
     '100' : "",
@@ -29,55 +41,23 @@ const localInsertBestCase = () => {
   let operationTime;
   let caseLength = Object.keys(template).length;
   
-  
   for (let i = 1; i <= caseLength; i++) {
     crdt = new CRDT();
     operationTime = Math.pow(10, i);
-    template[operationTime.toString()] = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], operationTime, true);
+    template[operationTime.toString()] = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], operationTime, type);
   }
   
   console.table(template);
-}
-
-const localInsertWorstCase = () => {
-  const template: Template = {
-    '10' : "",
-    '100' : "",
-    '1000' : "",
-    '10000' : "",
-  };
-
-  let crdt;
-  let operationTime;
-  let caseLength = Object.keys(template).length;
-
-  for (let i = 1; i <= caseLength; i++) {
-    crdt = new CRDT();
-    operationTime = Math.pow(10, i);
-    template[operationTime.toString()] = calcTimeDiff(crdt.localInsert.bind(crdt), [0, "a"], operationTime, false)
-  }
-  
-  console.table(template);
-}
-
-const localInsertTestCase  = {
-  "BEST": () => {
-    localInsertBestCase();
-  },
-  "WORST" : () => {
-    localInsertWorstCase();
-  },
-  "RANDOM" : () => {
-    // localInsertRandomCase();
-  }
 }
 
 console.log("**1. LocalInsert 벤치마크**");
 console.log("1) 모든 입력이 Best하게 들어갈 경우");
-localInsertTestCase["BEST"]();
+localInsertBenchmark("BEST");
 
 console.log("2) 모든 입력이 Worst하게 들어갈 경우");
-localInsertTestCase["WORST"]();
+localInsertBenchmark("WORST");
 
-// console.log("3) 모든 입력이 랜덤하게 들어갈 경우");
-// localInsertTestCase["RANDOM"]();
+console.log("3) 모든 입력이 랜덤하게 들어갈 경우");
+localInsertBenchmark("RANDOM");
+
+
