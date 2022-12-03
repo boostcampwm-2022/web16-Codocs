@@ -32,7 +32,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
+  @ApiOperation({ summary: '유저 정보 API', description: '유저 정보' })
+  @ApiCreatedResponse({ description: '유저 정보' })
+  getProfile(@Request() req): UserResponseDTO {
     return this.userService.findOneByEmail(req.user.email);
   }
 
