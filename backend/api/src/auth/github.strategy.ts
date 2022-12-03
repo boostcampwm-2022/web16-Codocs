@@ -18,7 +18,8 @@ export class GithubOAuthStrategy extends PassportStrategy(Strategy, 'github') {
     if (!accessToken) {
       return UnauthorizedException;
     }
+    const { name, node_id, email } = profile._json;
 
-    return profile._json.node_id;
+    return { node_id, name, email };
   }
 }

@@ -7,6 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { GithubOAuthStrategy } from './github.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { GithubOAuthStrategy } from './github.strategy';
       signOptions: { expiresIn: '1000y' }
     })
   ],
-  providers: [AuthService, LocalStrategy, GithubOAuthStrategy],
+  providers: [AuthService, LocalStrategy, GithubOAuthStrategy, JwtStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}

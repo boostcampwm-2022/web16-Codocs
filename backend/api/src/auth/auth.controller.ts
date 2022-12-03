@@ -2,6 +2,7 @@ import { Controller, Get, Post, Query, Redirect, Request, UseGuards } from '@nes
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/user.entity';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
