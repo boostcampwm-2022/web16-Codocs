@@ -1,6 +1,19 @@
 import { CRDT } from "./crdt/crdt";
 
-const localInsertTest = (times: number) => {
+const calcTimeDiff = (testFunc : any, funcParams: any[], time: number, isStable : boolean) : string => {
+  const startTime = performance.now();
+  for (let i = 0; i < time ; i++) {
+    if (isStable) {
+      testFunc(i, ...funcParams);
+    }else {
+      testFunc(...funcParams);
+    }
+  }
+  const endTime = performance.now();
+  return `${endTime - startTime}ms`;
+}
+
+const localInsertTestSequence = () => {
   const template = {
     op_10 : "",
     op_100 : "",
@@ -8,50 +21,25 @@ const localInsertTest = (times: number) => {
     op_10000 : "",
     op_100000 : "",
   };
-  
-  console.log("*** LocalInsert() Test ***");
-  console.log("*** 1. 모든 입력이 Best하게 들어갈 경우 ***");
+
   let crdt = new CRDT();
-  let startTime = performance.now()
-  for (let i = 0; i < times; i++) {
-    crdt.localInsert(i, `a`);
-  }
-  let endTime = performance.now()
-  template.op_10 = `${endTime - startTime}ms`; 
+  template.op_10 = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], 10, true);
 
   crdt = new CRDT();
-  startTime = performance.now()
-  for (let i = 0; i < times*10; i++) {
-    crdt.localInsert(i, `a`);
-  }
-  endTime = performance.now()
-  template.op_100 = `${endTime - startTime}ms`; 
+  template.op_100 = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], 100, true);
 
   crdt = new CRDT();
-  startTime = performance.now()
-  for (let i = 0; i < times*100; i++) {
-    crdt.localInsert(i, `a`);
-  }
-  endTime = performance.now()
-  template.op_1000 = `${endTime - startTime}ms`; 
+  template.op_1000 = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], 1000, true);
 
   crdt = new CRDT();
-  startTime = performance.now()
-  for (let i = 0; i < times*1000; i++) {
-    crdt.localInsert(i, `a`);
-  }
-  endTime = performance.now()
-  template.op_10000 = `${endTime - startTime}ms`;
+  template.op_10000 = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], 10000, true);
 
   crdt = new CRDT();
-  startTime = performance.now()
-  for (let i = 0; i < times*10000; i++) {
-    crdt.localInsert(i, `a`);
-  }
-  endTime = performance.now()
-  template.op_100000 = `${endTime - startTime}ms`; 
+  template.op_100000 = calcTimeDiff(crdt.localInsert.bind(crdt), ["a"], 100000, true);
   
   console.table(template);
 }
 
-localInsertTest(10);
+localInsertTestSequence();
+
+
