@@ -48,8 +48,8 @@ const remoteInsertBenchmark = (type : string) => {
     operationTime = Math.pow(10, i);
 
     for(let j = 0; j < operationTime; j++) {
-      crdt.localInsert(j, 'a');
-      crdtOthers.localInsert(j, 'a');
+      crdt.localInsert(0, 'a');
+      crdtOthers.localInsert(0, 'a');
     }
 
     if (type === "BEST") {
@@ -58,8 +58,9 @@ const remoteInsertBenchmark = (type : string) => {
         }
     } else if (type === "WORST") {
         for(let k = 0; k < operationTime; k++) {
-          operationHistory.push(crdtOthers.localInsert(operationTime + k, 'a'));
+          operationHistory.push(crdtOthers.localInsert(Math.floor(operationTime/2), 'a'));
         }
+        
     } else if (type === "RANDOM") {
         for(let k = 0; k < operationTime; k++) {
           operationHistory.push(crdtOthers.localInsert(Math.floor(Math.random() * (operationTime + k + 1)), 'a'));

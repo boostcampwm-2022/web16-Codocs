@@ -34,8 +34,8 @@ console.log("* 현재 양 쪽 모두 OperationCount만큼 인덱스가 존재하
 console.log("4-1) 모든 remote 요청이 Best하게 들어갈 경우");
 remoteInsertBenchmark("BEST");
 
-console.log("4-2) 모든 remote 요청이 Worst하게 들어갈 경우");
+console.log("4-2) 모든 remote 요청이 문서 중앙에 하게 들어갈 경우");
 remoteInsertBenchmark("WORST");
 
-console.log("4-3) 모든 remote 요청이 랜덤하게 들어갈 경우");
+console.log("4-3) 모든 remote 요청이 랜덤하게 들어갈 경우 (Worst)");
 remoteInsertBenchmark("RANDOM");
