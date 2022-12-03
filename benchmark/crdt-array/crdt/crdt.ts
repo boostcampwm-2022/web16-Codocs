@@ -37,7 +37,8 @@ class CRDT {
   }
 
   remoteDeleteRange(chars: Char[]){
-    chars.forEach(char => this.remoteDelete(char));
+    let c = 0;
+    chars.forEach(char => {this.remoteDelete(char)});
   }
 
   remoteDelete(char: Char) {
