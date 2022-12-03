@@ -57,4 +57,6 @@ console.log("**6. remoteDelete 벤치마크**");
 console.log("6-1) 한 글자를 삭제하는 요청이 들어올 경우");
 remoteDeleteBenchmark("DELETE");
 
-
+console.log("**7. remoteDeleteRange 벤치마크**");
+console.log("7-1) index만큼의 문자를 한번에 삭제하는 요청이 들어올 경우");
+remoteDeleteRangeBenchmark("DELETE");
