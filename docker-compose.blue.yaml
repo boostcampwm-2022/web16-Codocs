@@ -1,0 +1,18 @@
+version: '3.1'
+ 
+services:
+  api:
+    build: ./backend/api
+    container_name: api-blue
+    ports:
+      - '8001:8000'
+  socket:
+    build: ./backend/socket
+    container_name: socket-blue
+    ports:
+      - '8101:8100'
+  frontend:
+    build: ./frontend
+    container_name: frontend-blue
+    ports:
+      - '3001:3000'
