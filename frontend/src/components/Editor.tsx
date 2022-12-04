@@ -6,28 +6,21 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 import {crdt} from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
+import useDebounce from '../hooks/useDebounce';
 
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
   const { document_id } = useParams();
+  const [ setDebounceTimer ] = useDebounce();
   
   useEffect(()=>{
     socket.on('new-user', (data) => {
       crdt.syncDocument(data);
       setIsLoading((loading) => !loading);
     });
-    console.log(document_id);
     socket.emit('joinroom', document_id);    
   }, []);
-
-  useEffect(() => {
-    return (() => {
-      console.log('TIMER CLEAR');
-      clearTimeout(timer);
-    });
-  },[timer]);
 
   useEffect(() => {
     if (!editor) {
@@ -46,12 +39,11 @@ const Editor = () => {
     });
     
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
-      setTimer(() => setTimeout(async () => {
-        console.log('SAVE DATA', crdt.charMap); 
+      setDebounceTimer(() => setTimeout(async () => {
         try {
-          //fetch('#', crdt.charMap);
+          // TODO : fetch('#', crdt.charMap);
         }catch(e) {
-          console.log('SAVE ERROR');
+          throw new Error ('Save Failed. Please report it to our GitHub.');
         }
       }, 5000));
       
