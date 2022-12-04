@@ -1,0 +1,15 @@
+version: '3.4'
+
+services: 
+  db:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+      - 3306:3306
+    expose:
+      - '3306'
+    volumes:
+      - /docker/mysql/data:/var/lib/mysql 
+    environment: 
+      MYSQL_DATABASE: 'db'
+      MYSQL_ROOT_PASSWORD: "codocs*"

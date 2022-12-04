@@ -6,6 +6,8 @@ services:
     container_name: api-blue
     ports:
       - '8001:8000'
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
   socket:
     build: ./backend/socket
     container_name: socket-blue
