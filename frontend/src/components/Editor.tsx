@@ -10,6 +10,7 @@ import socket from '../core/sockets/sockets';
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [timer, setTimer] = useState<NodeJS.Timeout>();
   const { document_id } = useParams();
   
   useEffect(()=>{
@@ -20,6 +21,13 @@ const Editor = () => {
     console.log(document_id);
     socket.emit('joinroom', document_id);    
   }, []);
+
+  useEffect(() => {
+    return (() => {
+      console.log('TIMER CLEAR');
+      clearTimeout(timer);
+    });
+  },[timer]);
 
   useEffect(() => {
     if (!editor) {
@@ -38,6 +46,16 @@ const Editor = () => {
     });
     
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
+      setTimer(() => setTimeout(async () => {
+        console.log('SAVE DATA', crdt.charMap); 
+        try {
+          //fetch('#', crdt.charMap);
+        }catch(e) {
+          console.log('SAVE ERROR');
+        }
+      }, 5000));
+      
+      
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
@@ -76,10 +94,10 @@ const Editor = () => {
           eventName = 'local-delete';
         }
       }
-      console.log('EVENT_NAME :', change.origin);
-      console.log('from : ', fromIdx);
-      console.log('to : ', toIdx);
-      console.log('EVENT Value :', change.text);
+      // console.log('EVENT_NAME :', change.origin);
+      // console.log('from : ', fromIdx);
+      // console.log('to : ', toIdx);
+      // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
     return (()=>{
