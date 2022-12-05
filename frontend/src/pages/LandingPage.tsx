@@ -1,16 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import SiteLogoIcon from '../assets/logo.svg';
+import siteLogoIcon from '../assets/logo.svg';
+import debugImage from '../assets/background-1.svg';
+import talkingImage from '../assets/background-2.svg';
 const LandingPage = () => {
   return (
     <PageWrapper>
       <SiteLogo>
-        <img src={SiteLogoIcon} alt="사이트 로고 아이콘" />
+        <img src={siteLogoIcon} alt="사이트 로고 아이콘" />
         <span>codocs</span>
       </SiteLogo>
       <ContentBox>
         <Title>귀찮은 공동 문서 작업, Codocs에서 한번에.</Title>
       </ContentBox>
+      <DebugImage src={debugImage} alt="이야기하고 있는 사람들" />
+      <TalkingImage src={talkingImage} alt="디버깅하고 있는 사람" />
     </PageWrapper>
   );
 };
@@ -62,6 +66,22 @@ const Title = styled.span`
   letter-spacing: -0.04em;
 
   color: #222222;
+`;
+
+const DebugImage = styled.img`
+  position: absolute;
+  width: 30vw;
+  height: 30vh;
+  right: 0;
+  top: 0;
+`;
+
+const TalkingImage = styled.img`
+  position: absolute;
+  width: 30vw;
+  height: 30vh;
+  left: 0;
+  bottom: 100px;
 `;
 
 export default LandingPage;
