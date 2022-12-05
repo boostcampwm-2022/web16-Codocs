@@ -13,4 +13,10 @@ export class UserCreateDTO {
   @ApiProperty()
   @IsUrl()
   profileURL: string;
+
+  constructor(name: string, email: string, profileURL: string) {
+    this.name = name;
+    this.email = email;
+    this.profileURL = profileURL;
+  }
 }

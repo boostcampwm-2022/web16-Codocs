@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { DocumentModule } from './document/document.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserdocumentModule } from './userdocument/userdocument.module';
+import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -25,7 +26,8 @@ dotenv.config();
     UserModule,
     DocumentModule,
     BookmarkModule,
-    UserdocumentModule
+    UserdocumentModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]
