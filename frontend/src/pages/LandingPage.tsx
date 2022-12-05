@@ -13,8 +13,8 @@ const LandingPage = () => {
       <ContentBox>
         <Title>귀찮은 공동 문서 작업, Codocs에서 한번에.</Title>
       </ContentBox>
-      <DebugImage src={debugImage} alt="이야기하고 있는 사람들" />
-      <TalkingImage src={talkingImage} alt="디버깅하고 있는 사람" />
+      <DebugImage src={debugImage} alt="디버깅하고 있는 사람" />
+      <TalkingImage src={talkingImage} alt="이야기하고 있는 사람들" />
     </PageWrapper>
   );
 };
