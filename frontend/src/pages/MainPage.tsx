@@ -1,40 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { DocListItem } from '../components/docListItem';
-
-interface docListItemState {
-  id: string
-  title: string
-  lastVisited: string
-  role: string,
-}
+import React from 'react';
+import styled from 'styled-components';
+import { SideBar } from '../components/sideBar';
+import { DocListContainer } from '../components/docListContainer';
 
 const MainPage = () => {
-  const [docList, setDocList] = useState<docListItemState[]>([]);
-
-  useEffect(() => {
-    const fetchDocList = async () => {
-      // TODO : request docList from API server
-      return new Promise((resolve) => {
-        resolve(setDocList(() => [{id:'1234',
-          title: '알고리즘 스터디 기록',
-          lastVisited: '2022-11-10',
-          role: 'onwer',  
-        }, {id:'5678',
-          title: 'Untitled',
-          lastVisited: '2022-11-19',
-          role: 'edit'}]));
-      });
-    };
-    fetchDocList();
-  }, []);
-
   return (
-    <div>
-      {docList.length ? docList.map(doc => {
-        return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role} />;
-      }) : <div>...loading</div>}
-    </div>
+    <>
+      {/* TODO: <Header /> */}
+      <Container>
+        <SideBar />
+        <ContentWrapper>
+          <ContentHeaderGroup>
+            <Title>최근 문서 목록</Title>
+            <div>드롭다운</div>
+            {/* TODO: <Dropdown /> */}
+          </ContentHeaderGroup>
+          <DocListContainer />
+        </ContentWrapper>
+      </Container>
+    </>
   );
 };
 
+const Container = styled.main`
+  display: flex;
+`;
+
+const ContentWrapper = styled.section`
+  flex: 1;
+  margin: 2rem 3.5rem;
+  overflow-y: scroll;
+`;
+
+const ContentHeaderGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-weight: 800;
+  font-size: 2rem;
+`;
+  
 export default MainPage;

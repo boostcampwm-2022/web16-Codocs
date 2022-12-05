@@ -3,6 +3,7 @@ import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DocumentPage from './pages/DocumentPage';
 import LandingPage from './pages/LandingPage';
+import MainPage from './pages/MainPage';
 
 const Router = () => {
   return (
@@ -11,7 +12,7 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/document">
-          <Route path="main" element="" />
+          <Route path="main" element={<MainPage />} />
           <Route path="private" element="" />
           <Route path="shared" element="" />
           <Route path="bookmark" element="" />
