@@ -3,15 +3,20 @@ import styled from 'styled-components';
 import githubIcon from '../../assets/github.svg';
 
 const LoginButton = () => {
+  const handleGithubOAuth = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    window.location.href = process.env.REACT_APP_GITHUB_OAUTH as string;
+  };
+
   return (
-    <Button type="button">
+    <GithubButton onClick={handleGithubOAuth}>
       <img src={githubIcon} alt="Github 아이콘" />
       <span>Github로 시작하기</span>
-    </Button>
+    </GithubButton>
   );
 };
 
-const Button = styled.button`
+const GithubButton = styled.button`
   width: 18.75rem;
   height: 5.125rem;
 
