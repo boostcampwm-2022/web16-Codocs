@@ -18,10 +18,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('github'))
   @Get('callback')
-  async callback(
-    @Request() req,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<UserResponseDTO> {
+  @Redirect(process.env.CLIENT_HOST, 301)
+  async callback(@Request() req, @Res({ passthrough: true }) res: Response): Promise<any> {
     return this.authService.login(req.user, res);
   }
 }
