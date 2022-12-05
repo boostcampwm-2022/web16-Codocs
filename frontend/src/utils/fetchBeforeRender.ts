@@ -1,7 +1,11 @@
 import { worker } from '../mocks/worker';
 
+let requestDomain = 'http://localhost:3000';
+
 if (process.env.NODE_ENV === 'development') {
   worker.start();
+} else {
+  requestDomain = '';
 }
 
 interface Response<T> {
@@ -41,8 +45,9 @@ export function wrapPromise<T>(promise: Promise<T>) {
 }
 
 const fetchDataFromPath = (path: string) => {
+  console.log(`${requestDomain}${path}`);
   try {
-    const data = fetch(`http://localhost:3000/${path}`, {
+    const data = fetch(`${requestDomain}${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
