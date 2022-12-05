@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import siteLogoIcon from '../assets/logo.svg';
 import debugImage from '../assets/background-1.svg';
 import talkingImage from '../assets/background-2.svg';
+import { LoginButton } from '../components/loginButton';
 const LandingPage = () => {
   return (
     <PageWrapper>
@@ -12,6 +13,7 @@ const LandingPage = () => {
       </SiteLogo>
       <ContentBox>
         <Title>귀찮은 공동 문서 작업, Codocs에서 한번에.</Title>
+        <LoginButton />
       </ContentBox>
       <DebugImage src={debugImage} alt="디버깅하고 있는 사람" />
       <TalkingImage src={talkingImage} alt="이야기하고 있는 사람들" />
@@ -54,6 +56,8 @@ const ContentBox = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  gap: 2.5rem;
 `;
 
 const Title = styled.span`
