@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { DocList } from '../components/docList';
 import { SideBar } from '../components/sideBar';
+import { DocListContainer } from '../components/docListContainer';
 
 const MainPage = () => {
   return (
@@ -15,7 +15,7 @@ const MainPage = () => {
             <div>드롭다운</div>
             {/* TODO: <Dropdown /> */}
           </ContentHeaderGroup>
-          <DocList />
+          <DocListContainer />
         </ContentWrapper>
       </Container>
     </>
