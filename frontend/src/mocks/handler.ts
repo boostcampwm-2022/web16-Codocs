@@ -1,29 +1,21 @@
 import { rest } from 'msw';
+import createDocumentList from './dummy/docList';
 
-const docList: DocListItem[] = [{id:'1234',
-  title: '알고리즘 스터디 기록',
-  lastVisited: '2022-11-10',
-  role: 'onwer',  
-}, {id:'5678',
-  title: 'Untitled',
-  lastVisited: '2022-11-19',
-  role: 'edit'
-}, {id:'9012',
-  title: 'Untitled',
-  lastVisited: '2022-11-19',
-  role: 'edit'
-}, {id:'3456',
-  title: 'Untitled',
-  lastVisited: '2022-11-19',
-  role: 'edit'
-}, {id:'7890',
-  title: 'Untitled',
-  lastVisited: '2022-11-19',
-  role: 'edit'
-}];
+interface generateEnumObj {
+  [key : string] : (counts: number) => DocListItem[];
+}
+
+const generateFunc: generateEnumObj = {
+  'docList' : createDocumentList,
+};
+
+const generateDummy = (target: string, counts: number) => {
+  return generateFunc[target](counts);
+};
+
 
 export const handler = [
   rest.get('/document/main', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(docList));
+    return res(ctx.status(200), ctx.json(generateDummy('docList', 30)));
   }),
 ];
