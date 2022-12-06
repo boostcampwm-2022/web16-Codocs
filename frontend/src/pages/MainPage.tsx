@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Header } from '../components/header';
 import { SideBar } from '../components/sideBar';
 import { DocListContainer } from '../components/docListContainer';
 
 const MainPage = () => {
   return (
     <>
+      <Header />
       <Container>
         <SideBar />
         <ContentWrapper>
