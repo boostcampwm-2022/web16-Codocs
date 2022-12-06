@@ -1,38 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { SideBar } from '../components/sideBar';
 import { DocListContainer } from '../components/docListContainer';
-import { Navigate } from 'react-router-dom';
 
 const MainPage = () => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-
-  const checkLogin = async () => {
-    const response = await fetch('#');
-    setIsLogin(response.ok);
-  };
-
-  useEffect(() => {
-    checkLogin();
-  }, []);
-
   return (
     <>
-      {isLogin ? (
-        <Navigate to="/" replace />
-      ) : (
-        <Container>
-          <SideBar />
-          <ContentWrapper>
-            <ContentHeaderGroup>
-              <Title>최근 문서 목록</Title>
-              <div>드롭다운</div>
-              {/* TODO: <Dropdown /> */}
-            </ContentHeaderGroup>
-            <DocListContainer />
-          </ContentWrapper>
-        </Container>
-      )}
+      <Container>
+        <SideBar />
+        <ContentWrapper>
+          <ContentHeaderGroup>
+            <Title>최근 문서 목록</Title>
+            <div>드롭다운</div>
+            {/* TODO: <Dropdown /> */}
+          </ContentHeaderGroup>
+          <DocListContainer />
+        </ContentWrapper>
+      </Container>
     </>
   );
 };
