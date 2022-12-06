@@ -44,5 +44,5 @@ const Title = styled.h1`
   font-weight: 800;
   font-size: 2rem;
 `;
-  
+
 export default MainPage;
