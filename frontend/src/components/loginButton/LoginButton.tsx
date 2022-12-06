@@ -9,16 +9,15 @@ const LoginButton = () => {
   };
 
   return (
-    <GithubButton onClick={handleGithubOAuth}>
+    <GitHubButton onClick={handleGithubOAuth}>
       <img src={githubIcon} alt="Github 아이콘" />
       <span>Github로 시작하기</span>
-    </GithubButton>
+    </GitHubButton>
   );
 };
 
-const GithubButton = styled.button`
-  width: 18.75rem;
-  height: 5.125rem;
+const GitHubButton = styled.button`
+  padding: 1.25rem 1.5rem;
 
   background: #3a7dff;
   border-radius: 1.25rem;
@@ -26,7 +25,7 @@ const GithubButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.9375rem;
+  gap: 1rem;
 
   img {
     width: 2.5rem;
@@ -35,8 +34,8 @@ const GithubButton = styled.button`
 
   span {
     font-weight: 700;
-    font-size: 1.5625rem;
-    line-height: 1.875rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
     text-align: center;
     letter-spacing: -0.04em;
 
