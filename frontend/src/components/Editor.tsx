@@ -1,23 +1,24 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useParams} from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import {crdt} from '../core/crdt-linear/crdt';
+import {crdt} from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
+import useDebounce from '../hooks/useDebounce';
 
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { document_id } = useParams();
+  const [ setDebounceTimer ] = useDebounce();
   
   useEffect(()=>{
     socket.on('new-user', (data) => {
       crdt.syncDocument(data);
       setIsLoading((loading) => !loading);
     });
-    console.log(document_id);
     socket.emit('joinroom', document_id);    
   }, []);
 
@@ -34,10 +35,19 @@ const Editor = () => {
     });
 
     socket.on('remote-delete', (data) => {
-      crdt.remoteDeleteRange(data, editor.getDoc());
+      crdt.remoteDelete(data, editor.getDoc());
     });
     
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
+      setDebounceTimer(() => setTimeout(async () => {
+        try {
+          // TODO : fetch('#', crdt.charMap);
+        }catch(e) {
+          throw new Error ('Save Failed. Please report it to our GitHub.');
+        }
+      }, 5000));
+      
+      
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
@@ -52,9 +62,11 @@ const Editor = () => {
         eventName = 'local-insert';
         break;
       case '+input':
-      case '*compose': 
-        char = crdt.localDelete(fromIdx, toIdx);
-        socket.emit('local-delete', char);
+      case '*compose':
+        if(fromIdx !== toIdx){
+          char = crdt.localDelete(fromIdx, toIdx);
+          socket.emit('local-delete', char);
+        }
         if (content === ''){
           return;
         }
@@ -74,10 +86,10 @@ const Editor = () => {
           eventName = 'local-delete';
         }
       }
-      console.log('EVENT_NAME :', change.origin);
-      console.log('from : ', fromIdx);
-      console.log('to : ', toIdx);
-      console.log('EVENT Value :', change.text);
+      // console.log('EVENT_NAME :', change.origin);
+      // console.log('from : ', fromIdx);
+      // console.log('to : ', toIdx);
+      // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
     return (()=>{
@@ -86,7 +98,7 @@ const Editor = () => {
   }, [editor]);
   
   const editorOptions = useMemo(() => {
-    const opts = {
+    return {
       spellChecker: false,
       placeholder: 'Write document here and share!',
       toolbar: [
@@ -100,8 +112,6 @@ const Editor = () => {
         toggleUnorderedList: null,
       },
     } as SimpleMDE.Options;
-
-    return opts;
   }, []);
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
@@ -110,7 +120,7 @@ const Editor = () => {
 
   return (
     <>
-      {isLoading === true ? <div>로딩중...</div> : (<SimpleMDEReact
+      {isLoading ? <div>로딩중...</div> : (<SimpleMDEReact
         options={editorOptions}
         getCodemirrorInstance={getCmInstanceCallback}
         onCompositionStart={() => console.log('COMPOSITION START') }

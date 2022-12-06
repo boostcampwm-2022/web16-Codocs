@@ -1,2 +1,5 @@
 node_modules
+<<<<<<< HEAD
+=======
 .DS_Store
+>>>>>>> feature/benchmark
