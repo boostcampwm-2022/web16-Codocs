@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import DocumentPage from './pages/DocumentPage';
-import LandingPage from './pages/LandingPage';
-import MainPage from './pages/MainPage';
+
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const MainPage = lazy(() => import('./pages/MainPage'));
+const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 
 const Router = () => {
   return (
