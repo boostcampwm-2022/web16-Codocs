@@ -52,36 +52,35 @@ export class DocumentService {
       this.redis.hset(id, char.id, JSON.stringify(char));
     });
   }
-  // async saveContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
-  //   const { content } = documentUpdateDTO;
-  //   console.log(content);
-  //   if (content == undefined) {
-  //     throw new Error('no content');
-  //   }
-
-  //   this.redis.hset(id, id, JSON.stringify(content));
-  // }
-  async insertContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
+  async saveContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
     const { content } = documentUpdateDTO;
+    console.log(content);
     if (content == undefined) {
       throw new Error('no content');
     }
 
-    this.redis.hmset(id, content);
-
-    if ((await this.redis.hget(id, 'HEAD')) == null) {
-      this.redis.hset(
-        id,
-        'HEAD',
-        JSON.stringify({ id: 'HEAD', leftId: 'START', rightId: 'TAIL', siteId: '', value: '' })
-      );
-      this.redis.hset(
-        id,
-        'TAIL',
-        JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
-      );
-    }
+    this.redis.hset(id, id, JSON.stringify(content));
   }
+  // async insertContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
+  //   const { content } = documentUpdateDTO;
+  //   if (content == undefined) {
+  //     throw new Error('no content');
+  //   }
+
+  //   this.redis.hmset(id, content);
+
+  // if ((await this.redis.hget(id, 'HEAD')) == null) {
+  //   this.redis.hset(
+  //     id,
+  //     'HEAD',
+  //     JSON.stringify({ id: 'HEAD', leftId: 'START', rightId: 'TAIL', siteId: '', value: '' })
+  //   );
+  //   this.redis.hset(
+  //     id,
+  //     'TAIL',
+  //     JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
+  //   );
+  // }
 
   // content.forEach(async (char) => {
   //   this.redis.hset(id, char.id, JSON.stringify(char));

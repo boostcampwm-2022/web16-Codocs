@@ -46,15 +46,15 @@ export class DocumentController {
   @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
   @ApiResponse({ description: '저장됨' })
   saveContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
-    return this.documentService.insertContent(id, documentUpdateDTO);
+    return this.documentService.saveContent(id, documentUpdateDTO);
   }
 
-  @Post(':id/update-content')
-  @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
-  @ApiResponse({ description: '저장됨' })
-  updateContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
-    return this.documentService.updateContent(id, documentUpdateDTO);
-  }
+  // @Post(':id/update-content')
+  // @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
+  // @ApiResponse({ description: '저장됨' })
+  // updateContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
+  //   return this.documentService.updateContent(id, documentUpdateDTO);
+  // }
 
   @Delete(':id')
   @ApiOperation({ summary: '문서 삭제 API', description: '해당 uuid 문서 삭제하기' })
