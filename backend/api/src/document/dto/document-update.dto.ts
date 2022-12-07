@@ -11,5 +11,5 @@ export class DocumentUpdateDTO {
   @ApiProperty()
   // @IsString()
   @IsOptional()
-  content: Char[];
+  content: any;
 }
