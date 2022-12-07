@@ -3,7 +3,7 @@ import { DocList } from '../docList';
 import { Spinner } from '../spinner/Spinner';
 import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 
-const response: { read(): any;} = fetchDataFromPath('/document/main');
+const response = fetchDataFromPath('/document/main');
 
 const DocListContainer = () => {
 
