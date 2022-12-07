@@ -15,6 +15,12 @@ import { UserRole } from './enum/role.enum';
 @Entity()
 @Unique(['user', 'document'])
 export class UserDocument {
+  constructor(user, document, role = UserRole.EDITOR) {
+    this.user = user;
+    this.document = document;
+    this.role = role;
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -41,5 +47,9 @@ export class UserDocument {
 
   getUser(): User {
     return this.user;
+  }
+
+  setLastVisitedNow() {
+    this.lastVisited = new Date();
   }
 }
