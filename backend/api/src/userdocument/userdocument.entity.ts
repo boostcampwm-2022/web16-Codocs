@@ -34,4 +34,12 @@ export class UserDocument {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
   role: UserRole;
+
+  setDocument(document: Document) {
+    this.document = document;
+  }
+
+  getUser(): User {
+    return this.user;
+  }
 }
