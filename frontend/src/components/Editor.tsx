@@ -7,7 +7,7 @@ import 'easymde/dist/easymde.min.css';
 import { crdt } from '../core/crdt-linear/crdt';
 import socket from '../core/sockets/sockets';
 
-const NAVBAR_HEIGHT = 64;
+const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
