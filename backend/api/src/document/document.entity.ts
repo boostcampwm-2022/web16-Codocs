@@ -35,7 +35,7 @@ export class Document {
 
   addUserRelation(userDocument: UserDocument) {
     this.userRelations.push(userDocument);
-    userDocument.getUser().documentRelations.push(userDocument);
+    // userDocument.getUser().documentRelations.push(userDocument);
     userDocument.setDocument(this);
   }
 }

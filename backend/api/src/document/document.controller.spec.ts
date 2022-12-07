@@ -7,7 +7,7 @@ describe('DocumentController', () => {
   let documentService: DocumentService;
 
   beforeEach(() => {
-    documentService = new DocumentService(null, null);
+    documentService = new DocumentService(null, null, null, null);
     documentController = new DocumentController(documentService);
   });
 

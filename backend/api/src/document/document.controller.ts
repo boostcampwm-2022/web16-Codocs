@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentResponseDTO } from './dto/document-response.dto';
 import { DocumentCreateDTO } from './dto/document-create.dto';
@@ -6,6 +6,8 @@ import { DocumentUpdateDTO } from './dto/document-update.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Document } from './document.entity';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
+import { OptionalJwtAuthGuard } from 'src/auth/optional-jwt-auth.guard';
+import { Request } from 'express';
 
 @ApiTags('Document API')
 @Controller('document')
@@ -27,12 +29,11 @@ export class DocumentController {
   }
 
   @Get(':id')
+  @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: '문서 정보 API', description: '해당 uuid 문서 정보 얻기' })
   @ApiCreatedResponse({ description: '문서 정보', type: DocumentDetailResponseDTO })
-  async findOne(@Param('id') id: string) {
-    const response = await this.documentService.findOne(id);
-    console.log(response);
-    return response;
+  async findOne(@Req() req: Request, @Param('id') id: string) {
+    return this.documentService.findOne(id, req.user as { email; name });
   }
 
   @Post(':id/save-title')

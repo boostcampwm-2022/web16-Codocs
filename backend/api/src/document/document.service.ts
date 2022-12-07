@@ -9,12 +9,19 @@ import { DocumentUpdateDTO } from './dto/document-update.dto';
 import Redis from 'ioredis';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { Char } from 'src/types/char';
+import { User } from 'src/user/user.entity';
+import { Request } from 'express';
+import { UserDocument } from 'src/userdocument/userdocument.entity';
 
 @Injectable()
 export class DocumentService {
   constructor(
     @InjectRepository(Document)
     private documentRepository: Repository<Document>,
+    @InjectRepository(UserDocument)
+    private userDocumentRepository: Repository<UserDocument>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     @Inject('REDIS_CLIENT') private readonly redis: Redis
   ) {}
 
@@ -28,10 +35,28 @@ export class DocumentService {
     return documents.map((entity) => plainToClass(DocumentResponseDTO, entity));
   }
 
-  async findOne(id: string): Promise<DocumentDetailResponseDTO> {
-    const entity: Document = await this.documentRepository.findOneBy({ id });
-    const response = plainToClass(DocumentResponseDTO, entity);
+  async findOne(id: string, user: { email; name }): Promise<DocumentDetailResponseDTO> {
+    const documentEntity: Document = await this.documentRepository.findOne({
+      relations: ['userRelations'],
+      loadRelationIds: true,
+      where: { id }
+    });
+    const response = plainToClass(DocumentResponseDTO, documentEntity);
     const content = await this.redis.hgetall(id);
+    if (user) {
+      console.log(user.email);
+      const userEntity = await this.userRepository.findOneBy({ email: user.email });
+      let userDocument = await this.userDocumentRepository.findOne({
+        where: { user: { id: userEntity.id }, document: { id: documentEntity.id } }
+      });
+      if (userDocument == null) {
+        userDocument = new UserDocument(userEntity, documentEntity);
+      }
+      documentEntity.addUserRelation(userDocument);
+      userDocument.setLastVisitedNow();
+      this.userDocumentRepository.save(userDocument);
+    }
+
     return { ...response, content };
   }
 
@@ -61,36 +86,6 @@ export class DocumentService {
 
     this.redis.hset(id, id, JSON.stringify(content));
   }
-  // async insertContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
-  //   const { content } = documentUpdateDTO;
-  //   if (content == undefined) {
-  //     throw new Error('no content');
-  //   }
-
-  //   this.redis.hmset(id, content);
-
-  // if ((await this.redis.hget(id, 'HEAD')) == null) {
-  //   this.redis.hset(
-  //     id,
-  //     'HEAD',
-  //     JSON.stringify({ id: 'HEAD', leftId: 'START', rightId: 'TAIL', siteId: '', value: '' })
-  //   );
-  //   this.redis.hset(
-  //     id,
-  //     'TAIL',
-  //     JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
-  //   );
-  // }
-
-  // content.forEach(async (char) => {
-  //   this.redis.hset(id, char.id, JSON.stringify(char));
-  //   const left: Char = JSON.parse(await this.redis.hget(id, char.leftId));
-  //   const right: Char = JSON.parse(await this.redis.hget(id, char.rightId));
-  //   left.rightId = char.id;
-  //   right.leftId = char.id;
-  //   this.redis.hset(id, left.id, JSON.stringify(left));
-  //   this.redis.hset(id, right.id, JSON.stringify(right));
-  // });
 
   remove(id: string) {
     return this.documentRepository.softDelete(id);
