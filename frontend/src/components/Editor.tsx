@@ -4,21 +4,24 @@ import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import {crdt} from '../core/crdt-linear/crdt';
+import { crdt } from '../core/crdt-linear/crdt';
 import socket from '../core/sockets/sockets';
+import styled from 'styled-components';
 
+const NAVBAR_HEIGHT = 64;
+const WIDGET_HEIGHT = 70;
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { document_id } = useParams();
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     socket.on('new-user', (data) => {
       crdt.syncDocument(data);
       setIsLoading((loading) => !loading);
     });
     console.log(document_id);
-    socket.emit('joinroom', document_id);    
+    socket.emit('joinroom', document_id);
   }, []);
 
   useEffect(() => {
@@ -28,7 +31,7 @@ const Editor = () => {
 
     editor.setValue(crdt.toString());
     editor.focus();
-    
+
     socket.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
     });
@@ -36,7 +39,7 @@ const Editor = () => {
     socket.on('remote-delete', (data) => {
       crdt.remoteDeleteRange(data, editor.getDoc());
     });
-    
+
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
@@ -47,32 +50,32 @@ const Editor = () => {
       let eventName = '';
       let char;
       switch (change.origin) {
-      case 'paste':
-        char = crdt.localInsertRange(fromIdx, content);
-        eventName = 'local-insert';
-        break;
-      case '+input':
-      case '*compose': 
-        char = crdt.localDelete(fromIdx, toIdx);
-        socket.emit('local-delete', char);
-        if (content === ''){
-          return;
-        }
-        char = crdt.localInsertRange(fromIdx, content);
-        eventName = 'local-insert';
-        break;
-      case '+delete':
-        char = crdt.localDelete(fromIdx, toIdx);
-        eventName = 'local-delete';
-        break;
-      default:
-        if (fromIdx === toIdx) {
+        case 'paste':
           char = crdt.localInsertRange(fromIdx, content);
           eventName = 'local-insert';
-        } else {
+          break;
+        case '+input':
+        case '*compose':
+          char = crdt.localDelete(fromIdx, toIdx);
+          socket.emit('local-delete', char);
+          if (content === '') {
+            return;
+          }
+          char = crdt.localInsertRange(fromIdx, content);
+          eventName = 'local-insert';
+          break;
+        case '+delete':
           char = crdt.localDelete(fromIdx, toIdx);
           eventName = 'local-delete';
-        }
+          break;
+        default:
+          if (fromIdx === toIdx) {
+            char = crdt.localInsertRange(fromIdx, content);
+            eventName = 'local-insert';
+          } else {
+            char = crdt.localDelete(fromIdx, toIdx);
+            eventName = 'local-delete';
+          }
       }
       console.log('EVENT_NAME :', change.origin);
       console.log('from : ', fromIdx);
@@ -80,28 +83,25 @@ const Editor = () => {
       console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
-    return (()=>{
+    return () => {
       socket.removeAllListeners();
-    });
+    };
   }, [editor]);
-  
+
   const editorOptions = useMemo(() => {
-    const opts = {
+    return {
       spellChecker: false,
       placeholder: 'Write document here and share!',
-      toolbar: [
-        'side-by-side',
-        'preview',
-        'fullscreen',
-      ],
+      minHeight: `calc(100vh - ${NAVBAR_HEIGHT + WIDGET_HEIGHT}px)`,
+      maxHeight: `calc(100vh - ${NAVBAR_HEIGHT + WIDGET_HEIGHT}px)`,
+      sideBySideFullscreen: false,
+      toolbar: ['side-by-side', 'preview', 'fullscreen'],
       unorderedListStyle: '-',
       status: false,
       shortcuts: {
-        toggleUnorderedList: null,
-      },
+        toggleUnorderedList: null
+      }
     } as SimpleMDE.Options;
-
-    return opts;
   }, []);
 
   const getCmInstanceCallback = useCallback((cm: CodeMirror.Editor) => {
@@ -109,16 +109,22 @@ const Editor = () => {
   }, []);
 
   return (
-    <>
-      {isLoading === true ? <div>로딩중...</div> : (<SimpleMDEReact
-        options={editorOptions}
-        getCodemirrorInstance={getCmInstanceCallback}
-        onCompositionStart={() => console.log('COMPOSITION START') }
-        onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
-        onCompositionEnd={() => console.log('COMPOSITION END')}
-      />)}
-    </>
+    <EditorWrapper>
+      {isLoading ? (
+        <div>로딩중...</div>
+      ) : (
+        <SimpleMDEReact
+          options={editorOptions}
+          getCodemirrorInstance={getCmInstanceCallback}
+          onCompositionStart={() => console.log('COMPOSITION START')}
+          onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
+          onCompositionEnd={() => console.log('COMPOSITION END')}
+        />
+      )}
+    </EditorWrapper>
   );
 };
+
+const EditorWrapper = styled.div``;
 
 export default Editor;
