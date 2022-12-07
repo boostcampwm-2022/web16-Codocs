@@ -6,7 +6,6 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 import { crdt } from '../core/crdt-linear/crdt';
 import socket from '../core/sockets/sockets';
-import styled from 'styled-components';
 
 const NAVBAR_HEIGHT = 64;
 const WIDGET_HEIGHT = 70;
@@ -109,7 +108,7 @@ const Editor = () => {
   }, []);
 
   return (
-    <EditorWrapper>
+    <>
       {isLoading ? (
         <div>로딩중...</div>
       ) : (
@@ -121,10 +120,8 @@ const Editor = () => {
           onCompositionEnd={() => console.log('COMPOSITION END')}
         />
       )}
-    </EditorWrapper>
+    </>
   );
 };
-
-const EditorWrapper = styled.div``;
 
 export default Editor;

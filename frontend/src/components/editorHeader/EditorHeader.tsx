@@ -25,7 +25,7 @@ const EditorHeader = () => {
 
 const HeaderContainer = styled.header`
   width: 100vw;
-  height: 5vh;
+  height: 4rem;
   padding: 0 1rem;
 
   display: flex;
