@@ -31,13 +31,13 @@ export class UserDocumentService {
 
   async getUserDocuments(email: string) {
     const userDocuments = await this.userDocumentRepository.find({
-      relations: ['user', 'document'],
-      loadRelationIds: true,
+      relations: ['document', 'user'],
       where: { user: { email } },
       order: { lastVisited: 'DESC' }
     });
-
-    return userDocuments.map((userDocument) => plainToClass(UserDocumentResponseDTO, userDocument));
+    const ret = userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
+    console.log(ret);
+    return ret;
   }
 
   findOne(id: string) {

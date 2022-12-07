@@ -3,6 +3,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Exclude()
 export class DocumentResponseDTO {
+  constructor(id, title, createdAt) {
+    this.id = id;
+    this.title = title;
+    this.createdAt = createdAt;
+  }
+
   @ApiProperty()
   @Expose()
   id: string;
