@@ -25,7 +25,7 @@ const LogoImg = styled.img`
 const LogoTitle = styled.span`
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 1rem;
+  padding: 0.5rem;
 `;
 
 export { SiteLogo };
