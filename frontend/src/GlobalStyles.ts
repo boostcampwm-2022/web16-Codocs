@@ -1,8 +1,8 @@
 import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import normalize from 'styled-normalize';
 
 const GlobalStyles = createGlobalStyle` 
-  ${reset}
+  ${normalize}
     body {
         font-family: 'Inter', sans-serif;
     } 
