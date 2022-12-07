@@ -35,9 +35,8 @@ export class UserDocumentService {
       where: { user: { email } },
       order: { lastVisited: 'DESC' }
     });
-    const ret = userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
-    console.log(ret);
-    return ret;
+
+    return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
   }
 
   findOne(id: string) {
