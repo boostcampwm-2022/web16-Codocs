@@ -44,7 +44,6 @@ export class DocumentService {
     const response = plainToClass(DocumentResponseDTO, documentEntity);
     const content = await this.redis.hgetall(id);
     if (user) {
-      console.log(user.email);
       const userEntity = await this.userRepository.findOneBy({ email: user.email });
       let userDocument = await this.userDocumentRepository.findOne({
         where: { user: { id: userEntity.id }, document: { id: documentEntity.id } }
