@@ -5,13 +5,13 @@ import useTitle from '../../hooks/useTitle';
 import { copyURLPath } from '../../utils/utils';
 
 const EditorHeader = () => {
-  const { title, onTitleChange } = useTitle('Untitled');
+  const { title, onTitleChange, onTitleUpdate } = useTitle();
 
   return (
     <>
       <HeaderContainer>
         <SiteLogo />
-        <DocumentTitle type="text" value={title} onChange={onTitleChange} />
+        <DocumentTitle type="text" value={title} onChange={onTitleChange} onBlur={onTitleUpdate} />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={copyURLPath}>
             Share
