@@ -18,7 +18,7 @@ io.on('connection', (client) => {
     client.emit('new-user', crdts[room].getStruct());
     client.join(room);
   });
-  client.on('title-update', (newTitle) => {
+  client.on('update-title', (newTitle) => {
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('new-title', newTitle);
   });

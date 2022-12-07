@@ -10,7 +10,7 @@ const useTitle = () => {
   };
 
   const onTitleUpdate = () => {
-    socket.emit('title-update', title);
+    socket.emit('update-title', title);
   };
 
   useEffect(() => {
