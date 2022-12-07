@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
+import useTitle from '../../hooks/useTitle';
 
 const EditorHeader = () => {
-  const [title, setTitle] = useState<string>('Untitled');
-
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
+  const { title, onTitleChange } = useTitle('Untitled');
 
   return (
     <>
