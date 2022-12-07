@@ -7,6 +7,8 @@ import { DocumentCreateDTO } from './dto/document-create.dto';
 import { DocumentResponseDTO } from './dto/document-response.dto';
 import { DocumentUpdateDTO } from './dto/document-update.dto';
 import Redis from 'ioredis';
+import { ok } from 'assert';
+import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 
 @Injectable()
 export class DocumentService {
@@ -26,13 +28,10 @@ export class DocumentService {
     return documents.map((entity) => plainToClass(DocumentResponseDTO, entity));
   }
 
-  findOne(id: string) {
-    const entity = this.documentRepository.findOneBy({ id });
-    return plainToClass(DocumentResponseDTO, entity);
-  }
-
-  update(id: string, documentUpdateDTO: DocumentUpdateDTO) {
-    return this.documentRepository.update(id, documentUpdateDTO);
+  async findOne(id: string): Promise<DocumentDetailResponseDTO> {
+    const entity: Document = await this.documentRepository.findOneBy({ id });
+    const response = plainToClass(DocumentResponseDTO, entity);
+    return { ...response, content: await this.redis.hgetall(id) };
   }
 
   saveTitle(id: string, documentUpdateDTO: DocumentUpdateDTO) {
@@ -48,9 +47,24 @@ export class DocumentService {
     if (content == undefined) {
       throw new Error('no content');
     }
-    this.redis.hset(id, 'char_uuid3', JSON.stringify(content));
+    content.forEach((char) => {
+      this.redis.hset(id, char.id, JSON.stringify(char));
+    });
+
     // return this.documentRepository.update(id, { content });
   }
+
+  // deleteContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
+  //   const { content } = documentUpdateDTO;
+  //   if (content == undefined) {
+  //     throw new Error('no content');
+  //   }
+  //   content.forEach((char) => {
+  //     this.redis.hset(id, char.id, JSON.stringify(char));
+  //   });
+
+  //   // return this.documentRepository.update(id, { content });
+  // }
 
   remove(id: string) {
     return this.documentRepository.softDelete(id);
