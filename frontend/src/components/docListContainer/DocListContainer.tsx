@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { DocList } from '../docList';
+import { Spinner } from '../spinner/Spinner';
 import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 
 const response: { read(): any;} = fetchDataFromPath('/document/main');
@@ -7,7 +8,7 @@ const response: { read(): any;} = fetchDataFromPath('/document/main');
 const DocListContainer = () => {
 
   return (
-    <Suspense fallback={<div>loading.......</div>}>
+    <Suspense fallback={<Spinner />}>
       <DocList response={response}/>
     </Suspense>
   );
