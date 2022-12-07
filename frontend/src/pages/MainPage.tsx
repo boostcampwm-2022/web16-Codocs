@@ -1,7 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Header } from '../components/header';
-import { SideBar } from '../components/sideBar';
 import { DocListContainer } from '../components/docListContainer';
 import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
 import { useNavigate } from 'react-router-dom';
@@ -21,30 +19,20 @@ const MainPage = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Container>
-        <SideBar />
-        <ContentWrapper>
-          <NewDocBtn onClick={handleCreateNewDocument}>
-            <PencilIcon />
-            <BtnText>새로운 문서 작성</BtnText>
-          </NewDocBtn>
-          <ContentHeaderGroup>
-            <Title>최근 문서 목록</Title>
-            <div>드롭다운</div>
-            {/* TODO: <Dropdown /> */}
-          </ContentHeaderGroup>
-          <DocListContainer />
-        </ContentWrapper>
-      </Container>
-    </>
+    <ContentWrapper>
+      <NewDocBtn onClick={handleCreateNewDocument}>
+        <PencilIcon />
+        <BtnText>새로운 문서 작성</BtnText>
+      </NewDocBtn>
+      <ContentHeaderGroup>
+        <Title>최근 문서 목록</Title>
+        <div>드롭다운</div>
+        {/* TODO: <Dropdown /> */}
+      </ContentHeaderGroup>
+      <DocListContainer />
+    </ContentWrapper>
   );
 };
-
-const Container = styled.main`
-  display: flex;
-`;
 
 const ContentWrapper = styled.section`
   flex: 1;
