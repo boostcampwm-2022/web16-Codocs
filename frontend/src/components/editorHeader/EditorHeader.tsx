@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 
 const EditorHeader = () => {
+  const [title, setTitle] = useState<string>('Untitled');
+
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
   return (
     <>
       <HeaderContainer>
         <SiteLogo />
-        <DocumentTitle type="text" />
+        <DocumentTitle type="text" value={title} onChange={onTitleChange} />
         <RightButtonWrapper>
           <ShareButton type="button">Share</ShareButton>
           <Peer>3</Peer>
