@@ -3,10 +3,22 @@ import styled from 'styled-components';
 import { Header } from '../components/header';
 import { SideBar } from '../components/sideBar';
 import { DocListContainer } from '../components/docListContainer';
-import { IconButton } from '../components/iconButton';
 import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
+  const navigate = useNavigate();
+
+  const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/document/new');
+      const newDocumentId = await response.json();
+      navigate(`../${newDocumentId}`);
+    } catch (err) {
+      alert('새로운 문서 생성에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
 
   return (
     <>
@@ -14,10 +26,8 @@ const MainPage = () => {
       <Container>
         <SideBar />
         <ContentWrapper>
-          <NewDocBtn>
-            <IconButton fill={'#FFFFFF'} width={'1.5'} height={'1.5'} >
-              <PencilIcon />
-            </IconButton>
+          <NewDocBtn onClick={handleCreateNewDocument}>
+            <PencilIcon />
             <BtnText>새로운 문서 작성</BtnText>
           </NewDocBtn>
           <ContentHeaderGroup>
@@ -62,6 +72,9 @@ const NewDocBtn = styled.button`
   background-color: #3A7DFF;
   padding: 1.25rem 2rem 1.25rem 1.5rem;
   margin-bottom: 2rem;
+  svg {
+    fill: #fff;
+  }
   &:hover {
     span {
       color: #3A7DFF;
