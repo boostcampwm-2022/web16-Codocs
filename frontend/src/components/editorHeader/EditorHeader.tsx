@@ -5,6 +5,16 @@ import useTitle from '../../hooks/useTitle';
 
 const EditorHeader = () => {
   const { title, onTitleChange } = useTitle('Untitled');
+  const copyURLPath = () => {
+    try {
+      const url = window.location.href;
+      navigator.clipboard
+        .writeText(url)
+        .then(() => alert('주소가 복사되었습니다.\n문서를 다른 사람에게 공유해보세요!'));
+    } catch (e) {
+      alert('주소 복사에 실패했어요 ㅠㅠ');
+    }
+  };
 
   return (
     <>
@@ -12,7 +22,9 @@ const EditorHeader = () => {
         <SiteLogo />
         <DocumentTitle type="text" value={title} onChange={onTitleChange} />
         <RightButtonWrapper>
-          <ShareButton type="button">Share</ShareButton>
+          <ShareButton type="button" onClick={copyURLPath}>
+            Share
+          </ShareButton>
           <Peer>3</Peer>
         </RightButtonWrapper>
       </HeaderContainer>
