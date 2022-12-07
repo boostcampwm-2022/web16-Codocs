@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { DocListContainer } from '../components/docListContainer';
 import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
 import { useNavigate } from 'react-router-dom';
+import usePageName from '../hooks/usePageName';
 
 const MainPage = () => {
+  const { pageName } = usePageName(); 
   const navigate = useNavigate();
 
   const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -25,7 +27,7 @@ const MainPage = () => {
         <BtnText>새로운 문서 작성</BtnText>
       </NewDocBtn>
       <ContentHeaderGroup>
-        <Title>최근 문서 목록</Title>
+        <PageName>{pageName}</PageName>
         <div>드롭다운</div>
         {/* TODO: <Dropdown /> */}
       </ContentHeaderGroup>
@@ -47,7 +49,7 @@ const ContentHeaderGroup = styled.div`
   margin-bottom: 2rem;
 `;
 
-const Title = styled.h1`
+const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
 `;
