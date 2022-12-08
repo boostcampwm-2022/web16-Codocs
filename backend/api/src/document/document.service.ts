@@ -23,11 +23,12 @@ export class DocumentService {
     @Inject('REDIS_CLIENT') private readonly redis: Redis
   ) {}
 
-  async create(documentCreateDTO: DocumentCreateDTO, user) {
+  async create(documentCreateDTO: DocumentCreateDTO, user): Promise<DocumentResponseDTO> {
     const documentEntity = await this.documentRepository.save(documentCreateDTO);
     const userEntity = await this.userRepository.findOneBy({ nodeId: user.nodeId });
-
     this.userDocumentRepository.save(new UserDocument(userEntity, documentEntity));
+
+    return new DocumentResponseDTO(documentEntity);
   }
 
   async list(): Promise<DocumentResponseDTO[]> {

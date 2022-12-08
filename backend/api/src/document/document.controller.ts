@@ -26,7 +26,7 @@ export class DocumentController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '문서 생성 API', description: '문서 생성' })
   @ApiCreatedResponse({ description: '문서 생성됨' })
-  create(@Req() req, @Body() documentCreateDTO: DocumentCreateDTO) {
+  create(@Req() req, @Body() documentCreateDTO: DocumentCreateDTO): Promise<DocumentResponseDTO> {
     return this.documentService.create(documentCreateDTO, req.user);
   }
 
