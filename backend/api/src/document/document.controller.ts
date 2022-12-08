@@ -8,6 +8,7 @@ import { Document } from './document.entity';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Document API')
 @Controller('document')
@@ -22,10 +23,11 @@ export class DocumentController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '문서 생성 API', description: '문서 생성' })
   @ApiCreatedResponse({ description: '문서 생성됨' })
-  create(@Body() documentCreateDTO: DocumentCreateDTO) {
-    return this.documentService.create(documentCreateDTO);
+  create(@Req() req, @Body() documentCreateDTO: DocumentCreateDTO) {
+    return this.documentService.create(documentCreateDTO, req.user);
   }
 
   @Get(':id')

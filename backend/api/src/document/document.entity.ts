@@ -18,7 +18,7 @@ export class Document {
   // @ManyToOne(() => User)
   // writer: User;
 
-  @Column()
+  @Column({ default: 'Untitled' })
   title: string;
 
   @Column('text', { default: null })
