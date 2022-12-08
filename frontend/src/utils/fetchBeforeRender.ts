@@ -1,11 +1,16 @@
 import { worker } from '../mocks/worker';
 
-let requestDomain = 'http://localhost:3000';
+let requestDomain: string;
 
 if (process.env.NODE_ENV === 'development') {
-  worker.start();
-} else {
+  requestDomain = 'http://localhost:8000';
+} else if (process.env.NODE_ENV === 'test') {
   requestDomain = '';
+} else if (process.env.NODE_ENV === 'production') {
+  requestDomain = '';
+} else {
+  worker.start();
+  requestDomain = 'http://localhost:3000';
 }
 
 interface Response<T> {
@@ -32,16 +37,16 @@ export function wrapPromise<T>(promise: Promise<T>) {
 
   const read = () => {
     switch (response.status) {
-    case 'pending':
-      throw suspender;
-    case 'error':
-      throw response.data as T;
-    default:
-      return response.data as T;
+      case 'pending':
+        throw suspender;
+      case 'error':
+        throw response.data as T;
+      default:
+        return response.data as T;
     }
   };
 
-  return { read }; 
+  return { read };
 }
 
 const fetchDataFromPath = (path: string) => {
@@ -50,9 +55,10 @@ const fetchDataFromPath = (path: string) => {
     const data = fetch(`${requestDomain}${path}`, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-    }).then(response => response.json());
+      credentials: 'include'
+    }).then((response) => response.json());
     return wrapPromise(data);
   } catch (err) {
     throw new Error('Fail to fetch Data! Please report it to our GitHub.');
@@ -60,5 +66,3 @@ const fetchDataFromPath = (path: string) => {
 };
 
 export { fetchDataFromPath };
-
-
