@@ -33,7 +33,7 @@ export class DocumentService {
     return documents.map((entity) => plainToClass(DocumentResponseDTO, entity));
   }
 
-  async findOne(id: string, user: { email; name }): Promise<DocumentDetailResponseDTO> {
+  async findOne(id: string, user: { nodeId; name }): Promise<DocumentDetailResponseDTO> {
     const documentEntity: Document = await this.documentRepository.findOne({
       relations: ['userRelations'],
       loadRelationIds: true,
@@ -42,7 +42,7 @@ export class DocumentService {
     const response = plainToClass(DocumentResponseDTO, documentEntity);
     const content = await this.redis.hgetall(id);
     if (user) {
-      const userEntity = await this.userRepository.findOneBy({ email: user.email });
+      const userEntity = await this.userRepository.findOneBy({ nodeId: user.nodeId });
       let userDocument = await this.userDocumentRepository.findOne({
         where: { user: { id: userEntity.id }, document: { id: documentEntity.id } }
       });

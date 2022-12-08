@@ -33,7 +33,7 @@ export class DocumentController {
   @ApiOperation({ summary: '문서 정보 API', description: '해당 uuid 문서 정보 얻기' })
   @ApiCreatedResponse({ description: '문서 정보', type: DocumentDetailResponseDTO })
   async findOne(@Req() req: Request, @Param('id') id: string) {
-    return this.documentService.findOne(id, req.user as { email; name });
+    return this.documentService.findOne(id, req.user as { nodeId; name });
   }
 
   @Post(':id/save-title')

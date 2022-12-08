@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, IsUrl } from 'class-validator';
+import { IsString, IsUrl } from 'class-validator';
 
 export class UserCreateDTO {
   @ApiProperty()
@@ -7,16 +7,15 @@ export class UserCreateDTO {
   name: string;
 
   @ApiProperty()
-  @IsEmail()
-  email: string;
+  nodeId: string;
 
   @ApiProperty()
   @IsUrl()
   profileURL: string;
 
-  constructor(name: string, email: string, profileURL: string) {
+  constructor(name: string, nodeId: string, profileURL: string) {
     this.name = name;
-    this.email = email;
+    this.nodeId = nodeId;
     this.profileURL = profileURL;
   }
 }

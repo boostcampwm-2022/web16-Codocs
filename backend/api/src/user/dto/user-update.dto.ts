@@ -7,8 +7,6 @@ export class UserUpdateDTO {
   @IsOptional()
   name: string;
 
-  // email: string;
-
   @IsUrl()
   @ApiPropertyOptional()
   @IsOptional()
