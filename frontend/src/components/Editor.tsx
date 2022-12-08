@@ -1,34 +1,52 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import {crdt} from '../core/crdt-linear-ll/crdt';
+import { crdt } from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 import useDebounce from '../hooks/useDebounce';
+import { fetchDataFromPath } from '../utils/fetchBeforeRender';
+
+interface EditorProps {
+  content: { read(): any };
+}
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
-const Editor = () => {
+
+const Editor = ({ content }: EditorProps) => {
+  const editorContent = content.read();
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { document_id } = useParams();
-  const [ setDebounceTimer ] = useDebounce();
-  
-  useEffect(()=>{
-    socket.on('new-user', (data) => {
-      crdt.syncDocument(data);
-      setIsLoading((loading) => !loading);
-    });
-    socket.emit('joinroom', document_id); 
+  const [setDebounceTimer] = useDebounce();
+
+  useEffect(() => {
+    socket.emit('joinroom', document_id);
   }, []);
+
+  // useEffect(() => {
+  //   const getData = async (document_id: string) => {
+  //     // const content = await fetchDataFromPath(`/document/${document_id}`);
+  //     setIsLoading((loading) => !loading);
+  //     console.log(content);
+  //     // const document = await JSON.parse(content[document_id]);
+  //     // crdt.syncDocument(document);
+  //   };
+  //   if (document_id != undefined) {
+  //     getData(document_id);
+  //   }
+  // }, [document_id]);
 
   useEffect(() => {
     if (!editor) {
       return;
     }
 
+    crdt.syncDocument(JSON.parse(editorContent.content));
+    console.log(editorContent);
     editor.setValue(crdt.toString());
     editor.focus();
 
@@ -40,16 +58,17 @@ const Editor = () => {
       crdt.remoteDelete(data, editor.getDoc());
     });
 
-    editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
-      setDebounceTimer(() => setTimeout(async () => {
-        try {
-          // TODO : fetch('#', crdt.charMap);
-        }catch(e) {
-          throw new Error ('Save Failed. Please report it to our GitHub.');
-        }
-      }, 5000));
-      
-      
+    editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
+      setDebounceTimer(() =>
+        setTimeout(async () => {
+          try {
+            // TODO : fetch('#', crdt.charMap);
+          } catch (e) {
+            throw new Error('Save Failed. Please report it to our GitHub.');
+          }
+        }, 5000)
+      );
+
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
@@ -91,6 +110,27 @@ const Editor = () => {
       // console.log('to : ', toIdx);
       // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
+
+      const response = await fetch(
+        `${process.env.REACT_APP_DEV_URL}/document/${document_id}/save-content`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            content: crdt.charMap
+          })
+        }
+      );
+      // try {
+      //   axios.post(`http://localhost:8000/document/${document_id}/save-content`, {
+      //     content: crdt.charMap
+      //   });
+      // } catch (e) {
+      //   console.log(e);
+      // }
     });
     return () => {
       socket.removeAllListeners();
@@ -119,17 +159,13 @@ const Editor = () => {
 
   return (
     <>
-      {isLoading ? (
-        <div>로딩중...</div>
-      ) : (
-        <SimpleMDEReact
-          options={editorOptions}
-          getCodemirrorInstance={getCmInstanceCallback}
-          onCompositionStart={() => console.log('COMPOSITION START')}
-          onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
-          onCompositionEnd={() => console.log('COMPOSITION END')}
-        />
-      )}
+      <SimpleMDEReact
+        options={editorOptions}
+        getCodemirrorInstance={getCmInstanceCallback}
+        onCompositionStart={() => console.log('COMPOSITION START')}
+        onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
+        onCompositionEnd={() => console.log('COMPOSITION END')}
+      />
     </>
   );
 };
