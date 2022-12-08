@@ -13,7 +13,7 @@ export class DocumentDetailResponseDTO {
 
   @ApiProperty()
   @Expose()
-  content: Record<string, string>;
+  content: string;
 
   @ApiProperty()
   @Expose()

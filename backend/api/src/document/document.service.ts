@@ -33,7 +33,6 @@ export class DocumentService {
 
   async list(): Promise<DocumentResponseDTO[]> {
     const documents = await this.documentRepository.find();
-    console.log(documents);
     return documents.map((entity) => plainToClass(DocumentResponseDTO, entity));
   }
 
@@ -44,7 +43,7 @@ export class DocumentService {
       where: { id }
     });
     const response = plainToClass(DocumentResponseDTO, documentEntity);
-    const content = await this.redis.hgetall(id);
+    const content = await this.redis.hget(id, id);
     if (user) {
       const userEntity = await this.userRepository.findOneBy({ nodeId: user.nodeId });
       let userDocument = await this.userDocumentRepository.findOne({
@@ -80,7 +79,6 @@ export class DocumentService {
   }
   async saveContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
     const { content } = documentUpdateDTO;
-    console.log(content);
     if (content == undefined) {
       throw new Error('no content');
     }
