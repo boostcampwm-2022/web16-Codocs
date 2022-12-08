@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from 'react';
+import { useState, useEffect }  from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface pageNames {
@@ -18,9 +18,9 @@ const usePageName = () => {
   };
 
   useEffect(() => {
-    const lastPath = location.pathname.split('/').slice(-1);
-    setPageName(pageNamesByPath[lastPath[0]]);
-  }, [location]);
+    const [ lastPath ] = location.pathname.split('/').slice(-1);
+    setPageName(pageNamesByPath[lastPath]);
+  });
 
   return { pageName };
 };
