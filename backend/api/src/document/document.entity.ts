@@ -15,17 +15,14 @@ export class Document {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User)
-  writer: User;
+  // @ManyToOne(() => User)
+  // writer: User;
 
   @Column()
   title: string;
 
-  @Column('text')
+  @Column('text', { default: null })
   content: string;
-
-  @Column({ name: 'is_deleted' })
-  isDeleted: boolean;
 
   @OneToMany(() => UserDocument, (userDocument) => userDocument.document)
   userRelations: UserDocument[];
@@ -33,6 +30,12 @@ export class Document {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: 'deleted_at', default: null })
   deletedAt: Date;
+
+  addUserRelation(userDocument: UserDocument) {
+    this.userRelations.push(userDocument);
+    // userDocument.getUser().documentRelations.push(userDocument);
+    userDocument.setDocument(this);
+  }
 }

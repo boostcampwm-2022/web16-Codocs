@@ -8,6 +8,8 @@ import {crdt} from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 import useDebounce from '../hooks/useDebounce';
 
+const NAVBAR_HEIGHT = 70;
+const WIDGET_HEIGHT = 70;
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -19,7 +21,7 @@ const Editor = () => {
       crdt.syncDocument(data);
       setIsLoading((loading) => !loading);
     });
-    socket.emit('joinroom', document_id);    
+    socket.emit('joinroom', document_id); 
   }, []);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Editor = () => {
 
     editor.setValue(crdt.toString());
     editor.focus();
-    
+
     socket.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
     });
@@ -37,7 +39,7 @@ const Editor = () => {
     socket.on('remote-delete', (data) => {
       crdt.remoteDelete(data, editor.getDoc());
     });
-    
+
     editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
       setDebounceTimer(() => setTimeout(async () => {
         try {
@@ -57,34 +59,32 @@ const Editor = () => {
       let eventName = '';
       let char;
       switch (change.origin) {
-      case 'paste':
-        char = crdt.localInsertRange(fromIdx, content);
-        eventName = 'local-insert';
-        break;
-      case '+input':
-      case '*compose':
-        if(fromIdx !== toIdx){
-          char = crdt.localDelete(fromIdx, toIdx);
-          socket.emit('local-delete', char);
-        }
-        if (content === ''){
-          return;
-        }
-        char = crdt.localInsertRange(fromIdx, content);
-        eventName = 'local-insert';
-        break;
-      case '+delete':
-        char = crdt.localDelete(fromIdx, toIdx);
-        eventName = 'local-delete';
-        break;
-      default:
-        if (fromIdx === toIdx) {
+        case 'paste':
           char = crdt.localInsertRange(fromIdx, content);
           eventName = 'local-insert';
-        } else {
+          break;
+        case '+input':
+        case '*compose':
+          char = crdt.localDelete(fromIdx, toIdx);
+          socket.emit('local-delete', char);
+          if (content === '') {
+            return;
+          }
+          char = crdt.localInsertRange(fromIdx, content);
+          eventName = 'local-insert';
+          break;
+        case '+delete':
           char = crdt.localDelete(fromIdx, toIdx);
           eventName = 'local-delete';
-        }
+          break;
+        default:
+          if (fromIdx === toIdx) {
+            char = crdt.localInsertRange(fromIdx, content);
+            eventName = 'local-insert';
+          } else {
+            char = crdt.localDelete(fromIdx, toIdx);
+            eventName = 'local-delete';
+          }
       }
       // console.log('EVENT_NAME :', change.origin);
       // console.log('from : ', fromIdx);
@@ -92,25 +92,24 @@ const Editor = () => {
       // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
-    return (()=>{
+    return () => {
       socket.removeAllListeners();
-    });
+    };
   }, [editor]);
-  
+
   const editorOptions = useMemo(() => {
     return {
       spellChecker: false,
       placeholder: 'Write document here and share!',
-      toolbar: [
-        'side-by-side',
-        'preview',
-        'fullscreen',
-      ],
+      minHeight: `calc(100vh - ${NAVBAR_HEIGHT + WIDGET_HEIGHT}px)`,
+      maxHeight: `calc(100vh - ${NAVBAR_HEIGHT + WIDGET_HEIGHT}px)`,
+      sideBySideFullscreen: false,
+      toolbar: ['side-by-side', 'preview', 'fullscreen'],
       unorderedListStyle: '-',
       status: false,
       shortcuts: {
-        toggleUnorderedList: null,
-      },
+        toggleUnorderedList: null
+      }
     } as SimpleMDE.Options;
   }, []);
 
@@ -120,13 +119,17 @@ const Editor = () => {
 
   return (
     <>
-      {isLoading ? <div>로딩중...</div> : (<SimpleMDEReact
-        options={editorOptions}
-        getCodemirrorInstance={getCmInstanceCallback}
-        onCompositionStart={() => console.log('COMPOSITION START') }
-        onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
-        onCompositionEnd={() => console.log('COMPOSITION END')}
-      />)}
+      {isLoading ? (
+        <div>로딩중...</div>
+      ) : (
+        <SimpleMDEReact
+          options={editorOptions}
+          getCodemirrorInstance={getCmInstanceCallback}
+          onCompositionStart={() => console.log('COMPOSITION START')}
+          onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
+          onCompositionEnd={() => console.log('COMPOSITION END')}
+        />
+      )}
     </>
   );
 };

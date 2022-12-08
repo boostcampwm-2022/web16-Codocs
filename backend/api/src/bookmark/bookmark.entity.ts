@@ -1,11 +1,19 @@
 import { User } from '../user/user.entity';
 import { Document } from '../document/document.entity';
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Unique
+} from 'typeorm';
 
 @Entity()
+@Unique(['user', 'document'])
 export class Bookmark {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })

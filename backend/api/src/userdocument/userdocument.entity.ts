@@ -6,13 +6,23 @@ import {
   CreateDateColumn,
   ManyToOne,
   Column,
-  JoinColumn
+  JoinColumn,
+  UpdateDateColumn,
+  Unique
 } from 'typeorm';
+import { UserRole } from './enum/role.enum';
 
 @Entity()
+@Unique(['user', 'document'])
 export class UserDocument {
-  @PrimaryGeneratedColumn()
-  id: number;
+  constructor(user, document, role = UserRole.EDITOR) {
+    this.user = user;
+    this.document = document;
+    this.role = role;
+  }
+
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
@@ -25,9 +35,21 @@ export class UserDocument {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @Column({ name: 'last_visited' })
+  @UpdateDateColumn({ name: 'last_visited' })
   lastVisited: Date;
 
-  @Column({ default: false })
-  editable: boolean;
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
+  role: UserRole;
+
+  setDocument(document: Document) {
+    this.document = document;
+  }
+
+  getUser(): User {
+    return this.user;
+  }
+
+  setLastVisitedNow() {
+    this.lastVisited = new Date();
+  }
 }

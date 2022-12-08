@@ -3,12 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
-import { DocumentController } from './document/document.controller';
-import { DocumentService } from './document/document.service';
 import { DocumentModule } from './document/document.module';
 import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserdocumentModule } from './userdocument/userdocument.module';
+import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
+import { LoggerOptions } from 'typeorm';
+
 dotenv.config();
 
 @Module({
@@ -21,14 +22,16 @@ dotenv.config();
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
+      synchronize: true,
+      logging: process.env.DB_LOGGEROPTION as LoggerOptions
     }),
     UserModule,
     DocumentModule,
     BookmarkModule,
-    UserdocumentModule
+    UserdocumentModule,
+    AuthModule
   ],
-  controllers: [AppController, DocumentController],
-  providers: [AppService, DocumentService]
+  controllers: [AppController],
+  providers: [AppService]
 })
 export class AppModule {}

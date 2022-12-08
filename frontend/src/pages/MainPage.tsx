@@ -1,40 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { DocListItem } from '../components/docListItem';
-
-interface docListItemState {
-  id: string
-  title: string
-  lastVisited: string
-  role: string,
-}
+import React from 'react';
+import styled from 'styled-components';
+import { DocListContainer } from '../components/docListContainer';
+import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
+import { useNavigate } from 'react-router-dom';
+import usePageName from '../hooks/usePageName';
 
 const MainPage = () => {
-  const [docList, setDocList] = useState<docListItemState[]>([]);
+  const { pageName } = usePageName(); 
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchDocList = async () => {
-      // TODO : request docList from API server
-      return new Promise((resolve) => {
-        resolve(setDocList(() => [{id:'1234',
-          title: '알고리즘 스터디 기록',
-          lastVisited: '2022-11-10',
-          role: 'onwer',  
-        }, {id:'5678',
-          title: 'Untitled',
-          lastVisited: '2022-11-19',
-          role: 'edit'}]));
-      });
-    };
-    fetchDocList();
-  }, []);
+  const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/document/new');
+      const newDocumentId = await response.json();
+      navigate(`../${newDocumentId}`);
+    } catch (err) {
+      alert('새로운 문서 생성에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
 
   return (
-    <div>
-      {docList.length ? docList.map(doc => {
-        return <DocListItem key={doc.id} id={doc.id} title={doc.title} lastVisited={doc.lastVisited} role={doc.role} />;
-      }) : <div>...loading</div>}
-    </div>
+    <ContentWrapper>
+      <NewDocBtn onClick={handleCreateNewDocument}>
+        <PencilIcon />
+        <BtnText>새로운 문서 작성</BtnText>
+      </NewDocBtn>
+      <ContentHeaderGroup>
+        <PageName>{pageName}</PageName>
+        <div>드롭다운</div>
+        {/* TODO: <Dropdown /> */}
+      </ContentHeaderGroup>
+      <DocListContainer />
+    </ContentWrapper>
   );
 };
+
+const ContentWrapper = styled.section`
+  flex: 1;
+  margin: 3rem 3.5rem;
+  overflow-y: scroll;
+`;
+
+const ContentHeaderGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const PageName = styled.h1`
+  font-weight: 800;
+  font-size: 2rem;
+`;
+
+const NewDocBtn = styled.button`
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid #3A7DFF;
+  background-color: #3A7DFF;
+  padding: 1.25rem 2rem 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  svg {
+    fill: #fff;
+  }
+  &:hover {
+    span {
+      color: #3A7DFF;
+    }
+    svg {
+      fill: #3A7DFF;
+    }
+    background-color: #FFFFFF;
+  }
+`;
+  
+const BtnText = styled.span`
+  font-weight: 500;
+  font-size: 20px;
+  color: #FFFFFF;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin-left: 0.5rem;
+`;
 
 export default MainPage;
