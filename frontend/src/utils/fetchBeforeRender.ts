@@ -18,12 +18,12 @@ interface Response<T> {
   data: T | null;
 }
 
-const response: Response<unknown> = {
-  status: 'pending',
-  data: null
-};
+export function wrapPromise<T>(promise: Promise<T>, path: string) {
+  const response: Response<unknown> = {
+    status: 'pending',
+    data: null
+  };
 
-export function wrapPromise<T>(promise: Promise<T>) {
   const suspender = promise.then(
     (res) => {
       response.status = 'success';
@@ -59,7 +59,7 @@ const fetchDataFromPath = (path: string) => {
       },
       credentials: 'include'
     }).then((response) => response.json());
-    return wrapPromise(data);
+    return wrapPromise(data, path);
   } catch (err) {
     throw new Error('Fail to fetch Data! Please report it to our GitHub.');
   }

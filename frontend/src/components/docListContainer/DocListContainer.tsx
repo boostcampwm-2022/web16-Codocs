@@ -6,7 +6,6 @@ import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 const docListResponse = fetchDataFromPath('/user-document/recent');
 
 const DocListContainer = () => {
-  console.log('DocListContainer: ', docListResponse);
   return (
     <Suspense fallback={<Spinner />}>
       <DocList docListResponse={docListResponse} />
