@@ -6,26 +6,26 @@ import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
 
-const DocListItem = ({id, title, lastVisited, role}: DocListItem) => {
+const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) => {
   const docListItemStyles = {
     fill: '#A5A5A5',
     width: '0.75',
-    height: '0.75',
+    height: '0.75'
   };
 
   return (
     <DocListItemWrapper>
-      <Link to={id}>
+      <Link to={`../${id}`}>
         <Title>{title}</Title>
         <LowerLayout>
-          <LastVisited>최근 방문일: {lastVisited}</LastVisited>
+          <LastVisited>최근 방문일: {lastVisited.slice(0, 11)}</LastVisited>
           <IconGroup>
             <li>
-              {role === 'onwer' && 
-              <IconButton {...docListItemStyles} hover={COLOR_CAUTION}>
-                <TrashIcon />
-              </IconButton>
-              }
+              {role === 'onwer' && (
+                <IconButton {...docListItemStyles} hover={COLOR_CAUTION}>
+                  <TrashIcon />
+                </IconButton>
+              )}
             </li>
             <li>
               <IconButton {...docListItemStyles} hover={COLOR_ACTIVE}>
@@ -46,7 +46,7 @@ const DocListItemWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 0.75rem;
-  border: 1px solid #B6B6B6;
+  border: 1px solid #b6b6b6;
   border-radius: 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
@@ -67,12 +67,12 @@ const LowerLayout = styled.div`
 const LastVisited = styled.div`
   font-weight: 300;
   font-size: 10px;
-  color: #A5A5A5;
+  color: #a5a5a5;
 `;
 
 const IconGroup = styled.ul`
   list-style-type: none;
-  display: flex; 
+  display: flex;
   li {
     margin-left: 0.4rem;
   }
