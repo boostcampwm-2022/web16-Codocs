@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ToastMsg from './components/toastMsg/ToastMsg';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
@@ -10,6 +11,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <GlobalStyles />
+      <ToastMsg />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/document">
