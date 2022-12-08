@@ -13,9 +13,7 @@ describe('DocumentController', () => {
 
   describe('list', () => {
     it('should return an array of Document', async () => {
-      const result = new DocumentResponseDTO();
-      result.id = 'test';
-      result.title = 'test';
+      const result = new DocumentResponseDTO('test', 'test', null);
       jest.spyOn(documentService, 'list').mockResolvedValue([result]);
 
       expect(await documentController.list()).toEqual([result]);

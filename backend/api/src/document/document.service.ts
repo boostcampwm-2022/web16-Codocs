@@ -8,10 +8,8 @@ import { DocumentResponseDTO } from './dto/document-response.dto';
 import { DocumentUpdateDTO } from './dto/document-update.dto';
 import Redis from 'ioredis';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
-import { Char } from 'src/types/char';
-import { User } from 'src/user/user.entity';
-import { Request } from 'express';
-import { UserDocument } from 'src/userdocument/userdocument.entity';
+import { User } from '../user/user.entity';
+import { UserDocument } from '../userdocument/userdocument.entity';
 
 @Injectable()
 export class DocumentService {

@@ -6,7 +6,7 @@ import { DocumentUpdateDTO } from './dto/document-update.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Document } from './document.entity';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
-import { OptionalJwtAuthGuard } from 'src/auth/optional-jwt-auth.guard';
+import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { Request } from 'express';
 
 @ApiTags('Document API')
