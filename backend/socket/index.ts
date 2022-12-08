@@ -1,7 +1,7 @@
 import * as express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { CRDT } from './crdt-linear-server/crdt';
+import { CRDT } from './crdt-linear-ll/crdt';
 
 const app = express();
 const httpServer = createServer(app);
@@ -15,7 +15,7 @@ io.on('connection', (client) => {
     if (!crdts.hasOwnProperty(room)) {
       crdts[room] = new CRDT();
     }
-    client.emit('new-user', crdts[room].getStruct());
+    client.emit('new-user', crdts[room].getCharMap());
     client.join(room);
   });
   client.on('update-title', (newTitle) => {
@@ -29,7 +29,8 @@ io.on('connection', (client) => {
   });
   client.on('local-delete', (data) => {
     const roomName = Array.from(client.rooms)[1];
-    crdts[roomName].saveDeleteRange(data);
+    console.log("ROOMNAME : ", roomName)
+    crdts[roomName].saveDelete(data); // saveDelete 없다
     client.to(roomName).emit('remote-delete', data);
   });
   client.on('disconnect', () => {
