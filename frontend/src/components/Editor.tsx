@@ -8,47 +8,41 @@ import { crdt } from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 import useDebounce from '../hooks/useDebounce';
 import { fetchDataFromPath } from '../utils/fetchBeforeRender';
-
-interface EditorProps {
-  content: { read(): any };
-}
+import useToast from '../hooks/useToast';
+import { createCipheriv } from 'crypto';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
 
+interface EditorProps {
+  content: any;
+}
+
 const Editor = ({ content }: EditorProps) => {
-  const editorContent = content.read();
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { document_id } = useParams();
-  const [setDebounceTimer] = useDebounce();
 
   useEffect(() => {
     socket.emit('joinroom', document_id);
   }, []);
-
-  // useEffect(() => {
-  //   const getData = async (document_id: string) => {
-  //     // const content = await fetchDataFromPath(`/document/${document_id}`);
-  //     setIsLoading((loading) => !loading);
-  //     console.log(content);
-  //     // const document = await JSON.parse(content[document_id]);
-  //     // crdt.syncDocument(document);
-  //   };
-  //   if (document_id != undefined) {
-  //     getData(document_id);
-  //   }
-  // }, [document_id]);
 
   useEffect(() => {
     if (!editor) {
       return;
     }
 
-    crdt.syncDocument(JSON.parse(editorContent.content));
-    console.log(editorContent);
-    editor.setValue(crdt.toString());
-    editor.focus();
+    if (Object.keys(content).length > 0) {
+      try {
+        Object.keys(content).forEach((key) => {
+          content[key] = JSON.parse(content[key]);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      crdt.syncDocument(content);
+      editor.setValue(crdt.toString());
+      editor.focus();
+    }
 
     socket.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
@@ -59,19 +53,10 @@ const Editor = ({ content }: EditorProps) => {
     });
 
     editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
-      setDebounceTimer(() =>
-        setTimeout(async () => {
-          try {
-            // TODO : fetch('#', crdt.charMap);
-          } catch (e) {
-            throw new Error('Save Failed. Please report it to our GitHub.');
-          }
-        }, 5000)
-      );
-
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
+
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
       const content = change.text.join('\n');
@@ -110,27 +95,6 @@ const Editor = ({ content }: EditorProps) => {
       // console.log('to : ', toIdx);
       // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
-
-      const response = await fetch(
-        `${process.env.REACT_APP_DEV_URL}/document/${document_id}/save-content`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            content: crdt.charMap
-          })
-        }
-      );
-      // try {
-      //   axios.post(`http://localhost:8000/document/${document_id}/save-content`, {
-      //     content: crdt.charMap
-      //   });
-      // } catch (e) {
-      //   console.log(e);
-      // }
     });
     return () => {
       socket.removeAllListeners();
@@ -159,13 +123,7 @@ const Editor = ({ content }: EditorProps) => {
 
   return (
     <>
-      <SimpleMDEReact
-        options={editorOptions}
-        getCodemirrorInstance={getCmInstanceCallback}
-        onCompositionStart={() => console.log('COMPOSITION START')}
-        onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
-        onCompositionEnd={() => console.log('COMPOSITION END')}
-      />
+      <SimpleMDEReact options={editorOptions} getCodemirrorInstance={getCmInstanceCallback} />
     </>
   );
 };

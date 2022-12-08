@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { CRDT } from './crdt-linear-ll/crdt';
+import axios from 'axios';
 
 const app = express();
 const httpServer = createServer(app);
@@ -22,12 +23,26 @@ io.on('connection', (client) => {
     const roomName = Array.from(client.rooms)[1];
     // crdts[roomName].saveInsert(data);
     client.to(roomName).emit('remote-insert', data);
+    try {
+      axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
+        content: data
+      });
+    } catch (e) {
+      console.log(e);
+    }
   });
   client.on('local-delete', (data) => {
     const roomName = Array.from(client.rooms)[1];
     console.log('ROOMNAME : ', roomName);
     // crdts[roomName].saveDelete(data); // saveDelete 없다
     client.to(roomName).emit('remote-delete', data);
+    try {
+      axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+        content: data
+      });
+    } catch (e) {
+      console.log(e);
+    }
   });
   client.on('disconnect', () => {
     console.log('Socket disconnected');

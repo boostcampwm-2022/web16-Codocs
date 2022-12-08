@@ -10,6 +10,7 @@ import Redis from 'ioredis';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { User } from '../user/user.entity';
 import { UserDocument } from '../userdocument/userdocument.entity';
+import { Char } from 'src/types/char';
 
 @Injectable()
 export class DocumentService {
@@ -43,7 +44,8 @@ export class DocumentService {
       where: { id }
     });
     const response = plainToClass(DocumentResponseDTO, documentEntity);
-    const content = await this.redis.hget(id, id);
+    const content = await this.redis.hgetall(id);
+
     if (user) {
       const userEntity = await this.userRepository.findOneBy({ nodeId: user.nodeId });
       let userDocument = await this.userDocumentRepository.findOne({
@@ -77,13 +79,43 @@ export class DocumentService {
       this.redis.hset(id, char.id, JSON.stringify(char));
     });
   }
-  async saveContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
+
+  // async saveContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
+  //   const { content } = documentUpdateDTO;
+  //   if (content == undefined) {
+  //     throw new Error('no content');
+  //   }
+
+  //   this.redis.hset(id, id, JSON.stringify(content));
+  // }
+
+  async insertContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
     const { content } = documentUpdateDTO;
     if (content == undefined) {
       throw new Error('no content');
     }
 
-    this.redis.hset(id, id, JSON.stringify(content));
+    if ((await this.redis.hget(id, 'HEAD')) == null) {
+      this.redis.hset(
+        id,
+        'HEAD',
+        JSON.stringify({ id: 'HEAD', leftId: 'START', rightId: 'TAIL', siteId: '', value: '' })
+      );
+      this.redis.hset(
+        id,
+        'TAIL',
+        JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
+      );
+    }
+    content.forEach(async (char) => {
+      this.redis.hset(id, char.id, JSON.stringify(char));
+      const left: Char = JSON.parse(await this.redis.hget(id, char.leftId));
+      const right: Char = JSON.parse(await this.redis.hget(id, char.rightId));
+      left.rightId = char.id;
+      right.leftId = char.id;
+      this.redis.hset(id, left.id, JSON.stringify(left));
+      this.redis.hset(id, right.id, JSON.stringify(right));
+    });
   }
 
   remove(id: string) {
