@@ -3,12 +3,13 @@ import { DocList } from '../docList';
 import { Spinner } from '../spinner/Spinner';
 import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 
-const response = fetchDataFromPath('/user-document/recent');
+const docListResponse = fetchDataFromPath('/user-document/recent');
 
 const DocListContainer = () => {
+  console.log('DocListContainer: ', docListResponse);
   return (
     <Suspense fallback={<Spinner />}>
-      <DocList response={response} />
+      <DocList docListResponse={docListResponse} />
     </Suspense>
   );
 };
