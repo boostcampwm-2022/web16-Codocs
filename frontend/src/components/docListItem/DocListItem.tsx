@@ -72,6 +72,7 @@ const LastVisited = styled.div`
 
 const IconGroup = styled.ul`
   list-style-type: none;
+  margin: 0;
   display: flex;
   li {
     margin-left: 0.4rem;
