@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import useTitle from '../../hooks/useTitle';
 import useToast from '../../hooks/useToast';
 
-const EditorHeader = () => {
-  const { title, onTitleChange, onTitleUpdate } = useTitle();
+interface EditorHeaderProps {
+  titleProp: string;
+}
+
+const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
+  const { title, onTitleChange, onTitleUpdate, setTitle } = useTitle();
   const { alertToast } = useToast();
+
+  useEffect(() => {
+    setTitle(titleProp);
+  }, []);
 
   const handleCopyURL = () => {
     const url = window.location.href;

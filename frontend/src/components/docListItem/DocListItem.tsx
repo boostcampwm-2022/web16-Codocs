@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import { Link } from 'react-router-dom';
 import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
