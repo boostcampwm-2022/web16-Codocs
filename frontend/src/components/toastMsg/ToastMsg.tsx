@@ -45,6 +45,7 @@ const ToastMsgWrapper = styled.div`
   transform: translate(-50%);
   background-color: #fff;
   visibility: hidden;
+  z-index: 99;
   animation: ${toggleVisibility} 3s 1;
 `;
 
