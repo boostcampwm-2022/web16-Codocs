@@ -7,15 +7,11 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
 
-const crdts = {};
+// const crdts = {};
 // 클라이언트 목록, 룸 목록 관리
 
 io.on('connection', (client) => {
   client.on('joinroom', (room) => {
-    if (!crdts.hasOwnProperty(room)) {
-      crdts[room] = new CRDT();
-    }
-    client.emit('new-user', crdts[room].getCharMap());
     client.join(room);
   });
   client.on('update-title', (newTitle) => {
@@ -24,13 +20,13 @@ io.on('connection', (client) => {
   });
   client.on('local-insert', (data) => {
     const roomName = Array.from(client.rooms)[1];
-    crdts[roomName].saveInsert(data);
+    // crdts[roomName].saveInsert(data);
     client.to(roomName).emit('remote-insert', data);
   });
   client.on('local-delete', (data) => {
     const roomName = Array.from(client.rooms)[1];
-    console.log("ROOMNAME : ", roomName)
-    crdts[roomName].saveDelete(data); // saveDelete 없다
+    console.log('ROOMNAME : ', roomName);
+    // crdts[roomName].saveDelete(data); // saveDelete 없다
     client.to(roomName).emit('remote-delete', data);
   });
   client.on('disconnect', () => {
