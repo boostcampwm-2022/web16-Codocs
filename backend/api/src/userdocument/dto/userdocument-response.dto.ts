@@ -9,10 +9,10 @@ import { UserDocument } from '../userdocument.entity';
 @Exclude()
 export class UserDocumentResponseDTO {
   constructor(userDocument: UserDocument) {
-    const { id, user, document, lastVisited, role, createdAt } = userDocument;
-    this.id = id;
-    this.user = user.id;
-    this.document = new DocumentResponseDTO(document.id, document.title, document.createdAt);
+    const { document, lastVisited, role, createdAt } = userDocument;
+    this.id = document?.id;
+    this.title = document?.title;
+    this.createdAt = document?.createdAt;
     this.lastVisited = lastVisited;
     this.role = role;
     this.createdAt = createdAt;
@@ -24,11 +24,7 @@ export class UserDocumentResponseDTO {
 
   @ApiProperty()
   @Expose()
-  document: DocumentResponseDTO;
-
-  @ApiProperty()
-  @Expose()
-  user: string;
+  title: string;
 
   @ApiProperty()
   @Expose()
