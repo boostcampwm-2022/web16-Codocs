@@ -108,13 +108,17 @@ export class DocumentService {
       );
     }
     content.forEach(async (char) => {
-      this.redis.hset(id, char.id, JSON.stringify(char));
-      const left: Char = JSON.parse(await this.redis.hget(id, char.leftId));
-      const right: Char = JSON.parse(await this.redis.hget(id, char.rightId));
-      left.rightId = char.id;
-      right.leftId = char.id;
-      this.redis.hset(id, left.id, JSON.stringify(left));
-      this.redis.hset(id, right.id, JSON.stringify(right));
+      try {
+        this.redis.hset(id, char.id, JSON.stringify(char));
+        const left: Char = JSON.parse(await this.redis.hget(id, char.leftId));
+        const right: Char = JSON.parse(await this.redis.hget(id, char.rightId));
+        left.rightId = char.id;
+        right.leftId = char.id;
+        this.redis.hset(id, left.id, JSON.stringify(left));
+        this.redis.hset(id, right.id, JSON.stringify(right));
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 
