@@ -7,18 +7,18 @@ import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 
 const ToastMsg = () => {
   const toastMsg = useRecoilValue(toastMsgState);
-  const toastColor = toastMsg.type === 'info' ? '#3A7DFF' : '#FF3E3E';
+  const TOAST_COLOR = toastMsg.type === 'INFO' ? '#3A7DFF' : '#FF3E3E';
 
-  if (toastMsg.msg !== 'init') {
+  if (toastMsg.type !== 'INIT') {
     return (
-      <ToastMsgWrapper key={+new Date()} color={toastColor}>
+      <ToastMsgWrapper key={+new Date()} color={TOAST_COLOR}>
         {
-          toastMsg.type === 'info' ? 
+          toastMsg.type === 'INFO' ? 
           <PencilIcon width="16" height="16" fill="#3A7DFF"/> 
           : 
           <TrashIcon width="16" height="16" fill="#FF3E3E"/>
         }
-        <ToastText color={toastColor}>
+        <ToastText color={TOAST_COLOR}>
           {toastMsg.msg}
         </ToastText>
       </ToastMsgWrapper>
