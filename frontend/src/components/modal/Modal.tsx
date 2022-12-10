@@ -52,7 +52,7 @@ const Dimmed = styled('div')<DimmedProps>`
   left: 0;
   background-color: rgba(30, 30, 30, 0.9);
   z-index: 1000;
-  visibility: ${(props) => props.isVisible ? 'visible': 'hidden'};
+  display: ${(props) => props.isVisible ? 'block': 'none'};
 `;
 
 const ModalContent = styled.div`
