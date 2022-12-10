@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import DropdownOption from '../dropdownOption/DropdownOption';
 import { ReactComponent as AngleDownIcon } from '../../assets/angle-down.svg';
 
 interface optionOpenedProps {
@@ -24,8 +25,7 @@ const Dropdown = () => {
 
   return (
     <DropdownWrapper isOptionOpened={isOptionOpened}>
-      <DropdownOption onClick={handleOpenOption}>
-        <OptionTitle>{selectedOption}</OptionTitle>
+      <DropdownOption optionTitle={selectedOption} clickHandler={handleOpenOption} >
         <AngleDownIcon fill={'#fff'}/>
       </DropdownOption>
       <DropdownOptionList isOptionOpened={isOptionOpened}>
@@ -33,9 +33,7 @@ const Dropdown = () => {
           optionList.map((option, index) => {
             return (
               <li key={index}>
-                <DropdownOption onClick={handleSelectOption}>
-                  <OptionTitle>{option}</OptionTitle>
-                </DropdownOption>
+                <DropdownOption optionTitle={option} clickHandler={handleSelectOption} />
               </li>
             );
           })
@@ -47,29 +45,15 @@ const Dropdown = () => {
 
 const DropdownWrapper = styled('div')<optionOpenedProps>`
   width: 140px;
+  border-radius: 10px;
   background-color: #222;
-  border-radius: ${(props) => props.isOptionOpened ? '10px 10px 0 0' : '10px'};
-`;
-
-const DropdownOption = styled.button`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  color: #fff;
-  border-bottom: 1px solid #D9D9D9;
-`;
-
-const OptionTitle = styled.span`
-  padding-right: 0.5rem;
 `;
 
 const DropdownOptionList = styled('ul')<optionOpenedProps>`
   width: 140px;
   list-style-type: none;
   position: absolute;
-  border-radius: 0 0 10px 10px;
+  border-radius: 10px;
   padding: 0 0.25rem;
   margin: 0;
   background-color: #222;
