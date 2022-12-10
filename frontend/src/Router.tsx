@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ToastMsg from './components/toastMsg/ToastMsg';
+import Modal from './components/modal/Modal';
 import MainLayout from './pages/MainLayout';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -13,6 +14,7 @@ const Router = () => {
     <BrowserRouter>
       <GlobalStyles />
       <ToastMsg />
+      <Modal />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/document" element={<MainLayout />}>
