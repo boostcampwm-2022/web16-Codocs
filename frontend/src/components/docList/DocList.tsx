@@ -8,6 +8,7 @@ interface DocListProps {
   sortOption: string
 }
 
+// TODO: props 로 API 세부 주소 받기 
 const DocList = ({ sortOption }:DocListProps) => {
   const { data: docList } = useQuery('docList', () => fetchDataFromPath('/user-document/recent'), {
     refetchOnWindowFocus: false,
