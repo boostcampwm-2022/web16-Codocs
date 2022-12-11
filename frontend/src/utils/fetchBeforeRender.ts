@@ -4,7 +4,9 @@ const { REACT_APP_NODE_ENV, NODE_ENV } = process.env;
 let requestDomain: string;
 
 if (REACT_APP_NODE_ENV === 'mock') {
-  worker.start();
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
   requestDomain = 'http://localhost:3000';
 } else if (NODE_ENV === 'test') {
   requestDomain = 'http://localhost:3000';

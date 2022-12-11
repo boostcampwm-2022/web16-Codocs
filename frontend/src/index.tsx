@@ -5,7 +5,9 @@ import './index.css';
 const { REACT_APP_NODE_ENV } = process.env;
 
 if (REACT_APP_NODE_ENV === 'mock') {
-  import('./mocks/worker').then(({ worker }) => worker.start());
+  import('./mocks/worker').then(({ worker }) => worker.start({
+    onUnhandledRequest: 'bypass',
+  }));
 } 
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
