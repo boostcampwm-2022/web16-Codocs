@@ -11,7 +11,7 @@ import { Bookmark } from '../bookmark/bookmark.entity';
 import { UserDocument } from '../userdocument/userdocument.entity';
 
 @Entity()
-@Unique(['email'])
+@Unique(['nodeId'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -19,8 +19,8 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
-  email: string;
+  @Column({ name: 'node_id' })
+  nodeId: string;
 
   @Column({ name: 'profile_url' })
   profileURL: string;

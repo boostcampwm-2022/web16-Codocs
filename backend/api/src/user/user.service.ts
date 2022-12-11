@@ -15,6 +15,7 @@ export class UserService {
     private userRepository: Repository<User>
   ) {}
   create(userCreateDTO: UserCreateDTO) {
+    console.log(userCreateDTO);
     this.userRepository.save(userCreateDTO);
   }
 
@@ -28,8 +29,8 @@ export class UserService {
     return plainToClass(UserResponseDTO, entity);
   }
 
-  findOneByEmail(email: string) {
-    const entity = this.userRepository.findOneBy({ email });
+  findOneByNodeId(nodeId: string) {
+    const entity = this.userRepository.findOneBy({ nodeId });
     return plainToClass(UserResponseDTO, entity);
   }
 

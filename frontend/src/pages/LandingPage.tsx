@@ -9,7 +9,7 @@ const LandingPage = () => {
     <PageWrapper>
       <SiteLogo>
         <img src={siteLogoIcon} alt="사이트 로고 아이콘" />
-        <span>codocs</span>
+        <span>Codocs</span>
       </SiteLogo>
       <ContentBox>
         <Title>귀찮은 공동 문서 작업, Codocs에서 한번에.</Title>

@@ -1,27 +1,29 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import {crdt} from '../core/crdt-linear-ll/crdt';
+import { crdt } from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
 import useDebounce from '../hooks/useDebounce';
+import { fetchDataFromPath } from '../utils/fetchBeforeRender';
+import useToast from '../hooks/useToast';
+import { createCipheriv } from 'crypto';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
-const Editor = () => {
+
+interface EditorProps {
+  content: any;
+}
+
+const Editor = ({ content }: EditorProps) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { document_id } = useParams();
-  const [ setDebounceTimer ] = useDebounce();
-  
-  useEffect(()=>{
-    socket.on('new-user', (data) => {
-      crdt.syncDocument(data);
-      setIsLoading((loading) => !loading);
-    });
-    socket.emit('joinroom', document_id); 
+
+  useEffect(() => {
+    socket.emit('joinroom', document_id);
   }, []);
 
   useEffect(() => {
@@ -29,8 +31,18 @@ const Editor = () => {
       return;
     }
 
-    editor.setValue(crdt.toString());
-    editor.focus();
+    if (Object.keys(content).length > 0) {
+      try {
+        Object.keys(content).forEach((key) => {
+          content[key] = JSON.parse(content[key]);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      crdt.syncDocument(content);
+      editor.setValue(crdt.toString());
+      editor.focus();
+    }
 
     socket.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
@@ -40,19 +52,11 @@ const Editor = () => {
       crdt.remoteDelete(data, editor.getDoc());
     });
 
-    editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
-      setDebounceTimer(() => setTimeout(async () => {
-        try {
-          // TODO : fetch('#', crdt.charMap);
-        }catch(e) {
-          throw new Error ('Save Failed. Please report it to our GitHub.');
-        }
-      }, 5000));
-      
-      
+    editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
+
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
       const content = change.text.join('\n');
@@ -119,17 +123,7 @@ const Editor = () => {
 
   return (
     <>
-      {isLoading ? (
-        <div>로딩중...</div>
-      ) : (
-        <SimpleMDEReact
-          options={editorOptions}
-          getCodemirrorInstance={getCmInstanceCallback}
-          onCompositionStart={() => console.log('COMPOSITION START')}
-          onCompositionUpdate={(e) => console.log('COMPOSITION UPDATE', e)}
-          onCompositionEnd={() => console.log('COMPOSITION END')}
-        />
-      )}
+      <SimpleMDEReact options={editorOptions} getCodemirrorInstance={getCmInstanceCallback} />
     </>
   );
 };
