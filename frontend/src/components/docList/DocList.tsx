@@ -7,10 +7,10 @@ import { useQuery } from 'react-query';
 const DocList = () => {
   const { data: docList } = useQuery('docList', () => fetchDataFromPath('/user-document/recent'), {
     refetchOnWindowFocus: false,
+    suspense: true,
     onError: e => {
       console.log(e);
     },
-    suspense: true,
   });
 
   return (

@@ -19,12 +19,12 @@ const generateDummy = (target: string, counts = 1) => {
 
 export const handler = [
   rest.get('/user-document/recent', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.delay(2000), ctx.json(generateDummy('docList', 30)));
+    return res(ctx.status(200), ctx.delay(5000), ctx.json(generateDummy('docList', 30)));
   }),
   rest.post('/document', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(generateDummy('document')));
   }),
   rest.get('/user/profile', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(generateDummy('userProfile')[0]));
+    return res(ctx.status(200), ctx.delay(2000), ctx.json(generateDummy('userProfile')[0]));
   }),
 ];
