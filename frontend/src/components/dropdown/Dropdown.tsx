@@ -19,7 +19,10 @@ const Dropdown = () => {
 
   const handleSelectOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setSelectedOption(e.currentTarget.innerText);
+    const clickedValue = e.currentTarget.value;
+    if (optionList.includes(clickedValue)) {
+      setSelectedOption(clickedValue);
+    }
     setIsOptionOpened(() => !isOptionOpened);
   };
 

@@ -9,8 +9,8 @@ interface DropdownOptionProps {
 
 const DropdownOption = ({optionTitle, clickHandler, children: dropdownIcon}: DropdownOptionProps) => {
   return (
-    <DropdownOptionWrapper onClick={clickHandler}>
-      <OptionTitle>{optionTitle}</OptionTitle>
+    <DropdownOptionWrapper onClick={clickHandler} value={optionTitle}>
+      {optionTitle}
       {dropdownIcon}
     </DropdownOptionWrapper>
   )
@@ -25,10 +25,6 @@ const DropdownOptionWrapper = styled.button`
   padding: 1rem;
   color: #fff;
   border-bottom: 1px solid #fff;
-`;
-
-const OptionTitle = styled.span`
-  padding-right: 0.5rem;
 `;
 
 export default DropdownOption;
