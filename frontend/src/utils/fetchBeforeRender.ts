@@ -1,17 +1,18 @@
 import { worker } from '../mocks/worker';
+const { REACT_APP_NODE_ENV, NODE_ENV } = process.env;
 
 let requestDomain: string;
 
-if (process.env.NODE_ENV === 'development') {
-  requestDomain = 'http://localhost:8000';
-} else if (process.env.NODE_ENV === 'test') {
-  requestDomain = '';
-} else if (process.env.NODE_ENV === 'production') {
-  requestDomain = '';
-} else {
+if (REACT_APP_NODE_ENV === 'mock') {
   worker.start();
   requestDomain = 'http://localhost:3000';
-}
+} else if (NODE_ENV === 'test') {
+  requestDomain = 'http://localhost:3000';
+} else if (NODE_ENV === 'development') {
+  requestDomain = 'http://localhost:8000';
+} else if (NODE_ENV === 'production') {
+  requestDomain = '';
+} 
 
 interface Response<T> {
   status: 'success' | 'pending' | 'error';
