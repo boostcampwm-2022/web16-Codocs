@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
-import { DocListContainer } from '../components/docListContainer';
 import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
 import { useNavigate } from 'react-router-dom';
 import usePageName from '../hooks/usePageName';
 import useToast from '../hooks/useToast';
+import { DocList } from '../components/docList';
+import { Spinner } from '../components/spinner';
 
 const MainPage = () => {
   const { pageName } = usePageName();
@@ -39,7 +40,9 @@ const MainPage = () => {
         <div>드롭다운</div>
         {/* TODO: <Dropdown /> */}
       </ContentHeaderGroup>
-      <DocListContainer />
+      <Suspense fallback={<Spinner/>}>
+        <DocList />
+      </Suspense>
     </ContentWrapper>
   );
 };
