@@ -18,10 +18,10 @@ const generateDummy = (target: string, counts = 1) => {
 };
 
 export const handler = [
-  rest.get('/document/main', (req, res, ctx) => {
+  rest.get('/user-document/recent', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(generateDummy('docList', 30)));
   }),
-  rest.get('/document/new', (req, res, ctx) => {
+  rest.post('/document', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(generateDummy('document')));
   }),
   rest.get('/user/profile', (req, res, ctx) => {
