@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import styled from 'styled-components';
 import usePageName from '../hooks/usePageName';
 import { DocList } from '../components/docList';
@@ -7,15 +7,16 @@ import { Dropdown } from '../components/dropdown';
 
 const SharedPage = () => {
   const { pageName } = usePageName();
-
+  const [selectedOption, setSelectedOption] = useState<string>('lastVisited');
+  
   return (
     <ContentWrapper>
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
-        <Dropdown />
+        <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption}/>
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner/>}>
-        <DocList />
+        <DocList sortOption={selectedOption} />
       </Suspense>
     </ContentWrapper>
   );
