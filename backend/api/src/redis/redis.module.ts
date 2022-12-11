@@ -6,14 +6,15 @@ import Redis from 'ioredis';
     {
       provide: 'REDIS_OPTIONS',
       useValue: {
-        port: '6379'
+        host: process.env.DB_HOST,
+        port: 6379
       }
     },
     {
       inject: ['REDIS_OPTIONS'],
       provide: 'REDIS_CLIENT',
-      useFactory: async (options: { port: string }) => {
-        const redis = await new Redis(options.port);
+      useFactory: async ({ host, port }: { host: string, port: number }) => {
+        const redis = await new Redis({ host, port });
         return redis;
       }
     }
