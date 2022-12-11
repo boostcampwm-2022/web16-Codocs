@@ -10,6 +10,11 @@ const roleEnumMock: roleEnumObj = {
   3: 'onwer'
 };
 
+const getRandomDate = () => {
+  const date = new Date().getTime();
+  return new Date(date - Math.floor(Math.random() * 10000000000 ));
+};
+
 const createDocumentList = (counts: number): DocListItem[] => {
   return Array(counts)
     .fill(null)
@@ -17,9 +22,9 @@ const createDocumentList = (counts: number): DocListItem[] => {
       return {
         id: uuidv1(),
         title: Math.random().toFixed(4).slice(2).toString(),
-        lastVisited: '2022-12-01',
+        lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
-        createdAt: '2022-11-11'
+        createdAt: new Date(getRandomDate()).getTime().toString()
       };
     });
 };
