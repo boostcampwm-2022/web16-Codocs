@@ -1,15 +1,11 @@
 import * as express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { CRDT } from './crdt-linear-ll/crdt';
 import axios from 'axios';
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
-
-// const crdts = {};
-// 클라이언트 목록, 룸 목록 관리
 
 io.on('connection', (client) => {
   client.on('joinroom', (room) => {
@@ -44,8 +40,25 @@ io.on('connection', (client) => {
       console.log(e);
     }
   });
+
+  client.on('cursor-moved', (data) => {
+    const socketID = client.id;
+    const { cursorPosition, profile } = data;
+    const roomName = Array.from(client.rooms)[1];
+    client.to(roomName).emit('remote-cursor', {
+      socketID,
+      cursorPosition,
+      profile
+    });
+  });
+
   client.on('disconnect', () => {
     console.log('Socket disconnected');
+    const socketID = client.id;
+    const roomName = Array.from(client.rooms)[1];
+    client.to(roomName).emit('delete-cursor', {
+      socketID
+    });
   });
 });
 
