@@ -8,7 +8,7 @@ import { Document } from './document.entity';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { Request } from 'express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Document API')
 @Controller('document')
