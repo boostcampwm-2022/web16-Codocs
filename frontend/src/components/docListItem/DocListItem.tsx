@@ -5,12 +5,50 @@ import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
+import useToast from '../../hooks/useToast';
 
 const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) => {
+  const { alertToast } = useToast();
   const docListItemStyles = {
     fill: '#A5A5A5',
     width: '0.75',
     height: '0.75'
+  };
+
+  const handleDeleteDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      // TODO: URL 수정 + response statusCode 조건문 추가
+      const response = await fetch(`/document/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      throw Error('강제 에러');
+      alertToast('INFO', '문서를 성공적으로 삭제했습니다.');     
+    } catch (err) {
+      alertToast('WARNING', '문서 삭제에 실패했습니다. 다시 시도해주세요.');     
+    }
+  };
+
+  const handleBookmarkDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      // TODO: URL 수정 + response statusCode 조건문 추가
+      const response = await fetch(`/document/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      throw Error('강제 에러');
+      alertToast('INFO', '북마크에 추가했습니다.');     
+    } catch (err) {
+      alertToast('WARNING', '북마크에 추가하지 못했습니다. 다시 시도해주세요.');     
+    }
   };
 
   return (
@@ -22,13 +60,13 @@ const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) =
           <IconGroup>
             <li>
               {role === 'onwer' && (
-                <IconButton {...docListItemStyles} hover={COLOR_CAUTION}>
+                <IconButton {...docListItemStyles} hover={COLOR_CAUTION} clickHandler={handleDeleteDocument}>
                   <TrashIcon />
                 </IconButton>
               )}
             </li>
             <li>
-              <IconButton {...docListItemStyles} hover={COLOR_ACTIVE}>
+              <IconButton {...docListItemStyles} hover={COLOR_ACTIVE} clickHandler={handleBookmarkDocument}>
                 <BookmarkIcon />
               </IconButton>
             </li>
