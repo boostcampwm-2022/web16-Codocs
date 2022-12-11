@@ -1,4 +1,4 @@
-import { v1 as uuidv1 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 interface roleEnumObj {
   [key: number]: string;
@@ -20,7 +20,7 @@ const createDocumentList = (counts: number): DocListItem[] => {
     .fill(null)
     .map((_) => {
       return {
-        id: uuidv1(),
+        id: uuidv4(),
         title: Math.random().toFixed(4).slice(2).toString(),
         lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
