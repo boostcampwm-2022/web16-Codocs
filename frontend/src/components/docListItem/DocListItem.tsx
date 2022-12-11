@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
@@ -14,7 +15,7 @@ const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) =
 
   return (
     <DocListItemWrapper>
-      <a href={`${id}`}>
+      <Link to={`../${id}`}>
         <Title>{title}</Title>
         <LowerLayout>
           <LastVisited>최근 방문일: {lastVisited.slice(0, 11)}</LastVisited>
@@ -33,7 +34,7 @@ const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) =
             </li>
           </IconGroup>
         </LowerLayout>
-      </a>
+      </Link>
     </DocListItemWrapper>
   );
 };
