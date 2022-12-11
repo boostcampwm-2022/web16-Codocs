@@ -4,7 +4,11 @@ import { DocListItem } from '../docListItem';
 import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 import { useQuery } from 'react-query';
 
-const DocList = () => {
+interface DocListProps {
+  sortOption: string
+}
+
+const DocList = ({ sortOption }:DocListProps) => {
   const { data: docList } = useQuery('docList', () => fetchDataFromPath('/user-document/recent'), {
     refetchOnWindowFocus: false,
     suspense: true,
@@ -13,20 +17,26 @@ const DocList = () => {
     },
   });
 
+  const sortDocListByOption = (prev: DocListItem, next: DocListItem) => {
+    return prev[sortOption] > next[sortOption] ? 1 : -1; 
+  };
+  
   return (
       <DocListWrapper>
-        {docList?.map((doc: DocListItem) => {
-          return (
-            <DocListItem
-              key={doc.id}
-              id={doc.id}
-              title={doc.title}
-              lastVisited={doc.lastVisited}
-              role={doc.role}
-              createdAt={doc.createdAt}
-            />
-          );
-        })}
+        {
+          docList?.sort(sortDocListByOption).map((doc: DocListItem) => {
+            return (
+              <DocListItem
+                key={doc.id}
+                id={doc.id}
+                title={doc.title}
+                lastVisited={doc.lastVisited}
+                role={doc.role}
+                createdAt={doc.createdAt}
+              />
+            );
+          })
+        }
       </DocListWrapper>
   );
 };
