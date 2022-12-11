@@ -37,8 +37,6 @@ const MainPage = () => {
       </NewDocBtn>
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
-        <div>드롭다운</div>
-        {/* TODO: <Dropdown /> */}
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner/>}>
         <DocList />
