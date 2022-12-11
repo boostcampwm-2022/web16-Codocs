@@ -1,3 +1,24 @@
+.remote-cursor {
+  position: absolute;
+  border-left-style: solid;
+  border-left-width: 2px;
+  padding: 0;
+}
+
+.codePair-name {
+  white-space: nowrap;
+  position: absolute;
+  mix-blend-mode: difference;
+  z-index: 1000;
+  left: -2px;
+  padding: 1px 4px;
+  border-radius: 2px 2px 2px 0;
+}
+
+.hide {
+  display: none;
+}
+
 .editor-preview-side {
   max-height: calc(100vh - 120px);
 }
