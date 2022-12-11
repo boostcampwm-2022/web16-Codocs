@@ -1,13 +1,9 @@
-import { User } from '../../user/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class DocumentCreateDTO {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   title: string;
-
-  @ApiProperty()
-  @IsUUID()
-  writer: User;
 }

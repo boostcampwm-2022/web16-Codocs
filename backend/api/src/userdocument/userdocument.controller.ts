@@ -34,7 +34,7 @@ export class UserdocumentController {
   @ApiOperation({ summary: '유저 문서 관계 API', description: '유저 정보' })
   @ApiCreatedResponse({ description: '유저 정보' })
   getUserDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
-    return this.userDocumentService.getUserDocuments(req.user.email);
+    return this.userDocumentService.getUserDocuments(req.user.nodeId);
   }
 
   @Get(':id')

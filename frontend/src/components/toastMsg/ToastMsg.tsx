@@ -12,15 +12,12 @@ const ToastMsg = () => {
   if (toastMsg.type !== 'INIT') {
     return (
       <ToastMsgWrapper key={+new Date()} color={TOAST_COLOR}>
-        {
-          toastMsg.type === 'INFO' ? 
-          <PencilIcon width="16" height="16" fill="#3A7DFF"/> 
-          : 
-          <TrashIcon width="16" height="16" fill="#FF3E3E"/>
-        }
-        <ToastText color={TOAST_COLOR}>
-          {toastMsg.msg}
-        </ToastText>
+        {toastMsg.type === 'INFO' ? (
+          <PencilIcon width="16" height="16" fill="#3A7DFF" />
+        ) : (
+          <TrashIcon width="16" height="16" fill="#FF3E3E" />
+        )}
+        <ToastText color={TOAST_COLOR}>{toastMsg.msg}</ToastText>
       </ToastMsgWrapper>
     );
   } else {
@@ -48,6 +45,7 @@ const ToastMsgWrapper = styled.div`
   transform: translate(-50%);
   background-color: #fff;
   visibility: hidden;
+  z-index: 99;
   animation: ${toggleVisibility} 3s 1;
 `;
 
@@ -60,4 +58,4 @@ const ToastText = styled.span`
   word-break: break-all;
 `;
 
-export default ToastMsg;
+export { ToastMsg };

@@ -10,8 +10,8 @@ import { UserService } from '../user/user.service';
 export class AuthService {
   constructor(private readonly userService: UserService, private jwtService: JwtService) {}
 
-  async validateUser(email: string): Promise<any> {
-    const user = await this.userService.findOneByEmail(email);
+  async validateUser(nodeId: string): Promise<any> {
+    const user = await this.userService.findOneByNodeId(nodeId);
     if (user) {
       const result = user;
       return result;
@@ -20,12 +20,16 @@ export class AuthService {
   }
 
   async login(user: User, res: Response): Promise<UserResponseDTO> {
-    const { name, email, profileURL } = user;
-    const entity = await this.userService.findOneByEmail(email);
+    const { name, nodeId, profileURL } = user;
+    console.log(nodeId);
+    const entity = await this.userService.findOneByNodeId(nodeId);
+    console.log(entity);
     if (!entity) {
-      await this.userService.create(new UserCreateDTO(name, email, profileURL));
+      console.log('noentity');
+      console.log('abc: ', name, nodeId, profileURL);
+      await this.userService.create(new UserCreateDTO(name, nodeId, profileURL));
     }
-    const payload = { name, email };
+    const payload = { name, nodeId };
     const accessToken = this.jwtService.sign(payload);
     res.cookie('access_token', accessToken, {
       expires: new Date(Date.now() + 100 * 12 * 30 * 24 * 3600000),

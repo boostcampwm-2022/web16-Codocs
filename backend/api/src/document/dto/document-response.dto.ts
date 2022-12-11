@@ -1,12 +1,13 @@
 import { Exclude, Expose } from '@nestjs/class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Document } from '../document.entity';
 
 @Exclude()
 export class DocumentResponseDTO {
-  constructor(id, title, createdAt) {
-    this.id = id;
-    this.title = title;
-    this.createdAt = createdAt;
+  constructor(document: Document) {
+    this.id = document?.id;
+    this.title = document?.title;
+    this.createdAt = document?.createdAt;
   }
 
   @ApiProperty()

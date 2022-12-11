@@ -4,19 +4,27 @@ import { DocListContainer } from '../components/docListContainer';
 import { ReactComponent as PencilIcon } from '../../src/assets/pencil.svg';
 import { useNavigate } from 'react-router-dom';
 import usePageName from '../hooks/usePageName';
+import useToast from '../hooks/useToast';
 
 const MainPage = () => {
-  const { pageName } = usePageName(); 
+  const { pageName } = usePageName();
+  const { alertToast } = useToast();
   const navigate = useNavigate();
 
   const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('/document/new');
-      const newDocumentId = await response.json();
+      const response = await fetch(`${process.env.REACT_APP_DEV_URL}/document`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+      const { id: newDocumentId } = await response.json();
       navigate(`../${newDocumentId}`);
     } catch (err) {
-      alert('새로운 문서 생성에 실패했습니다. 다시 시도해주세요.');
+      alertToast('WARNING', '새로운 문서 생성에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -58,8 +66,8 @@ const NewDocBtn = styled.button`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid #3A7DFF;
-  background-color: #3A7DFF;
+  border: 1px solid #3a7dff;
+  background-color: #3a7dff;
   padding: 1.25rem 2rem 1.25rem 1.5rem;
   margin-bottom: 2rem;
   svg {
@@ -67,19 +75,19 @@ const NewDocBtn = styled.button`
   }
   &:hover {
     span {
-      color: #3A7DFF;
+      color: #3a7dff;
     }
     svg {
-      fill: #3A7DFF;
+      fill: #3a7dff;
     }
-    background-color: #FFFFFF;
+    background-color: #ffffff;
   }
 `;
-  
+
 const BtnText = styled.span`
   font-weight: 500;
   font-size: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   margin-left: 0.5rem;
 `;

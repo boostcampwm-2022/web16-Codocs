@@ -1,8 +1,9 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ToastMsg from './components/toastMsg/ToastMsg';
-import Modal from './components/modal/Modal';
+import { Spinner } from './components/spinner';
+import { ToastMsg } from './components/toastMsg';
+import { Modal } from './components/modal';
 import MainLayout from './pages/MainLayout';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -15,17 +16,19 @@ const Router = () => {
       <GlobalStyles />
       <ToastMsg />
       <Modal />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/document" element={<MainLayout />}>
-          <Route path="main" element={<MainPage />} />
-          <Route path="private" element="" />
-          <Route path="shared" element="" />
-          <Route path="bookmark" element="" />
-          <Route path="trash" element="" />
-        </Route>
-        <Route path="/document/:document_id" element={<DocumentPage />} />
-      </Routes>
+      <Suspense fallback={<Spinner />}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/document" element={<MainLayout />}>
+            <Route path="main" element={<MainPage />} />
+            <Route path="private" element="" />
+            <Route path="shared" element="" />
+            <Route path="bookmark" element="" />
+            <Route path="trash" element="" />
+          </Route>
+          <Route path="/document/:document_id" element={<DocumentPage />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };

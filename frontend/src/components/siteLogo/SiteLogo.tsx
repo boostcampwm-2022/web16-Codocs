@@ -7,7 +7,7 @@ const SiteLogo = () => {
   return (
     <LogoWrapper to="/document/main">
       <LogoImg src={siteLogoIcon} alt="사이트 로고 아이콘" />
-      <LogoTitle>codocs</LogoTitle>
+      <LogoTitle>Codocs</LogoTitle>
     </LogoWrapper>
   );
 };

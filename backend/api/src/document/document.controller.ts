@@ -8,6 +8,7 @@ import { Document } from './document.entity';
 import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
 import { Request } from 'express';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Document API')
 @Controller('document')
@@ -22,10 +23,11 @@ export class DocumentController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '문서 생성 API', description: '문서 생성' })
   @ApiCreatedResponse({ description: '문서 생성됨' })
-  create(@Body() documentCreateDTO: DocumentCreateDTO) {
-    return this.documentService.create(documentCreateDTO);
+  create(@Req() req, @Body() documentCreateDTO: DocumentCreateDTO): Promise<DocumentResponseDTO> {
+    return this.documentService.create(documentCreateDTO, req.user);
   }
 
   @Get(':id')
@@ -33,7 +35,7 @@ export class DocumentController {
   @ApiOperation({ summary: '문서 정보 API', description: '해당 uuid 문서 정보 얻기' })
   @ApiCreatedResponse({ description: '문서 정보', type: DocumentDetailResponseDTO })
   async findOne(@Req() req: Request, @Param('id') id: string) {
-    return this.documentService.findOne(id, req.user as { email; name });
+    return this.documentService.findOne(id, req.user as { nodeId; name });
   }
 
   @Post(':id/save-title')
@@ -47,15 +49,15 @@ export class DocumentController {
   @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
   @ApiResponse({ description: '저장됨' })
   saveContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
-    return this.documentService.saveContent(id, documentUpdateDTO);
+    return this.documentService.insertContent(id, documentUpdateDTO);
   }
 
-  // @Post(':id/update-content')
-  // @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
-  // @ApiResponse({ description: '저장됨' })
-  // updateContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
-  //   return this.documentService.updateContent(id, documentUpdateDTO);
-  // }
+  @Post(':id/update-content')
+  @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
+  @ApiResponse({ description: '저장됨' })
+  updateContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
+    return this.documentService.updateContent(id, documentUpdateDTO);
+  }
 
   @Delete(':id')
   @ApiOperation({ summary: '문서 삭제 API', description: '해당 uuid 문서 삭제하기' })

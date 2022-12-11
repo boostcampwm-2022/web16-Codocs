@@ -29,10 +29,10 @@ export class UserDocumentService {
     }
   }
 
-  async getUserDocuments(email: string) {
+  async getUserDocuments(nodeId: string) {
     const userDocuments = await this.userDocumentRepository.find({
       relations: ['document', 'user'],
-      where: { user: { email } },
+      where: { user: { nodeId } },
       order: { lastVisited: 'DESC' }
     });
 
