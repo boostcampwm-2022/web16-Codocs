@@ -5,8 +5,11 @@ class Cursor {
 
   color: string;
 
-  constructor(color: string) {
+  name: string;
+
+  constructor(color: string, name: string) {
     this.color = color;
+    this.name = name;
   }
 
   updateCursor(editor: CodeMirror.Editor, cursorPosition: CodeMirror.Position) {
@@ -29,10 +32,6 @@ class Cursor {
       this.marker.clear();
       this.marker = undefined;
     }
-  }
-
-  clear() {
-    this.removeCursor();
   }
 }
 
