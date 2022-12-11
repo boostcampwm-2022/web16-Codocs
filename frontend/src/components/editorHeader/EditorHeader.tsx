@@ -45,10 +45,7 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
 };
 
 const HeaderContainer = styled.header`
-  width: 100vw;
-  height: 4rem;
   padding: 0 1rem;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,7 +57,6 @@ const DocumentTitle = styled.input`
   font-size: 24px;
   line-height: 29px;
   text-align: center;
-
   border: none;
 
   :focus {
@@ -75,7 +71,6 @@ const DocumentTitle = styled.input`
 const RightButtonWrapper = styled.div`
   width: 9rem;
   height: 1.5rem;
-
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -85,7 +80,6 @@ const ShareButton = styled.button`
   padding: 0.5rem 1.5rem;
   background: #3a7dff;
   border-radius: 10px;
-
   font-weight: 700;
   font-size: 0.9rem;
   line-height: 1rem;
