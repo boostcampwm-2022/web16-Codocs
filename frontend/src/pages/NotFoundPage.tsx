@@ -1,8 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import ErrorIcon from '../assets/404.svg';
+import { useNavigate } from 'react-router-dom';
 
 const NotFoundPage = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate('/', { replace: true });
+  };
+
   return (
     <PageWrapper>
       <ErrorImage src={ErrorIcon} alt="실망하는 사람" />
@@ -10,7 +17,9 @@ const NotFoundPage = () => {
         <ErrorCode>404</ErrorCode>
         <ErrorMessage>Page Not Found</ErrorMessage>
         <PageDescription>페이지를 찾을 수 없습니다.</PageDescription>
-        <ReplaceButton type="button">돌아가기</ReplaceButton>
+        <ReplaceButton type="button" onClick={handleGoBack}>
+          돌아가기
+        </ReplaceButton>
       </PageContent>
     </PageWrapper>
   );
