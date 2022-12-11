@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { DocumentResponseDTO } from './dto/document-response.dto';
 import { DocumentCreateDTO } from './dto/document-create.dto';
 import { DocumentUpdateDTO } from './dto/document-update.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Document } from './document.entity';
+import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
+import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard';
+import { Request } from 'express';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Document API')
 @Controller('document')
@@ -19,24 +23,40 @@ export class DocumentController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: '문서 생성 API', description: '문서 생성' })
   @ApiCreatedResponse({ description: '문서 생성됨' })
-  create(@Body() documentCreateDTO: DocumentCreateDTO) {
-    return this.documentService.create(documentCreateDTO);
+  create(@Req() req, @Body() documentCreateDTO: DocumentCreateDTO): Promise<DocumentResponseDTO> {
+    return this.documentService.create(documentCreateDTO, req.user);
   }
 
   @Get(':id')
+  @UseGuards(OptionalJwtAuthGuard)
   @ApiOperation({ summary: '문서 정보 API', description: '해당 uuid 문서 정보 얻기' })
-  @ApiCreatedResponse({ description: '문서 정보', type: DocumentResponseDTO })
-  findOne(@Param('id') id: string) {
-    return this.documentService.findOne(id);
+  @ApiCreatedResponse({ description: '문서 정보', type: DocumentDetailResponseDTO })
+  async findOne(@Req() req: Request, @Param('id') id: string) {
+    return this.documentService.findOne(id, req.user as { nodeId; name });
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: '문서 정보 변경 API', description: '해당 uuid 문서 정보 변경하기' })
-  @ApiResponse({ description: '변경됨' })
-  update(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
-    return this.documentService.update(id, documentUpdateDTO);
+  @Post(':id/save-title')
+  @ApiOperation({ summary: '문서 제목 저장 API', description: '해당 uuid 문서 제목 저장하기' })
+  @ApiResponse({ description: '저장됨' })
+  saveTitle(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
+    return this.documentService.saveTitle(id, documentUpdateDTO);
+  }
+
+  @Post(':id/save-content')
+  @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
+  @ApiResponse({ description: '저장됨' })
+  saveContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
+    return this.documentService.insertContent(id, documentUpdateDTO);
+  }
+
+  @Post(':id/update-content')
+  @ApiOperation({ summary: '문서 컨텐츠 저장 API', description: '해당 uuid 문서 컨텐츠 저장하기' })
+  @ApiResponse({ description: '저장됨' })
+  updateContent(@Param('id') id: string, @Body() documentUpdateDTO: DocumentUpdateDTO) {
+    return this.documentService.updateContent(id, documentUpdateDTO);
   }
 
   @Delete(':id')

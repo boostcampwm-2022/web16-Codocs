@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
@@ -6,15 +6,12 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 import { crdt } from '../core/crdt-linear/crdt';
 import socket from '../core/sockets/sockets';
-import { Cursor } from '../core/cursor';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
-
 const Editor = () => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
 
   useEffect(() => {

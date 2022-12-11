@@ -8,7 +8,7 @@ class CRDT {
   localCounter: number;
 
   struct: Char[];
-   
+  
   constructor() {
     this.siteId = uuidv1();
     this.localCounter = 0;

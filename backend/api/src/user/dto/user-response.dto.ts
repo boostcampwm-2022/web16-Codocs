@@ -13,7 +13,7 @@ export class UserResponseDTO {
 
   @ApiProperty()
   @Expose()
-  email: string;
+  nodeId: string;
 
   @ApiProperty()
   @Expose()

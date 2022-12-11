@@ -18,7 +18,7 @@ export class Document {
   // @ManyToOne(() => User)
   // writer: User;
 
-  @Column()
+  @Column({ default: 'Untitled' })
   title: string;
 
   @Column('text', { default: null })
@@ -32,4 +32,10 @@ export class Document {
 
   @DeleteDateColumn({ name: 'deleted_at', default: null })
   deletedAt: Date;
+
+  addUserRelation(userDocument: UserDocument) {
+    this.userRelations.push(userDocument);
+    // userDocument.getUser().documentRelations.push(userDocument);
+    userDocument.setDocument(this);
+  }
 }

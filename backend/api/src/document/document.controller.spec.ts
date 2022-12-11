@@ -7,15 +7,13 @@ describe('DocumentController', () => {
   let documentService: DocumentService;
 
   beforeEach(() => {
-    documentService = new DocumentService(null);
+    documentService = new DocumentService(null, null, null, null);
     documentController = new DocumentController(documentService);
   });
 
   describe('list', () => {
     it('should return an array of Document', async () => {
-      const result = new DocumentResponseDTO();
-      result.id = 'test';
-      result.title = 'test';
+      const result = new DocumentResponseDTO(null);
       jest.spyOn(documentService, 'list').mockResolvedValue([result]);
 
       expect(await documentController.list()).toEqual([result]);

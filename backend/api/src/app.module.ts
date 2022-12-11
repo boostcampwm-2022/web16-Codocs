@@ -8,6 +8,8 @@ import { BookmarkModule } from './bookmark/bookmark.module';
 import { UserdocumentModule } from './userdocument/userdocument.module';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
+import { LoggerOptions } from 'typeorm';
+
 dotenv.config();
 
 @Module({
@@ -21,7 +23,7 @@ dotenv.config();
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      logging: 'all'
+      logging: process.env.DB_LOGGEROPTION as LoggerOptions
     }),
     UserModule,
     DocumentModule,

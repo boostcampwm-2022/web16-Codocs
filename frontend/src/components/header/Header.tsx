@@ -2,8 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import { UserProfile } from '../userProfile';
+import usePageName from '../../hooks/usePageName';
 
 const Header = () => {
+  const { pageName } = usePageName();
+
   const profileProps = {
     profileImgURL: 'https://picsum.photos/200',
     userName: 'iyu88'
@@ -12,7 +15,7 @@ const Header = () => {
   return (
     <HeaderWrapper>
       <SiteLogo />
-      <PageTitle>최근 문서 목록</PageTitle>
+      <PageName>{pageName}</PageName>
       <UserProfile {...profileProps}/>
     </HeaderWrapper>
   );
@@ -26,7 +29,7 @@ const HeaderWrapper = styled.div`
   border-bottom: 1px solid #BBBBBB;
 `;
 
-const PageTitle = styled.span`
+const PageName = styled.span`
   font-size: 1rem;
   font-weight: 500;
 `;

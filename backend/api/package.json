@@ -35,6 +35,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "env-cmd": "^10.1.0",
+    "ioredis": "^5.2.4",
     "mysql2": "^2.3.3",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",

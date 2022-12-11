@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'test') {
   import('./mocks/worker').then(({ worker }) => worker.start());
 }
 

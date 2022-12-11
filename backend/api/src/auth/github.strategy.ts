@@ -10,7 +10,7 @@ export class GithubOAuthStrategy extends PassportStrategy(Strategy, 'github') {
       clientID: process.env.GITHUB_CLIENTID,
       clientSecret: process.env.GITHUB_SECRET,
       callbackURL: 'http://localhost:8000/auth/callback'
-      // https://github.com/login/oauth/authorize?client_id=eed0086cbb5575f05dd1
+      // https://github.com/login/oauth/authorize?client_id=eed0086cbb5575f05dd1&scope=user:email,read:user`
     });
   }
 
@@ -18,8 +18,10 @@ export class GithubOAuthStrategy extends PassportStrategy(Strategy, 'github') {
     if (!accessToken) {
       return UnauthorizedException;
     }
-    const { name, node_id, email, avatar_url } = profile._json;
+    console.log(accessToken);
+    console.log(profile);
+    const { name, node_id, avatar_url } = profile._json;
 
-    return { node_id, name, email, profileURL: avatar_url };
+    return { nodeId: node_id, name, profileURL: avatar_url };
   }
 }

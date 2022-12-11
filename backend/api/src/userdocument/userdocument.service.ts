@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { catchError } from 'rxjs';
+import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { UserDocumentCreateDTO } from './dto/userdocument-create.dto';
 import { UserDocumentResponseDTO } from './dto/userdocument-response.dto';
@@ -26,6 +27,16 @@ export class UserDocumentService {
     } catch (e) {
       console.log(e.code);
     }
+  }
+
+  async getUserDocuments(nodeId: string) {
+    const userDocuments = await this.userDocumentRepository.find({
+      relations: ['document', 'user'],
+      where: { user: { nodeId } },
+      order: { lastVisited: 'DESC' }
+    });
+
+    return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
   }
 
   findOne(id: string) {
