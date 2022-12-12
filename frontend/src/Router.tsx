@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Spinner } from './components/spinner';
 import { ToastMsg } from './components/toastMsg';
 import MainLayout from './pages/MainLayout';
+import NotFoundPage from './pages/NotFoundPage';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
@@ -25,6 +26,7 @@ const Router = () => {
             <Route path="trash" element="" />
           </Route>
           <Route path="/document/:document_id" element={<DocumentPage />} />
+          <Route path="/*" element={<NotFoundPage />} />;
         </Routes>
       </Suspense>
     </BrowserRouter>
