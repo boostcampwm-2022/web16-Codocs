@@ -1,16 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
+import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
+import { useQuery } from 'react-query';
 
-interface ProfileProps {
-  profileImgURL: string
-  userName: string
-}
+const UserProfile = () => {
+  const { data: profile } = useQuery('userProfile', () => fetchDataFromPath('/user/profile'), {
+    refetchOnWindowFocus: false,
+    suspense: true,
+    onError: e => {
+      console.log(e);
+    },
+  });
 
-const UserProfile = ({profileImgURL, userName}: ProfileProps) => {
   return (
     <ProfileWrapper>
-      <UserName>{userName}</UserName>
-      <ProfileImg src={profileImgURL} alt="사용자 프로필 이미지" />
+      <UserName>{profile.userName}</UserName>
+      <ProfileImg src={profile.profileImgURL} alt="사용자 프로필 이미지" />
     </ProfileWrapper>
   );
 };

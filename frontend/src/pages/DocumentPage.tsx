@@ -3,15 +3,21 @@ import Editor from '../components/Editor';
 import { EditorHeader } from '../components/editorHeader';
 import { Spinner } from '../components/spinner';
 import { fetchDataFromPath } from '../utils/fetchBeforeRender';
-
-const documentResponse = fetchDataFromPath(window.location.pathname);
+import { useQuery } from 'react-query';
 
 const DocumentPage = () => {
-  const { title, content } = documentResponse.read();
+  const { data: documentData } = useQuery('document', () => fetchDataFromPath(window.location.pathname), {
+    refetchOnWindowFocus: false,
+    suspense: true,
+    onError: e => {
+      console.log(e);
+    },
+  }); 
+
   return (
     <Suspense fallback={<Spinner />}>
-      <EditorHeader titleProp={title} />
-      <Editor content={content} />
+      <EditorHeader titleProp={documentData.title} />
+      <Editor content={documentData.content} />
     </Suspense>
   );
 };

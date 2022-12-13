@@ -8,13 +8,14 @@ interface IconButtonProps {
   height?: string,
   hover?: string,
   active?: string,
+  clickHandler?: React.MouseEventHandler
 }
 
 const IconButton = (props: IconButtonProps) => {
   const {children, ...iconButtonStyles} = props;
 
   return (
-    <IconButtonWrapper {...iconButtonStyles}>
+    <IconButtonWrapper {...iconButtonStyles} onClick={props.clickHandler}>
       {children}
     </IconButtonWrapper>
   );

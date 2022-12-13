@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const Spinner = () => {
+
   return (
     <SpinnerWrapper>
       <LoadingCircle />
@@ -10,7 +11,7 @@ const Spinner = () => {
 };
 
 const SpinnerWrapper = styled.div`
-  height: 70%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

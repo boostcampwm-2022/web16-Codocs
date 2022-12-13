@@ -1,54 +1,22 @@
 import { worker } from '../mocks/worker';
+const { REACT_APP_NODE_ENV, NODE_ENV } = process.env;
 
 let requestDomain: string;
 
-if (process.env.NODE_ENV === 'development') {
-  requestDomain = 'http://localhost:8000';
-} else if (process.env.NODE_ENV === 'test') {
-  requestDomain = '';
-} else if (process.env.NODE_ENV === 'production') {
-  requestDomain = '';
-} else {
-  worker.start();
+if (REACT_APP_NODE_ENV === 'mock') {
+  worker.start({
+    onUnhandledRequest: 'bypass',
+  });
   requestDomain = 'http://localhost:3000';
-}
-
-interface Response<T> {
-  status: 'success' | 'pending' | 'error';
-  data: T | null;
-}
-
-export function wrapPromise<T>(promise: Promise<T>, path: string) {
-  const response: Response<unknown> = {
-    status: 'pending',
-    data: null
-  };
-
-  const suspender = promise.then(
-    (res) => {
-      response.status = 'success';
-      response.data = res;
-    },
-    (error) => {
-      response.status = 'error';
-      response.data = error;
-    }
-  );
-
-  const read = () => {
-    switch (response.status) {
-      case 'pending':
-        throw suspender;
-      case 'error':
-        throw response.data as T;
-      default:
-        return response.data as T;
-    }
-  };
-
-  return { read };
-}
-
+} else if (REACT_APP_NODE_ENV === 'test') {
+  requestDomain = 'http://localhost:3000';
+} else if (REACT_APP_NODE_ENV === 'development') {
+  requestDomain = 'http://localhost:8000';
+} else {
+  requestDomain = 'http://www.codocs.site';
+} 
+console.log(REACT_APP_NODE_ENV);
+console.log(requestDomain);
 const fetchDataFromPath = (path: string) => {
   console.log(`${requestDomain}${path}`);
   try {
@@ -59,7 +27,7 @@ const fetchDataFromPath = (path: string) => {
       },
       credentials: 'include'
     }).then((response) => response.json());
-    return wrapPromise(data, path);
+    return data;
   } catch (err) {
     throw new Error('Fail to fetch Data! Please report it to our GitHub.');
   }
