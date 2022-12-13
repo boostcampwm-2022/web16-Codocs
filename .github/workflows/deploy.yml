@@ -2,8 +2,7 @@ name: 'deploy when push'
 
 on:
   push:
-    branches: 
-      - dev
+    branches: ['dev']
   workflow_dispatch:
 
 jobs:
