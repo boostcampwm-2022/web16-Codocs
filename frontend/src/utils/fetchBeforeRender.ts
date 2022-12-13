@@ -8,14 +8,15 @@ if (REACT_APP_NODE_ENV === 'mock') {
     onUnhandledRequest: 'bypass',
   });
   requestDomain = 'http://localhost:3000';
-} else if (NODE_ENV === 'test') {
+} else if (REACT_APP_NODE_ENV === 'test') {
   requestDomain = 'http://localhost:3000';
-} else if (NODE_ENV === 'development') {
+} else if (REACT_APP_NODE_ENV === 'development') {
   requestDomain = 'http://localhost:8000';
-} else if (NODE_ENV === 'production') {
-  requestDomain = '';
+} else {
+  requestDomain = 'http://www.codocs.site';
 } 
-
+console.log(REACT_APP_NODE_ENV);
+console.log(requestDomain);
 const fetchDataFromPath = (path: string) => {
   console.log(`${requestDomain}${path}`);
   try {
