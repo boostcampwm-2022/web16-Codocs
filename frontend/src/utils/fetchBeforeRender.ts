@@ -5,7 +5,7 @@ let requestDomain: string;
 
 if (REACT_APP_NODE_ENV === 'mock') {
   worker.start({
-    onUnhandledRequest: 'bypass',
+    onUnhandledRequest: 'bypass'
   });
   requestDomain = 'http://localhost:3000';
 } else if (REACT_APP_NODE_ENV === 'test') {
@@ -13,8 +13,8 @@ if (REACT_APP_NODE_ENV === 'mock') {
 } else if (REACT_APP_NODE_ENV === 'development') {
   requestDomain = 'http://localhost:8000';
 } else {
-  requestDomain = 'http://www.codocs.site';
-} 
+  requestDomain = 'http://www.codocs.site/api';
+}
 console.log(REACT_APP_NODE_ENV);
 console.log(requestDomain);
 const fetchDataFromPath = (path: string) => {
