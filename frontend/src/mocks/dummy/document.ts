@@ -10,4 +10,4 @@ const createDocumentId = () => {
   };
 };
 
-export default createDocumentId ;
+export default createDocumentId;
