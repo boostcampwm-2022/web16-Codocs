@@ -8,6 +8,8 @@ import NotFoundPage from './pages/NotFoundPage';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const MainPage = lazy(() => import('./pages/MainPage'));
+const PrivatePage = lazy(() => import('./pages/PrivatePage'));
+const SharedPage = lazy(() => import('./pages/SharedPage'));
 const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 
 const Router = () => {
@@ -20,8 +22,8 @@ const Router = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/document" element={<MainLayout />}>
             <Route path="main" element={<MainPage />} />
-            <Route path="private" element="" />
-            <Route path="shared" element="" />
+            <Route path="private" element={<PrivatePage />} />
+            <Route path="shared" element={<SharedPage />} />
             <Route path="bookmark" element="" />
             <Route path="trash" element="" />
           </Route>

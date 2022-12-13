@@ -1,29 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
 import { DocListItem } from '../docListItem';
+import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
+import { useQuery } from 'react-query';
 
 interface DocListProps {
-  docListResponse: { read(): any };
+  sortOption: string
 }
 
-const DocList = ({ docListResponse }: DocListProps) => {
-  const docList = docListResponse.read();
+// TODO: props 로 API 세부 주소 받기 
+const DocList = ({ sortOption }:DocListProps) => {
+  const { data: docList } = useQuery('docList', () => fetchDataFromPath('/user-document/recent'), {
+    refetchOnWindowFocus: false,
+    suspense: true,
+    onError: e => {
+      console.log(e);
+    },
+  });
 
+  const sortDocListByOption = (prev: DocListItem, next: DocListItem) => {
+    return prev[sortOption] > next[sortOption] ? 1 : -1; 
+  };
+  
   return (
-    <DocListWrapper>
-      {docList.map((doc: DocListItem) => {
-        return (
-          <DocListItem
-            key={doc.id}
-            id={doc.id}
-            title={doc.title}
-            lastVisited={doc.lastVisited}
-            role={doc.role}
-            createdAt={doc.createdAt}
-          />
-        );
-      })}
-    </DocListWrapper>
+      <DocListWrapper>
+        {
+          docList?.sort(sortDocListByOption).map((doc: DocListItem) => {
+            return (
+              <DocListItem
+                key={doc.id}
+                id={doc.id}
+                title={doc.title}
+                lastVisited={doc.lastVisited}
+                role={doc.role}
+                createdAt={doc.createdAt}
+              />
+            );
+          })
+        }
+      </DocListWrapper>
   );
 };
 

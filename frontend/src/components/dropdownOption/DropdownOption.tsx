@@ -3,13 +3,14 @@ import styled from 'styled-components';
 
 interface DropdownOptionProps {
   optionTitle: string
+  optionValue?: string
   clickHandler?: React.MouseEventHandler
   children?: ReactNode,
 }
 
-const DropdownOption = ({optionTitle, clickHandler, children: dropdownIcon}: DropdownOptionProps) => {
+const DropdownOption = ({optionTitle, optionValue, clickHandler, children: dropdownIcon}: DropdownOptionProps) => {
   return (
-    <DropdownOptionWrapper onClick={clickHandler} value={optionTitle}>
+    <DropdownOptionWrapper onClick={clickHandler} value={optionValue}>
       {optionTitle}
       {dropdownIcon}
     </DropdownOptionWrapper>

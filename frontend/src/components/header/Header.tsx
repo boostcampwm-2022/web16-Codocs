@@ -1,22 +1,20 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import { UserProfile } from '../userProfile';
+import { Spinner } from '../spinner';
 import usePageName from '../../hooks/usePageName';
 
 const Header = () => {
   const { pageName } = usePageName();
 
-  const profileProps = {
-    profileImgURL: 'https://picsum.photos/200',
-    userName: 'iyu88'
-  };
-
   return (
     <HeaderWrapper>
       <SiteLogo />
       <PageName>{pageName}</PageName>
-      <UserProfile {...profileProps}/>
+      <Suspense fallback={<Spinner />}>
+        <UserProfile />
+      </Suspense>
     </HeaderWrapper>
   );
 };

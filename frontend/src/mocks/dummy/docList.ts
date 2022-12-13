@@ -1,4 +1,4 @@
-import { v1 as uuidv1 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 interface roleEnumObj {
   [key: number]: string;
@@ -7,7 +7,12 @@ interface roleEnumObj {
 const roleEnumMock: roleEnumObj = {
   1: 'view',
   2: 'edit',
-  3: 'onwer'
+  3: 'owner'
+};
+
+const getRandomDate = () => {
+  const date = new Date().getTime();
+  return new Date(date - Math.floor(Math.random() * 10000000000 ));
 };
 
 const createDocumentList = (counts: number): DocListItem[] => {
@@ -15,11 +20,11 @@ const createDocumentList = (counts: number): DocListItem[] => {
     .fill(null)
     .map((_) => {
       return {
-        id: uuidv1(),
+        id: uuidv4(),
         title: Math.random().toFixed(4).slice(2).toString(),
-        lastVisited: '2022-12-01',
+        lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
-        createdAt: '2022-11-11'
+        createdAt: new Date(getRandomDate()).getTime().toString()
       };
     });
 };
