@@ -59,7 +59,7 @@ const DocListItem = ({ id, title, lastVisited, role, createdAt }: DocListItem) =
           <LastVisited>최근 방문일: {lastVisited.slice(0, 11)}</LastVisited>
           <IconGroup>
             <li>
-              {role === 'onwer' && (
+              {role === 'owner' && (
                 <IconButton {...docListItemStyles} hover={COLOR_CAUTION} clickHandler={handleDeleteDocument}>
                   <TrashIcon />
                 </IconButton>

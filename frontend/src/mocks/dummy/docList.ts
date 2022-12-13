@@ -7,7 +7,7 @@ interface roleEnumObj {
 const roleEnumMock: roleEnumObj = {
   1: 'view',
   2: 'edit',
-  3: 'onwer'
+  3: 'owner'
 };
 
 const getRandomDate = () => {

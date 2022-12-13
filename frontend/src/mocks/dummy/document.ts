@@ -5,7 +5,7 @@ const createDocumentId = () => {
     id: uuidv1(),
     title: Math.random().toFixed(4).slice(2).toString(),
     lastVisited: '2022-12-01',
-    role: 'onwer',
+    role: 'owner',
     createdAt: '2022-11-11'
   };
 };
