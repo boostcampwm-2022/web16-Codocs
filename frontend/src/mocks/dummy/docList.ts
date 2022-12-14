@@ -24,7 +24,10 @@ const createDocumentList = (counts: number): DocListItem[] => {
         title: Math.random().toFixed(4).slice(2).toString(),
         lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
-        createdAt: new Date(getRandomDate()).getTime().toString()
+        createdAt: new Date(getRandomDate()).getTime().toString(),
+        bookmark: false,
+        shared: false,
+        isDeleted: false,
       };
     });
 };
