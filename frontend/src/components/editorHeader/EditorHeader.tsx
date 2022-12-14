@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import useTitle from '../../hooks/useTitle';
 import useToast from '../../hooks/useToast';
+import { OnlinePeople } from '../../components/onlinePeople';
 
 interface EditorHeaderProps {
   titleProp: string;
@@ -37,7 +38,7 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
           <ShareButton type="button" onClick={handleCopyURL}>
             Share
           </ShareButton>
-          <Peer>3</Peer>
+          <OnlinePeople />
         </RightButtonWrapper>
       </HeaderContainer>
     </>
@@ -86,8 +87,5 @@ const ShareButton = styled.button`
   color: #ffffff;
 `;
 
-const Peer = styled.div`
-  width: 2.75rem;
-`;
 
 export { EditorHeader };
