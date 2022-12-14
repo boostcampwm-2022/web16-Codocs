@@ -1,8 +1,8 @@
-import { useState, useEffect }  from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface pageNames {
-  [key: string] : string, 
+  [key: string]: string;
 }
 
 const usePageName = () => {
@@ -10,15 +10,15 @@ const usePageName = () => {
   const location = useLocation();
 
   const pageNamesByPath: pageNames = {
-    'main': '최근 문서 목록',
-    'private' : '내 문서함',
-    'shared' : '공유 문서함',
-    'bookmark' : '북마크',
-    'trash': '휴지통',
+    main: '최근 문서 목록',
+    private: '내 문서함',
+    shared: '공유 문서함',
+    bookmark: '북마크',
+    trash: '휴지통'
   };
 
   useEffect(() => {
-    const [ lastPath ] = location.pathname.split('/').slice(-1);
+    const [lastPath] = location.pathname.split('/').slice(-1);
     setPageName(pageNamesByPath[lastPath]);
   });
 
