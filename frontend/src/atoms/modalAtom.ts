@@ -2,7 +2,12 @@ import { atom } from 'recoil';
 
 const modalState = atom({
   key: 'modal',
-  default: false,
+  default: {
+    type: 'INIT',
+    clickHandler: () => { 
+      return; 
+    }
+  },
 });
 
 export { modalState };
