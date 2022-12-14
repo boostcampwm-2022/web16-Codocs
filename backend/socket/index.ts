@@ -1,15 +1,11 @@
 import * as express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { CRDT } from './crdt-linear-ll/crdt';
 import axios from 'axios';
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
-
-// const crdts = {};
-// 클라이언트 목록, 룸 목록 관리
 
 io.on('connection', (client) => {
   client.on('joinroom', (room) => {
@@ -21,7 +17,6 @@ io.on('connection', (client) => {
   });
   client.on('local-insert', (data) => {
     const roomName = Array.from(client.rooms)[1];
-    // crdts[roomName].saveInsert(data);
     client.to(roomName).emit('remote-insert', data);
     try {
       axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
@@ -34,7 +29,6 @@ io.on('connection', (client) => {
   client.on('local-delete', (data) => {
     const roomName = Array.from(client.rooms)[1];
     console.log('ROOMNAME : ', roomName);
-    // crdts[roomName].saveDelete(data); // saveDelete 없다
     client.to(roomName).emit('remote-delete', data);
     try {
       axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
@@ -44,6 +38,26 @@ io.on('connection', (client) => {
       console.log(e);
     }
   });
+
+  client.on('cursor-moved', (data) => {
+    const id = client.id;
+    const { cursorPosition, profile } = data;
+    const roomName = Array.from(client.rooms)[1];
+    client.to(roomName).emit('remote-cursor', {
+      id,
+      cursorPosition,
+      profile
+    });
+  });
+
+  client.on('disconnecting', () => {
+    const id = client.id;
+    const roomName = Array.from(client.rooms)[1];
+    client.to(roomName).emit('delete-cursor', {
+      id
+    });
+  });
+
   client.on('disconnect', () => {
     console.log('Socket disconnected');
   });
