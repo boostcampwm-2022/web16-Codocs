@@ -3,4 +3,7 @@ const copyURLPath = () => {
   return navigator.clipboard.writeText(url);
 };
 
-export { copyURLPath };
+const getRandomColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16);
+
+export { copyURLPath, getRandomColor };
+

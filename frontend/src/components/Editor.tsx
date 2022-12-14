@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
@@ -6,10 +6,9 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 import { crdt } from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
+import {Cursor} from '../core/cursor/cursor';
 import useDebounce from '../hooks/useDebounce';
-import { fetchDataFromPath } from '../utils/fetchBeforeRender';
-import useToast from '../hooks/useToast';
-import { createCipheriv } from 'crypto';
+import useProfile from '../hooks/useProfile';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -20,6 +19,9 @@ interface EditorProps {
 
 const Editor = ({ content }: EditorProps) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
+  const [cursorDebounce] = useDebounce();
+  const { profile } = useProfile();
+  const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
 
   useEffect(() => {
@@ -50,6 +52,20 @@ const Editor = ({ content }: EditorProps) => {
 
     socket.on('remote-delete', (data) => {
       crdt.remoteDelete(data, editor.getDoc());
+    });
+
+    socket.on('remote-cursor', (data) => {
+      const { id, profile, cursorPosition } = data;
+      if (!cursorMap.current.has(id)) {
+        cursorMap.current.set(id, new Cursor(profile.color, profile.name));
+      }
+      cursorMap.current.get(id)?.updateCursor(editor, cursorPosition);
+    });
+
+    socket.on('delete-cursor', (data) => {
+      const { id } = data;
+      cursorMap.current.get(id)?.removeCursor();
+      cursorMap.current.delete(id);
     });
 
     editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
@@ -96,6 +112,19 @@ const Editor = ({ content }: EditorProps) => {
       // console.log('EVENT Value :', change.text);
       socket.emit(eventName, char);
     });
+
+    editor?.on('cursorActivity', () => {
+      cursorDebounce(
+        setTimeout(() => {
+          const cursorPosition = editor.getCursor();
+          socket.emit('cursor-moved', {
+            cursorPosition,
+            profile
+          });
+        }, 100)
+      );
+    });
+
     return () => {
       socket.removeAllListeners();
     };
