@@ -11,6 +11,7 @@ import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { User } from '../user/user.entity';
 import { UserDocument } from '../userdocument/userdocument.entity';
 import { Char } from 'src/types/char';
+import { UserRole } from '../enum/role.enum';
 
 @Injectable()
 export class DocumentService {
@@ -27,7 +28,7 @@ export class DocumentService {
   async create(documentCreateDTO: DocumentCreateDTO, user): Promise<DocumentResponseDTO> {
     const documentEntity = await this.documentRepository.save(documentCreateDTO);
     const userEntity = await this.userRepository.findOneBy({ nodeId: user.nodeId });
-    this.userDocumentRepository.save(new UserDocument(userEntity, documentEntity));
+    this.userDocumentRepository.save(new UserDocument(userEntity, documentEntity, UserRole.OWNER));
 
     return new DocumentResponseDTO(documentEntity);
   }

@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
   Unique
 } from 'typeorm';
-import { UserRole } from './enum/role.enum';
+import { UserRole } from '../enum/role.enum';
 
 @Entity()
 @Unique(['user', 'document'])

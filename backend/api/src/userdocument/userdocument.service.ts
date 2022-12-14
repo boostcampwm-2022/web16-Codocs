@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { catchError } from 'rxjs';
 import { User } from 'src/user/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { UserDocumentCreateDTO } from './dto/userdocument-create.dto';
 import { UserDocumentResponseDTO } from './dto/userdocument-response.dto';
 import { UserDocumentUpdateDTO } from './dto/userdocument-update.dto';
+import { UserRole } from '../enum/role.enum';
 import { UserDocument } from './userdocument.entity';
 
 @Injectable()
@@ -33,6 +34,26 @@ export class UserDocumentService {
     const userDocuments = await this.userDocumentRepository.find({
       relations: ['document', 'user'],
       where: { user: { nodeId } },
+      order: { lastVisited: 'DESC' }
+    });
+
+    return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
+  }
+
+  async getPrivateDocuments(nodeId: string) {
+    const userDocuments = await this.userDocumentRepository.find({
+      relations: ['document', 'user'],
+      where: { user: { nodeId }, role: UserRole.OWNER },
+      order: { lastVisited: 'DESC' }
+    });
+
+    return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
+  }
+
+  async getSharedDocuments(nodeId: string) {
+    const userDocuments = await this.userDocumentRepository.find({
+      relations: ['document', 'user'],
+      where: { user: { nodeId }, role: Not(UserRole.OWNER) },
       order: { lastVisited: 'DESC' }
     });
 
