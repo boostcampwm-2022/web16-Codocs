@@ -8,7 +8,8 @@ import {
   Column,
   JoinColumn,
   UpdateDateColumn,
-  Unique
+  Unique,
+  DeleteDateColumn
 } from 'typeorm';
 import { UserRole } from '../enum/role.enum';
 
@@ -40,6 +41,9 @@ export class UserDocument {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.VIEWER })
   role: UserRole;
+
+  @DeleteDateColumn({ name: 'deleted_at', default: null })
+  deletedAt: Date;
 
   setDocument(document: Document) {
     this.document = document;
