@@ -27,8 +27,8 @@ const ModalDoubleChecker = ({modalType, modalCancelHandler,  modalActionHandler}
       questionDescription: '한 번 삭제한 문서는 복원할 수 없습니다. 그래도 진행하시겠습니까?',
     }, 
     'BOOKMARK': {
-      questionTitle: '북마크에 등록합니까?',
-      questionDescription: '북마크에 등록합니까?',
+      questionTitle: '북마크에 등록하시겠습니까?',
+      questionDescription: '등록한 문서는 북마크 페이지에서 확인할 수 있습니다.',
     }
   };
 
