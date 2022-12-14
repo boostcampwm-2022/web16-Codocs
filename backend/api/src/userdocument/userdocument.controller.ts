@@ -31,10 +31,29 @@ export class UserdocumentController {
 
   @UseGuards(JwtAuthGuard)
   @Get('recent')
-  @ApiOperation({ summary: '유저 문서 관계 API', description: '유저 정보' })
-  @ApiCreatedResponse({ description: '유저 정보' })
-  getUserDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
+  @ApiOperation({ summary: '최근 방문 문서 API', description: '최근 방문한 문서를 반환하는 API' })
+  @ApiResponse({ description: '문서를 최근 방문한 날짜로 내림차순 정렬하여 반환' })
+  getRecentDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
     return this.userDocumentService.getUserDocuments(req.user.nodeId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('private')
+  @ApiOperation({ summary: '내가 만든 문서 API', description: '유저가 만든 문서를 반환한다.' })
+  @ApiResponse({ description: 'owner인 문서' })
+  getPrivateDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
+    return this.userDocumentService.getPrivateDocuments(req.user.nodeId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('shared')
+  @ApiOperation({
+    summary: '공유된 문서 API',
+    description: '방문한 문서 중 내가 만들지 않은 문서들을 반환한다.'
+  })
+  @ApiResponse({ description: '문서' })
+  getSharedDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
+    return this.userDocumentService.getSharedDocuments(req.user.nodeId);
   }
 
   @Get(':id')

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'src/document/document.entity';
 import { DocumentResponseDTO } from 'src/document/dto/document-response.dto';
 import { User } from 'src/user/user.entity';
-import { UserRole } from '../enum/role.enum';
+import { UserRole } from '../../enum/role.enum';
 import { UserDocument } from '../userdocument.entity';
 
 @Exclude()
