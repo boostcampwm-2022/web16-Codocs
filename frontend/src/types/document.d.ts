@@ -1,3 +1,7 @@
 declare type DocListItem = {
-  [key: string]: string
+  id: string
+  title: string
+  lastVisited: string
+  role: string
+  createdAt: string
 };

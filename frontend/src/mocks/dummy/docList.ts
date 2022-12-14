@@ -25,9 +25,6 @@ const createDocumentList = (counts: number): DocListItem[] => {
         lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
         createdAt: new Date(getRandomDate()).getTime().toString(),
-        bookmark: false,
-        shared: false,
-        isDeleted: false,
       };
     });
 };
