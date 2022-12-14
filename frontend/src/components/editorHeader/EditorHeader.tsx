@@ -33,7 +33,12 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
     <>
       <HeaderContainer>
         <SiteLogo />
-        <DocumentTitle type="text" value={title ?? ''} onChange={onTitleChange} onBlur={onTitleUpdate} />
+        <DocumentTitle
+          type="text"
+          value={title ?? ''}
+          onChange={onTitleChange}
+          onBlur={onTitleUpdate}
+        />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={handleCopyURL}>
             Share
@@ -86,6 +91,5 @@ const ShareButton = styled.button`
   line-height: 1rem;
   color: #ffffff;
 `;
-
 
 export { EditorHeader };

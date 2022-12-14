@@ -17,19 +17,25 @@ const Modal = () => {
     console.log(e.target);
     if (e.target) {
       setModalData({
-          type: 'INIT',
-          clickHandler: () => { 
-            return Promise<void>;
-          },
-        });
+        type: 'INIT',
+        clickHandler: () => {
+          return Promise<void>;
+        }
+      });
       console.log(modalData);
     }
   };
 
   return (
-      <Dimmed ref={dimmedRef} modalType={modalData.type} onClick={handleCloseModal}>
-        {modalData.clickHandler && <ModalDoubleChecker modalType={modalData.type} modalCancelHandler={handleCloseModal} modalActionHandler={modalData.clickHandler} />}
-      </Dimmed>
+    <Dimmed ref={dimmedRef} modalType={modalData.type} onClick={handleCloseModal}>
+      {modalData.clickHandler && (
+        <ModalDoubleChecker
+          modalType={modalData.type}
+          modalCancelHandler={handleCloseModal}
+          modalActionHandler={modalData.clickHandler}
+        />
+      )}
+    </Dimmed>
   );
 };
 
@@ -41,7 +47,7 @@ const Dimmed = styled('div')<DimmedProps>`
   left: 0;
   background-color: rgba(30, 30, 30, 0.9);
   z-index: 1000;
-  display: ${(props) => props.modalType === 'INIT' ? 'none': 'block'};
+  display: ${(props) => (props.modalType === 'INIT' ? 'none' : 'block')};
 `;
 
 export { Modal };
