@@ -1,5 +1,5 @@
 import { plainToClass } from '@nestjs/class-transformer';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Document } from './document.entity';
@@ -92,7 +92,7 @@ export class DocumentService {
   async insertContent(id: string, documentUpdateDTO: DocumentUpdateDTO) {
     const { content } = documentUpdateDTO;
     if (content == undefined) {
-      throw new Error('no content');
+      throw new HttpException('no content', 400);
     }
 
     if ((await this.redis.hget(id, 'HEAD')) == null) {
@@ -107,6 +107,7 @@ export class DocumentService {
         JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
       );
     }
+
     content.forEach(async (char) => {
       try {
         this.redis.hset(id, char.id, JSON.stringify(char));
@@ -117,7 +118,7 @@ export class DocumentService {
         this.redis.hset(id, left.id, JSON.stringify(left));
         this.redis.hset(id, right.id, JSON.stringify(right));
       } catch (e) {
-        console.error(e);
+        throw new HttpException('Insert Error', 400);
       }
     });
   }
