@@ -22,7 +22,7 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        alertToast('INFO', '성공! 공유해보세요.');
+        alertToast('INFO', '링크 복사 성공! 공유해보세요!');
       })
       .catch(() => {
         alertToast('WARNING', '실패!');
