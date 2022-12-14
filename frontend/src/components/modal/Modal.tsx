@@ -1,45 +1,34 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
+import { ModalDoubleChecker } from '../modalDoubleChecker';
 import { useRecoilState } from 'recoil';
 import { modalState } from '../../atoms/modalAtom';
 
 interface DimmedProps {
-  isVisible: boolean;
-}
-
-interface AnswerBtnProps {
-  backgroundColor: string;
+  modalType: string;
 }
 
 const Modal = () => {
-  const [isVisible, setIsVisible] = useRecoilState(modalState);
+  const [modalData, setModalData] = useRecoilState(modalState);
   const dimmedRef = useRef<HTMLDivElement | null>(null);
 
   const handleCloseModal = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
     e.preventDefault();
-    if (e.target === dimmedRef.current) {
-      setIsVisible(false);
-      console.log(isVisible);
+    console.log(e.target);
+    if (e.target) {
+      setModalData({
+          type: 'INIT',
+          clickHandler: () => { 
+            return Promise<void>;
+          },
+        });
+      console.log(modalData);
     }
   };
 
   return (
-      <Dimmed ref={dimmedRef} isVisible={isVisible} onClick={handleCloseModal}>
-        <ModalContent>
-          <Question>
-            <QuestionTitle>
-            정말로 삭제하시겠습니까?
-            </QuestionTitle>
-            <QuestionDescribtion>
-              한 번 삭제한 문서는 복구할 수 없습니다.
-              그래도 진행하시겠습니까?
-            </QuestionDescribtion>
-          </Question>
-          <Answers>
-            <AnswerBtn backgroundColor={'#A5A5A5'}>취소</AnswerBtn>
-            <AnswerBtn backgroundColor={'#FF5757'}>확인</AnswerBtn>
-          </Answers>
-        </ModalContent>
+      <Dimmed ref={dimmedRef} modalType={modalData.type} onClick={handleCloseModal}>
+        {modalData.clickHandler && <ModalDoubleChecker modalType={modalData.type} modalCancelHandler={handleCloseModal} modalActionHandler={modalData.clickHandler} />}
       </Dimmed>
   );
 };
@@ -52,49 +41,7 @@ const Dimmed = styled('div')<DimmedProps>`
   left: 0;
   background-color: rgba(30, 30, 30, 0.9);
   z-index: 1000;
-  display: ${(props) => props.isVisible ? 'block': 'none'};
-`;
-
-const ModalContent = styled.div`
-  width: 550px;
-  min-height: 450px;
-  border-radius: 10px;
-  background-color: #DFDFDF;
-  padding: 6.5rem 2rem;
-  margin: 0 auto;
-  margin-top: 4rem;
-`;
-
-const Question = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 4rem 3rem 4rem;
-`;
-
-const QuestionTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-`;
-
-const QuestionDescribtion = styled.p`
-  max-width: 330px;
-  word-break: keep-all;
-  margin-top: 0;
-`;
-
-const Answers = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const AnswerBtn = styled('button')<AnswerBtnProps>`
-  font-size: 20px;
-  border-radius: 10px;
-  padding: 1rem 6rem;
-  color: white;
-  background-color: ${(props) => props.backgroundColor};
+  display: ${(props) => props.modalType === 'INIT' ? 'none': 'block'};
 `;
 
 export { Modal };
