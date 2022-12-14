@@ -15,7 +15,7 @@ const useTitle = () => {
 
   const saveNewTitle = async (title: string) => {
     try {
-      await fetch(`${process.env.REACT_APP_DEV_URL}/document/${document_id}/save-title`, {
+      await fetch(`http://localhost:8000/document/${document_id}/save-title`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -23,6 +23,7 @@ const useTitle = () => {
         credentials: 'include',
         body: JSON.stringify({ title })
       });
+      setTitle(title);
     } catch (err) {
       alertToast('WARNING', '제목 저장에 실패했어요. 🥲  다시 시도해주세요.');
     }

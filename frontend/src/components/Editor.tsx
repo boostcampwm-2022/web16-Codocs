@@ -4,11 +4,12 @@ import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import { crdt } from '../core/crdt-linear/crdt';
-import socket from '../core/sockets/sockets';
+import { CRDT } from '../core/crdt-linear-ll/crdt';
+// import socket from '../core/sockets/sockets';
 import useProfile from '../hooks/useProfile';
 import useDebounce from '../hooks/useDebounce';
 import { Cursor } from '../core/cursor';
+import socketIOClient, { Socket } from 'socket.io-client';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -17,21 +18,31 @@ interface EditorProps {
   content: any;
 }
 
+let crdt: CRDT;
+let socket: Socket;
 const Editor = ({ content }: EditorProps) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [cursorDebounce] = useDebounce();
   const { profile } = useProfile();
   const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
+  const [users, setUsers] = useState<string[]>([]);
 
   useEffect(() => {
-    socket.emit('joinroom', document_id);
-  }, []);
+    crdt = new CRDT();
+    socket = socketIOClient('http://localhost:8100');
+    socket.emit('joinroom', document_id, profile.name);
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (!editor || !profile) {
       return;
     }
+
+    console.log('EDITOR LINE 40:', content);
 
     if (Object.keys(content).length > 0) {
       try {
@@ -42,11 +53,22 @@ const Editor = ({ content }: EditorProps) => {
         console.log(e);
       }
       crdt.syncDocument(content);
+      console.log('CHARMAP', crdt.charMap);
       editor.setValue(crdt.toString());
       editor.focus();
     }
 
+    socket.on('new-user', (username: string) => {
+      // setUsers([...users, username]);
+      // console.log(users);
+    });
+
+    socket.on('connect', () => {
+      console.log('connected');
+    });
+
     socket.on('remote-insert', (data) => {
+      console.log('REMOTE OP');
       crdt.remoteInsert(data, editor);
     });
 
@@ -57,7 +79,7 @@ const Editor = ({ content }: EditorProps) => {
     socket.on('remote-cursor', (data) => {
       const { id, profile, cursorPosition } = data;
       if (!cursorMap.current.has(id)) {
-        cursorMap.current.set(id, new Cursor(profile.color, profile.username));
+        cursorMap.current.set(id, new Cursor(profile.color, profile.name));
       }
       cursorMap.current.get(id)?.updateCursor(editor, cursorPosition);
     });
@@ -68,11 +90,10 @@ const Editor = ({ content }: EditorProps) => {
       cursorMap.current.delete(id);
     });
 
-    editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
+    editor?.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
-
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
       const content = change.text.join('\n');
@@ -106,6 +127,7 @@ const Editor = ({ content }: EditorProps) => {
             eventName = 'local-delete';
           }
       }
+
       socket.emit(eventName, char);
     });
 

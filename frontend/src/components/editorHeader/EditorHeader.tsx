@@ -4,17 +4,9 @@ import { SiteLogo } from '../siteLogo';
 import useTitle from '../../hooks/useTitle';
 import useToast from '../../hooks/useToast';
 
-interface EditorHeaderProps {
-  titleProp: string;
-}
-
-const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
-  const { title, onTitleChange, onTitleUpdate, setTitle } = useTitle();
+const EditorHeader = () => {
+  const { title, onTitleChange, onTitleUpdate } = useTitle();
   const { alertToast } = useToast();
-
-  useEffect(() => {
-    setTitle(titleProp);
-  }, []);
 
   const handleCopyURL = () => {
     const url = window.location.href;
@@ -32,7 +24,12 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
     <>
       <HeaderContainer>
         <SiteLogo />
-        <DocumentTitle type="text" value={title ?? ''} onChange={onTitleChange} onBlur={onTitleUpdate} />
+        <DocumentTitle
+          type="text"
+          value={title ?? ''}
+          onChange={onTitleChange}
+          onBlur={onTitleUpdate}
+        />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={handleCopyURL}>
             Share

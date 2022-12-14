@@ -4,8 +4,9 @@ import { getRandomColor } from '../utils/utils';
 const profileState = atom({
   key: 'profile',
   default: {
-    username: 'anonymous',
-    color: getRandomColor()
+    name: 'anonymous',
+    color: getRandomColor(),
+    profileURL: ''
   }
 });
 

@@ -18,8 +18,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard('github'))
   @Get('callback')
-  @Redirect(process.env.CLIENT_HOST + '/document/main', 301)
+  @Redirect('http://localhost:3000/document/main', 301)
   async callback(@Request() req, @Res({ passthrough: true }) res: Response): Promise<any> {
+    console.log('hi');
     return this.authService.login(req.user, res);
   }
 }

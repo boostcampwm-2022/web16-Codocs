@@ -1,22 +1,32 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Editor from '../components/Editor';
 import { EditorHeader } from '../components/editorHeader';
 import { Spinner } from '../components/spinner';
 import { fetchDataFromPath } from '../utils/fetchBeforeRender';
 import { useQuery } from 'react-query';
+import useTitle from '../hooks/useTitle';
+import socketIOClient, { Socket } from 'socket.io-client';
 
 const DocumentPage = () => {
-  const { data: documentData } = useQuery('document', () => fetchDataFromPath(window.location.pathname), {
-    refetchOnWindowFocus: false,
-    suspense: true,
-    onError: e => {
-      console.log(e);
-    },
-  }); 
+  const { setTitle } = useTitle();
+  const { data: documentData } = useQuery(
+    window.location.pathname,
+    () => fetchDataFromPath(window.location.pathname),
+    {
+      refetchOnWindowFocus: false,
+      suspense: true,
+      onSuccess: (response) => {
+        setTitle(response.title);
+      },
+      onError: (e) => {
+        console.log(e);
+      }
+    }
+  );
 
   return (
     <Suspense fallback={<Spinner />}>
-      <EditorHeader titleProp={documentData.title} />
+      <EditorHeader />
       <Editor content={documentData.content} />
     </Suspense>
   );

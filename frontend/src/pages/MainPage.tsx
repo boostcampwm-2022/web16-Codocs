@@ -15,7 +15,7 @@ const MainPage = () => {
   const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_DEV_URL}/document`, {
+      const response = await fetch('http://localhost:8000/document', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -38,8 +38,8 @@ const MainPage = () => {
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
       </ContentHeaderGroup>
-      <Suspense fallback={<Spinner/>}>
-        <DocList sortOption={'lastVisited'}/>
+      <Suspense fallback={<Spinner />}>
+        <DocList sortOption={'lastVisited'} />
       </Suspense>
     </ContentWrapper>
   );

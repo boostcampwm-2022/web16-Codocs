@@ -7,57 +7,70 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } });
 
-io.on('connection', (client) => {
-  client.on('joinroom', (room) => {
+io.on('connection', (client: any) => {
+  client.on('joinroom', (room, username) => {
     client.join(room);
+    client.username = username;
+    client.to(room).emit('new-user', username);
   });
   client.on('update-title', (newTitle) => {
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('new-title', newTitle);
   });
-  client.on('local-insert', (data) => {
+  client.on('local-insert', async (data) => {
     const roomName = Array.from(client.rooms)[1];
     // crdts[roomName].saveInsert(data);
-    client.to(roomName).emit('remote-insert', data);
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-insert', data);
+      console.log(data);
     } catch (e) {
       console.log(e);
     }
   });
-  client.on('local-delete', (data) => {
+  client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
-    console.log('ROOMNAME : ', roomName);
+    //console.log('ROOMNAME : ', roomName);
     // crdts[roomName].saveDelete(data); // saveDelete 없다
-    client.to(roomName).emit('remote-delete', data);
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-delete', data);
     } catch (e) {
       console.log(e);
     }
   });
 
   client.on('cursor-moved', (data) => {
-    const socketID = client.id;
+    const id = client.id;
     const { cursorPosition, profile } = data;
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('remote-cursor', {
-      socketID,
+      id,
       cursorPosition,
       profile
     });
   });
 
+  client.on('client-out', () => {
+    const id = client.id;
+    const roomName = Array.from(client.rooms)[1];
+    console.log('client-out');
+    client.to(roomName).emit('delete-cursor', {
+      id
+    });
+  });
+
   client.on('disconnect', () => {
     console.log('Socket disconnected');
-    const socketID = client.id;
+    const id = client.id;
     const roomName = Array.from(client.rooms)[1];
+    //console.log(roomName);
     client.to(roomName).emit('delete-cursor', {
-      socketID
+      id
     });
   });
 });

@@ -168,11 +168,18 @@ class CRDT {
   toString(): string {
     let str = '';
     let currentNode = this.head;
-    while (currentNode.rightId !== 'END') {
-      if (!currentNode.tombstone) {
-        str += currentNode.value;
+    try {
+      while (currentNode.rightId !== 'END') {
+        // console.log(currentNode);
+        if (!currentNode.tombstone) {
+          str += currentNode.value;
+        }
+        currentNode = this.charMap[currentNode.rightId];
       }
-      currentNode = this.charMap[currentNode.rightId];
+    } catch (e) {
+      console.log('====================');
+      console.log('ERROR', this.charMap);
+      console.log('====================');
     }
 
     return str;
@@ -190,6 +197,4 @@ class CRDT {
   }
 }
 
-const crdt = new CRDT();
-
-export { crdt, CRDT };
+export { CRDT };

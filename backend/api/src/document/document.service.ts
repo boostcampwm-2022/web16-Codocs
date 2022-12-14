@@ -94,8 +94,8 @@ export class DocumentService {
     if (content == undefined) {
       throw new Error('no content');
     }
-
-    if ((await this.redis.hget(id, 'HEAD')) == null) {
+    const head = await this.redis.hget(id, 'HEAD');
+    if (head == null) {
       this.redis.hset(
         id,
         'HEAD',
@@ -107,17 +107,23 @@ export class DocumentService {
         JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
       );
     }
+    console.log(content);
     content.forEach(async (char) => {
+      let rightId, leftId;
       try {
         this.redis.hset(id, char.id, JSON.stringify(char));
         const left: Char = JSON.parse(await this.redis.hget(id, char.leftId));
         const right: Char = JSON.parse(await this.redis.hget(id, char.rightId));
+        leftId = left;
+        rightId = right;
+
         left.rightId = char.id;
         right.leftId = char.id;
         this.redis.hset(id, left.id, JSON.stringify(left));
         this.redis.hset(id, right.id, JSON.stringify(right));
       } catch (e) {
         console.error(e);
+        console.log(rightId, leftId);
       }
     });
   }
