@@ -39,7 +39,7 @@ const MainPage = () => {
         <PageName>{pageName}</PageName>
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner/>}>
-        <DocList sortOption={'lastVisited'}/>
+        <DocList documentType={'recent'} sortOption={'lastVisited'}/>
       </Suspense>
     </ContentWrapper>
   );
