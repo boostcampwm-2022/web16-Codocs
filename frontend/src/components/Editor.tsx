@@ -69,6 +69,10 @@ const Editor = ({ content }: EditorProps) => {
       setOnlineUserInfo((onlineUserInfo) => [...onlineUserInfo, user]);
     });
 
+    socket.on('remote-insert', (data) => {
+      crdt.remoteInsert(data, editor);
+    });
+
     socket.on('remote-delete', (data) => {
       crdt.remoteDelete(data, editor.getDoc());
     });
@@ -89,10 +93,21 @@ const Editor = ({ content }: EditorProps) => {
       setOnlineUserInfo(() => [...leftUser]);
     });
 
-    editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
+    return () => {
+      socket.removeAllListeners();
+    };
+  }, [editor, onlineUserInfo]);
+
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    editor.on('beforeChange', (_, change: CodeMirror.EditorChange) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
+      console.log('BEFORECHANGE');
 
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
@@ -105,6 +120,9 @@ const Editor = ({ content }: EditorProps) => {
           eventName = 'local-insert';
           break;
         case '+input':
+          char = crdt.localInsertRange(fromIdx, content);
+          eventName = 'local-insert';
+          break;
         case '*compose':
           char = crdt.localDelete(fromIdx, toIdx);
           socket.emit('local-delete', char);
@@ -134,7 +152,7 @@ const Editor = ({ content }: EditorProps) => {
       socket.emit(eventName, char);
     });
 
-    editor?.on('cursorActivity', () => {
+    editor.on('cursorActivity', () => {
       cursorDebounce(
         setTimeout(() => {
           const cursorPosition = editor.getCursor();
@@ -146,11 +164,7 @@ const Editor = ({ content }: EditorProps) => {
         }, 100)
       );
     });
-
-    return () => {
-      socket.removeAllListeners();
-    };
-  }, [editor, onlineUserInfo]);
+  }, [editor]);
 
   const editorOptions = useMemo(() => {
     return {
