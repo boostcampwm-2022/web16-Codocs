@@ -34,11 +34,11 @@ class Cursor {
   }
 
   private showCursorName(cursorHolder: HTMLSpanElement) {
-    const nameHolder = document.createElement('span');
+    const nameHolder = document.createElement('div');
     nameHolder.classList.add('remote-cursor-name');
 
     cursorHolder.addEventListener('mouseenter', () => {
-      nameHolder.textContent = this.name;
+      nameHolder.innerHTML = this.name;
       nameHolder.style.top = `-${this.height}px`;
       nameHolder.style.backgroundColor = this.color;
 

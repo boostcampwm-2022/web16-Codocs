@@ -1,14 +1,16 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import { crdt } from '../core/crdt-linear-ll/crdt';
+import { CRDT } from '../core/crdt-linear-ll/crdt';
 import socket from '../core/sockets/sockets';
-import {Cursor} from '../core/cursor/cursor';
+import { Cursor } from '../core/cursor/cursor';
 import useDebounce from '../hooks/useDebounce';
 import useProfile from '../hooks/useProfile';
+import { useRecoilState } from 'recoil';
+import { onlinePeopleState } from '../atoms/onlinePeopleAtom';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -23,12 +25,22 @@ const Editor = ({ content }: EditorProps) => {
   const { profile } = useProfile();
   const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
+  const [crdt] = useState<CRDT>(new CRDT());
+  const [onlinePeopleInfo, setOnlinePeopleInfo] = useRecoilState(onlinePeopleState);
 
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
-    socket.emit('joinroom', document_id);
+    socket.emit(
+      'joinroom',
+      document_id,
+      profile,
+      (users: { id: string; name: string; color: string }[]) => {
+        console.log(users);
+        setOnlinePeopleInfo(users);
+      }
+    );
     return () => {
       socket.disconnect();
     };
@@ -52,8 +64,8 @@ const Editor = ({ content }: EditorProps) => {
       editor.focus();
     }
 
-    socket.on('remote-insert', (data) => {
-      crdt.remoteInsert(data, editor);
+    socket.on('new-user', (user) => {
+      // crdt.remoteInsert(data, editor);
     });
 
     socket.on('remote-delete', (data) => {
@@ -62,6 +74,7 @@ const Editor = ({ content }: EditorProps) => {
 
     socket.on('remote-cursor', (data) => {
       const { id, profile, cursorPosition } = data;
+      console.log('REMOTE CURSOR', cursorMap.current);
       if (!cursorMap.current.has(id)) {
         cursorMap.current.set(id, new Cursor(profile.color, profile.name));
       }
@@ -123,6 +136,7 @@ const Editor = ({ content }: EditorProps) => {
       cursorDebounce(
         setTimeout(() => {
           const cursorPosition = editor.getCursor();
+          console.log('CURSOR MOVE');
           socket.emit('cursor-moved', {
             cursorPosition,
             profile

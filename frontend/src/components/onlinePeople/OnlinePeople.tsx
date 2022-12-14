@@ -3,36 +3,22 @@ import styled from 'styled-components';
 import DropdownOption from '../dropdownOption/DropdownOption';
 import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as OnlineIcon } from '../../assets/online.svg';
+import { useRecoilState } from 'recoil';
+import { onlinePeopleState } from '../../atoms/onlinePeopleAtom';
 
 interface OnlinePeopleState {
-  id: string,
-  name: string,
-  color: string,
+  id: string;
+  name: string;
+  color: string;
 }
 
 interface OptionOpenedProps {
-  isOptionOpened : boolean;
+  isOptionOpened: boolean;
 }
 
 const OnlinePeople = () => {
   const [isOptionOpened, setIsOptionOpened] = useState<boolean>(false);
-  const [onlinePeopleInfo, setOnlinePeopleInfo] = useState<OnlinePeopleState[]>([
-    {
-      id: 'test1',
-      name: 'J001',
-      color: '#770287'
-    },
-    {
-      id: 'test2',
-      name: 'J128',
-      color: '#778589'
-    }, 
-    {
-      id: 'test3',
-      name: 'J164',
-      color: '#F39B2B'
-    },
-  ]);
+  const [onlinePeopleInfo, setOnlinePeopleInfo] = useRecoilState(onlinePeopleState);
 
   const handleOpenOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -42,21 +28,20 @@ const OnlinePeople = () => {
   return (
     <OnlinePeopleWrapper>
       <OnlinePeopleCount onClick={handleOpenOption}>
-        <TogetherIcon fill={'#000'}/>
+        <TogetherIcon fill={'#000'} />
         <BtnNumber>{onlinePeopleInfo.length}</BtnNumber>
       </OnlinePeopleCount>
       <OnlinePeopleList isOptionOpened={isOptionOpened}>
-      {
-        onlinePeopleInfo.map(person => {
+        {onlinePeopleInfo.map((person: OnlinePeopleState) => {
           return (
             <li key={person.id}>
               <DropdownOption optionTitle={person.name} optionValue={person.id}>
-                <OnlineIcon fill={person.color}/>
+                <OnlineIcon fill={person.color} />
               </DropdownOption>
             </li>
+            // <li key={index}>{index}</li>
           );
-        })
-      }
+        })}
       </OnlinePeopleList>
     </OnlinePeopleWrapper>
   );
@@ -90,7 +75,7 @@ const OnlinePeopleList = styled('ul')<OptionOpenedProps>`
   padding: 0 0.25rem;
   margin: 0;
   background-color: #222;
-  display: ${(props) => props.isOptionOpened ? 'block' : 'none'};
+  display: ${(props) => (props.isOptionOpened ? 'block' : 'none')};
 `;
 
 export { OnlinePeople };
