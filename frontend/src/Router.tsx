@@ -27,7 +27,6 @@ const Router = () => {
             <Route path="private" element={<PrivatePage />} />
             <Route path="shared" element={<SharedPage />} />
             <Route path="bookmark" element="" />
-            <Route path="trash" element="" />
           </Route>
           <Route path="/document/:document_id" element={<DocumentPage />} />
           <Route path="/*" element={<NotFoundPage />} />;
