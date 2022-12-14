@@ -24,7 +24,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  border-bottom: 1px solid #BBBBBB;
+  border-bottom: 1px solid #bbbbbb;
 `;
 
 const PageName = styled.span`

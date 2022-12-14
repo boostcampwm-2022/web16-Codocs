@@ -39,7 +39,6 @@ const OnlineUser = () => {
                 <OnlineIcon fill={person.color} />
               </DropdownOption>
             </li>
-            // <li key={index}>{index}</li>
           );
         })}
       </OnlineUserList>
