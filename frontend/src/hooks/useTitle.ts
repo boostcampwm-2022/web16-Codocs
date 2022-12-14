@@ -41,7 +41,7 @@ const useTitle = () => {
     return () => {
       socket.removeAllListeners();
     };
-  }, []);
+  }, [title]);
 
   return {
     title,
