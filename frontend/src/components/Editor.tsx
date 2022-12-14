@@ -25,7 +25,13 @@ const Editor = ({ content }: EditorProps) => {
   const { document_id } = useParams();
 
   useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
     socket.emit('joinroom', document_id);
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
