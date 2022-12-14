@@ -1,4 +1,4 @@
 declare type UserProfile = {
-  profileImgURL: string,
-  userName: string,
-}
+  profileImgURL: string;
+  userName: string;
+};

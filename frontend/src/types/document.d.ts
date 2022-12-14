@@ -1,7 +1,8 @@
 declare type DocListItem = {
-  id: string
-  title: string
-  lastVisited: string
-  role: string
-  createdAt: string
+  id: string;
+  title: string;
+  lastVisited: string;
+  role: string;
+  createdAt: string;
+  isBookmarked: boolean;
 };
