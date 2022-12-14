@@ -16,7 +16,7 @@ const PrivatePage = () => {
         <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption}/>
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner/>}>
-        <DocList sortOption={selectedOption} />
+        <DocList documentType={'recent'} sortOption={selectedOption} />
       </Suspense>
     </ContentWrapper>
   );
