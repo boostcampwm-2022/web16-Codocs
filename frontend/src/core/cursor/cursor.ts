@@ -38,7 +38,7 @@ class Cursor {
     nameHolder.classList.add('remote-cursor-name');
 
     cursorHolder.addEventListener('mouseenter', () => {
-      nameHolder.innerHTML = this.name;
+      nameHolder.innerHTML = `<span>${this.name}</span>`;
       nameHolder.style.top = `-${this.height}px`;
       nameHolder.style.backgroundColor = this.color;
 
