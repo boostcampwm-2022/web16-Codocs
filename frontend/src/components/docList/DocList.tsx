@@ -22,7 +22,7 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
     recent: '/user-document/recent',
     private: '/user-document/private',
     shared: '/user-document/shared',
-    bookmark: '/bookmark'
+    bookmark: '/user-document/bookmark'
   };
   const queryClient = useQueryClient();
 
@@ -39,7 +39,17 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
   );
 
   const sortDocListByOption = (prev: DocListItem, next: DocListItem) => {
-    // return prev[sortOption] > next[sortOption] ? 1 : -1;
+    if (sortOption === 'title') {
+      return prev[sortOption] > next[sortOption] ? 1 : -1;
+    }
+
+    if (sortOption === 'createdAt') {
+      return new Date(prev[sortOption]) > new Date(next[sortOption]) ? 1 : -1;
+    }
+
+    if (sortOption === 'lastVisited') {
+      return new Date(prev[sortOption]) < new Date(next[sortOption]) ? 1 : -1;
+    }
   };
 
   const deleteMutation = useMutation(
@@ -55,13 +65,17 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(`${documentType}`);
+        alertToast('INFO', '성공적으로 삭제했습니다.');
+      },
+      onError: () => {
+        alertToast('WARNING', '문서 삭제에 실패했습니다. 다시 시도해주세요.');
       }
     }
   );
 
   const bookmarkMutation = useMutation(
     async (id: string) => {
-      return await fetch(`${REACT_APP_API_URL}/bookmark/${id}`, {
+      return await fetch(`${REACT_APP_API_URL}/user-document/${id}/bookmark`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -72,12 +86,34 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(`${documentType}`);
+        alertToast('INFO', '북마크에 추가되었습니다.');
+      },
+      onError: () => {
+        alertToast('WARNING', '북마크 추가에 실패했습니다. 다시 시도해주세요.');
       }
     }
   );
 
-  // alertToast('INFO', '북마크에 추가했습니다.');
-  // alertToast('WARNING', '북마크에 추가하지 못했습니다. 다시 시도해주세요.');
+  const unbookmarkMutation = useMutation(
+    async (id: string) => {
+      return await fetch(`${REACT_APP_API_URL}/user-document/${id}/unbookmark`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`${documentType}`);
+        alertToast('INFO', '북마크를 해제했습니다.');
+      },
+      onError: () => {
+        alertToast('WARNING', '북마크를 해제하지 못했습니다. 다시 시도해주세요.');
+      }
+    }
+  );
 
   return (
     <DocListWrapper>
@@ -90,7 +126,9 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
             lastVisited={doc.lastVisited}
             role={doc.role}
             createdAt={doc.createdAt}
+            isBookmarked={doc.isBookmarked}
             handleBookmark={bookmarkMutation.mutate}
+            handleUnbookmark={unbookmarkMutation.mutate}
             handleDelete={deleteMutation.mutate}
           />
         );

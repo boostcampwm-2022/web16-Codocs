@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ModalDoubleChecker } from '../modalDoubleChecker';
 import { useRecoilState } from 'recoil';
@@ -10,28 +10,23 @@ interface DimmedProps {
 
 const Modal = () => {
   const [modalData, setModalData] = useRecoilState(modalState);
-  const dimmedRef = useRef<HTMLDivElement | null>(null);
 
-  const handleCloseModal = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement>) => {
+  const handleInitModal = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log(e.target);
-    if (e.target) {
-      setModalData({
-        type: 'INIT',
-        clickHandler: () => {
-          return Promise<void>;
-        }
-      });
-      console.log(modalData);
-    }
+    setModalData({
+      type: 'INIT',
+      clickHandler: () => {
+        return Promise<void>;
+      }
+    });
   };
 
   return (
-    <Dimmed ref={dimmedRef} modalType={modalData.type} onClick={handleCloseModal}>
-      {modalData.clickHandler && (
+    <Dimmed modalType={modalData.type}>
+      {modalData.type !== 'INIT' && (
         <ModalDoubleChecker
           modalType={modalData.type}
-          modalCancelHandler={handleCloseModal}
+          modalCancelHandler={handleInitModal}
           modalActionHandler={modalData.clickHandler}
         />
       )}

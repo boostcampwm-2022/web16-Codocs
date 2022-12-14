@@ -33,6 +33,10 @@ const ModalDoubleChecker = ({
     BOOKMARK: {
       questionTitle: '북마크에 등록하시겠습니까?',
       questionDescription: '등록한 문서는 북마크 페이지에서 확인할 수 있습니다.'
+    },
+    UNBOOKMARK: {
+      questionTitle: '북마크를 해제하시겠습니까?',
+      questionDescription: '북마크를 해제해도 다시 북마크할 수 있습니다.'
     }
   };
 
@@ -49,7 +53,12 @@ const ModalDoubleChecker = ({
           <AnswerBtn backgroundColor={'#A5A5A5'} onClick={modalCancelHandler}>
             취소
           </AnswerBtn>
-          <AnswerBtn backgroundColor={'#FF5757'} onClick={modalActionHandler}>
+          <AnswerBtn
+            backgroundColor={'#FF5757'}
+            onClick={(e) => {
+              modalActionHandler();
+              modalCancelHandler(e);
+            }}>
             확인
           </AnswerBtn>
         </Answers>
@@ -63,7 +72,7 @@ const ModalContent = styled.div`
   min-height: 450px;
   border-radius: 10px;
   background-color: #dfdfdf;
-  padding: 6.5rem 2rem;
+  padding: 3rem 2rem;
   margin: 0 auto;
   margin-top: 4rem;
 `;
@@ -73,7 +82,7 @@ const Question = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 4rem 3rem 4rem;
+  margin: 3rem 4rem;
 `;
 
 const QuestionTitle = styled.h2`
