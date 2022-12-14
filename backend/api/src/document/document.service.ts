@@ -11,7 +11,7 @@ import { DocumentDetailResponseDTO } from './dto/document-detail-response.dto';
 import { User } from '../user/user.entity';
 import { UserDocument } from '../userdocument/userdocument.entity';
 import { Char } from 'src/types/char';
-import { UserRole } from 'src/enum/role.enum';
+import { UserRole } from '../enum/role.enum';
 
 @Injectable()
 export class DocumentService {
