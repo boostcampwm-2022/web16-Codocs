@@ -45,6 +45,9 @@ export class UserDocument {
   @DeleteDateColumn({ name: 'deleted_at', default: null })
   deletedAt: Date;
 
+  @Column({ name: 'is_bookmarked', default: false })
+  isBookmarked: boolean;
+
   setDocument(document: Document) {
     this.document = document;
   }
