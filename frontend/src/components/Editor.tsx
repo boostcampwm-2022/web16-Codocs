@@ -65,7 +65,8 @@ const Editor = ({ content }: EditorProps) => {
     }
 
     socket.on('new-user', (user) => {
-      // crdt.remoteInsert(data, editor);
+      console.log(user);
+      setOnlineUserInfo((onlineUserInfo) => [...onlineUserInfo, user]);
     });
 
     socket.on('remote-delete', (data) => {
@@ -74,7 +75,6 @@ const Editor = ({ content }: EditorProps) => {
 
     socket.on('remote-cursor', (data) => {
       const { id, profile, cursorPosition } = data;
-      console.log('REMOTE CURSOR', cursorMap.current);
       if (!cursorMap.current.has(id)) {
         cursorMap.current.set(id, new Cursor(profile.color, profile.name));
       }
@@ -85,6 +85,8 @@ const Editor = ({ content }: EditorProps) => {
       const { id } = data;
       cursorMap.current.get(id)?.removeCursor();
       cursorMap.current.delete(id);
+      const leftUser = onlineUserInfo.filter((user) => user.id !== id);
+      setOnlineUserInfo(() => [...leftUser]);
     });
 
     editor?.on('beforeChange', async (_, change: CodeMirror.EditorChange) => {
@@ -148,7 +150,7 @@ const Editor = ({ content }: EditorProps) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [editor]);
+  }, [editor, onlineUserInfo]);
 
   const editorOptions = useMemo(() => {
     return {
