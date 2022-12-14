@@ -10,7 +10,7 @@ import { Cursor } from '../core/cursor/cursor';
 import useDebounce from '../hooks/useDebounce';
 import useProfile from '../hooks/useProfile';
 import { useRecoilState } from 'recoil';
-import { onlinePeopleState } from '../atoms/onlinePeopleAtom';
+import { onlineUserState } from '../atoms/onlineUserAtom';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -26,7 +26,7 @@ const Editor = ({ content }: EditorProps) => {
   const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
   const [crdt] = useState<CRDT>(new CRDT());
-  const [onlinePeopleInfo, setOnlinePeopleInfo] = useRecoilState(onlinePeopleState);
+  const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
 
   useEffect(() => {
     if (!socket.connected) {
@@ -38,7 +38,7 @@ const Editor = ({ content }: EditorProps) => {
       profile,
       (users: { id: string; name: string; color: string }[]) => {
         console.log(users);
-        setOnlinePeopleInfo(users);
+        setOnlineUserInfo(users);
       }
     );
     return () => {

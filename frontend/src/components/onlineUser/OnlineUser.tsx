@@ -4,9 +4,9 @@ import DropdownOption from '../dropdownOption/DropdownOption';
 import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as OnlineIcon } from '../../assets/online.svg';
 import { useRecoilState } from 'recoil';
-import { onlinePeopleState } from '../../atoms/onlinePeopleAtom';
+import { onlineUserState } from '../../atoms/onlineUserAtom';
 
-interface OnlinePeopleState {
+interface OnlineUserState {
   id: string;
   name: string;
   color: string;
@@ -16,9 +16,9 @@ interface OptionOpenedProps {
   isOptionOpened: boolean;
 }
 
-const OnlinePeople = () => {
+const OnlineUser = () => {
   const [isOptionOpened, setIsOptionOpened] = useState<boolean>(false);
-  const [onlinePeopleInfo, setOnlinePeopleInfo] = useRecoilState(onlinePeopleState);
+  const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
 
   const handleOpenOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -26,13 +26,13 @@ const OnlinePeople = () => {
   };
 
   return (
-    <OnlinePeopleWrapper>
-      <OnlinePeopleCount onClick={handleOpenOption}>
+    <OnlineUserWrapper>
+      <OnlineUserCount onClick={handleOpenOption}>
         <TogetherIcon fill={'#000'} />
-        <BtnNumber>{onlinePeopleInfo.length}</BtnNumber>
-      </OnlinePeopleCount>
-      <OnlinePeopleList isOptionOpened={isOptionOpened}>
-        {onlinePeopleInfo.map((person: OnlinePeopleState) => {
+        <BtnNumber>{onlineUserInfo.length}</BtnNumber>
+      </OnlineUserCount>
+      <OnlineUserList isOptionOpened={isOptionOpened}>
+        {onlineUserInfo.map((person: OnlineUserState) => {
           return (
             <li key={person.id}>
               <DropdownOption optionTitle={person.name} optionValue={person.id}>
@@ -42,18 +42,18 @@ const OnlinePeople = () => {
             // <li key={index}>{index}</li>
           );
         })}
-      </OnlinePeopleList>
-    </OnlinePeopleWrapper>
+      </OnlineUserList>
+    </OnlineUserWrapper>
   );
 };
 
-const OnlinePeopleWrapper = styled.div`
+const OnlineUserWrapper = styled.div`
   width: 140px;
   z-index: 500;
   cursor: pointer;
 `;
 
-const OnlinePeopleCount = styled.span`
+const OnlineUserCount = styled.span`
   display: flex;
   align-items: center;
 `;
@@ -65,7 +65,7 @@ const BtnNumber = styled.span`
   margin-left: 0.5rem;
 `;
 
-const OnlinePeopleList = styled('ul')<OptionOpenedProps>`
+const OnlineUserList = styled('ul')<OptionOpenedProps>`
   width: 140px;
   list-style-type: none;
   position: absolute;
@@ -78,4 +78,4 @@ const OnlinePeopleList = styled('ul')<OptionOpenedProps>`
   display: ${(props) => (props.isOptionOpened ? 'block' : 'none')};
 `;
 
-export { OnlinePeople };
+export { OnlineUser };

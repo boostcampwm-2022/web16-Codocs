@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import useTitle from '../../hooks/useTitle';
 import useToast from '../../hooks/useToast';
-import { OnlinePeople } from '../../components/onlinePeople';
+import { OnlineUser } from '../../components/onlineUser/OnlineUser';
 
 interface EditorHeaderProps {
   titleProp: string;
@@ -43,7 +43,7 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
           <ShareButton type="button" onClick={handleCopyURL}>
             Share
           </ShareButton>
-          <OnlinePeople />
+          <OnlineUser />
         </RightButtonWrapper>
       </HeaderContainer>
     </>
