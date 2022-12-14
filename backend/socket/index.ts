@@ -15,25 +15,26 @@ io.on('connection', (client) => {
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('new-title', newTitle);
   });
-  client.on('local-insert', (data) => {
+  client.on('local-insert', async (data) => {
     const roomName = Array.from(client.rooms)[1];
-    client.to(roomName).emit('remote-insert', data);
+
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-insert', data);
     } catch (e) {
       console.log(e);
     }
   });
-  client.on('local-delete', (data) => {
+  client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
     console.log('ROOMNAME : ', roomName);
-    client.to(roomName).emit('remote-delete', data);
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-delete', data);
     } catch (e) {
       console.log(e);
     }
