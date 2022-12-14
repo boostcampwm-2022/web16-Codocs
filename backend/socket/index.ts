@@ -5,7 +5,10 @@ import axios from 'axios';
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: '*' } });
+const io = new Server(httpServer, {
+  cors: { origin: '*' },
+  transports: ['websocket', 'polling']
+});
 
 interface SocketCustomClient extends Socket {
   name?: string;
@@ -15,11 +18,9 @@ interface SocketCustomClient extends Socket {
 io.on('connection', (client: SocketCustomClient) => {
   client.on('joinroom', (room, profile, callback) => {
     client.join(room);
-    client.name = profile.name;
+    client.name = profile.name ?? 'anonymous';
     client.color = profile.color;
-    client.to(room).emit('new-user', client.id, profile.name, profile.color);
-    // room에서 client들 정보 빼와서 보내기.
-    // 클라이언트에서 필요한 정보 -> id / name / color
+    client.to(room).emit('new-user', { id: client.id, name: client.name, color: client.color });
     const users = Array.from(io.sockets.adapter.rooms.get(room));
     callback(
       users.map((user) => {
@@ -32,7 +33,6 @@ io.on('connection', (client: SocketCustomClient) => {
         };
       })
     );
-    // callback(Array.from(clients));
   });
   client.on('update-title', (newTitle) => {
     const roomName = Array.from(client.rooms)[1];
@@ -65,7 +65,10 @@ io.on('connection', (client: SocketCustomClient) => {
 
   client.on('cursor-moved', (data) => {
     const id = client.id;
-    const { cursorPosition, profile } = data;
+    let { cursorPosition, profile } = data;
+    if (profile.name == undefined) {
+      profile.name = 'anonymous';
+    }
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('remote-cursor', {
       id,
