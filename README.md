@@ -99,7 +99,7 @@
 
 ## 아키텍쳐
 
-<img src="https://user-images.githubusercontent.com/31645195/207779245-e5b43d8a-8b64-49ea-90c7-c8ef5b5ac4e3.png" width=80%>
+<img src="https://user-images.githubusercontent.com/31645195/207783810-a6480464-d7f4-41d2-989f-95ed7bcc7c4f.png" width=80%>
 
 <br />
 
