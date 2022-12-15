@@ -167,8 +167,8 @@ class CRDT {
       this.charMap[char.id].tombstone = true;
     });
 
-    const positionFrom = editor.getDoc().posFromIndex(deleteStartIndex);
-    const positionTo = editor.getDoc().posFromIndex(deleteEndIndex);
+    const positionFrom = editor?.getDoc().posFromIndex(deleteStartIndex);
+    const positionTo = editor?.getDoc().posFromIndex(deleteEndIndex);
 
     this.addChange(editor, positionFrom, positionTo, '');
 
