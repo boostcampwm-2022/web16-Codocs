@@ -10,15 +10,6 @@
 
 </center>
 
-<br />
-
-|[Notion](https://5-line-poem-with-bstcp.notion.site/codocs-d5051e495a0640ebacc8cadebde4b54e)|[Figma](https://www.figma.com/file/4ouMjFJWdbdYPUwSf6WEMO/Codocs?node-id=0%3A1)|[GoogleSheet](https://docs.google.com/spreadsheets/d/1zg6LNgrADmZ-ABg8H5B5nIpRaAqmZvLjx29GzCOUoeo/edit#gid=0)|[GitHub wiki](https://github.com/boostcampwm-2022/web16-Codocs/wiki)
-|:-:|:-:|:-:|:-:|
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png?20200221181224" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Figma-logo.svg/640px-Figma-logo.svg.png" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/640px-Google_Sheets_logo_%282014-2020%29.svg.png" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/GitHub_Mark.png/640px-GitHub_Mark.png" width=100>|
-|문서 모음|디자인|백로그|깃허브 위키|
-
-<br />
-
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm-2022%2Fweb16-Codocs&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
 ## 프로젝트 소개 
@@ -115,3 +106,18 @@
 ## 기술 스택 
 
 <img src="https://user-images.githubusercontent.com/31645195/207773388-96f8e435-d1eb-4662-a50d-5f4dd7d707ef.png" width=80%>
+
+## 링크
+
+<div align="center">
+
+<br />
+
+|[Notion](https://5-line-poem-with-bstcp.notion.site/codocs-d5051e495a0640ebacc8cadebde4b54e)|[Figma](https://www.figma.com/file/4ouMjFJWdbdYPUwSf6WEMO/Codocs?node-id=0%3A1)|[GoogleSheet](https://docs.google.com/spreadsheets/d/1zg6LNgrADmZ-ABg8H5B5nIpRaAqmZvLjx29GzCOUoeo/edit#gid=0)|[GitHub wiki](https://github.com/boostcampwm-2022/web16-Codocs/wiki)
+|:-:|:-:|:-:|:-:|
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png?20200221181224" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Figma-logo.svg/640px-Figma-logo.svg.png" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Google_Sheets_logo_%282014-2020%29.svg/640px-Google_Sheets_logo_%282014-2020%29.svg.png" width=100>|<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/GitHub_Mark.png/640px-GitHub_Mark.png" width=100>|
+|문서 모음|디자인|백로그|깃허브 위키|
+
+<br />
+
+<div align="center">
