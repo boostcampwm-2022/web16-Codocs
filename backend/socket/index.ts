@@ -1,39 +1,63 @@
 import * as express from 'express';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { createServer } from 'http';
 import axios from 'axios';
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: '*' } });
+const io = new Server(httpServer, {
+  cors: { origin: '*' },
+  transports: ['websocket', 'polling']
+});
 
-io.on('connection', (client) => {
-  client.on('joinroom', (room) => {
+interface SocketCustomClient extends Socket {
+  name?: string;
+  color?: string;
+}
+
+io.on('connection', (client: SocketCustomClient) => {
+  client.on('joinroom', (room, profile, callback) => {
     client.join(room);
+    client.name = profile.name ?? 'anonymous';
+    client.color = profile.color;
+    client.to(room).emit('new-user', { id: client.id, name: client.name, color: client.color });
+    const users = Array.from(io.sockets.adapter.rooms.get(room));
+    callback(
+      users.map((user) => {
+        const userSocket: SocketCustomClient = io.sockets.sockets.get(user);
+        const { id, name, color } = userSocket;
+        return {
+          id,
+          name,
+          color
+        };
+      })
+    );
   });
   client.on('update-title', (newTitle) => {
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('new-title', newTitle);
   });
-  client.on('local-insert', (data) => {
+  client.on('local-insert', async (data) => {
     const roomName = Array.from(client.rooms)[1];
-    client.to(roomName).emit('remote-insert', data);
+
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-insert', data);
     } catch (e) {
       console.log(e);
     }
   });
-  client.on('local-delete', (data) => {
+  client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
     console.log('ROOMNAME : ', roomName);
-    client.to(roomName).emit('remote-delete', data);
     try {
-      axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
         content: data
       });
+      client.to(roomName).emit('remote-delete', data);
     } catch (e) {
       console.log(e);
     }
@@ -41,7 +65,10 @@ io.on('connection', (client) => {
 
   client.on('cursor-moved', (data) => {
     const id = client.id;
-    const { cursorPosition, profile } = data;
+    let { cursorPosition, profile } = data;
+    if (profile.name == undefined) {
+      profile.name = 'anonymous';
+    }
     const roomName = Array.from(client.rooms)[1];
     client.to(roomName).emit('remote-cursor', {
       id,

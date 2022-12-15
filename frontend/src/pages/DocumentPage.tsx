@@ -6,13 +6,17 @@ import { fetchDataFromPath } from '../utils/fetchBeforeRender';
 import { useQuery } from 'react-query';
 
 const DocumentPage = () => {
-  const { data: documentData } = useQuery('document', () => fetchDataFromPath(window.location.pathname), {
-    refetchOnWindowFocus: false,
-    suspense: true,
-    onError: e => {
-      console.log(e);
-    },
-  }); 
+  const { data: documentData } = useQuery(
+    `${window.location.pathname}`,
+    () => fetchDataFromPath(window.location.pathname),
+    {
+      cacheTime: 0,
+      suspense: true,
+      onError: (e) => {
+        console.log(e);
+      }
+    }
+  );
 
   return (
     <Suspense fallback={<Spinner />}>

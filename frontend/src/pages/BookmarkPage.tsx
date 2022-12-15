@@ -5,7 +5,7 @@ import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
 import { Dropdown } from '../components/dropdown';
 
-const PrivatePage = () => {
+const BookmarkPage = () => {
   const { pageName } = usePageName();
   const [selectedOption, setSelectedOption] = useState<string>('lastVisited');
 
@@ -16,7 +16,7 @@ const PrivatePage = () => {
         <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption} />
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner />}>
-        <DocList documentType={'private'} sortOption={selectedOption} />
+        <DocList documentType={'bookmark'} sortOption={selectedOption} />
       </Suspense>
     </ContentWrapper>
   );
@@ -40,4 +40,4 @@ const PageName = styled.h1`
   font-size: 2rem;
 `;
 
-export default PrivatePage;
+export default BookmarkPage;

@@ -34,13 +34,14 @@ class Cursor {
   }
 
   private showCursorName(cursorHolder: HTMLSpanElement) {
-    const nameHolder = document.createElement('span');
+    const nameHolder = document.createElement('div');
     nameHolder.classList.add('remote-cursor-name');
 
     cursorHolder.addEventListener('mouseenter', () => {
-      nameHolder.textContent = this.name;
+      nameHolder.innerHTML = this.name;
       nameHolder.style.top = `-${this.height}px`;
       nameHolder.style.backgroundColor = this.color;
+      nameHolder.style.color = this.getContrastColor(this.color);
 
       nameHolder.classList.remove('hide');
       cursorHolder.appendChild(nameHolder);
@@ -51,6 +52,15 @@ class Cursor {
 
       nameHolder.parentNode?.removeChild(nameHolder);
     });
+  }
+
+  private getContrastColor(color: string) {
+    const hex = color.replace('#', '');
+    const c_r = parseInt(hex.substring(0, 0 + 2), 16);
+    const c_g = parseInt(hex.substring(2, 2 + 2), 16);
+    const c_b = parseInt(hex.substring(4, 4 + 2), 16);
+    const brightness = (c_r * 299 + c_g * 587 + c_b * 114) / 1000;
+    return brightness > 155 ? '#222222' : '#FFFFFF';
   }
 
   removeCursor() {

@@ -9,11 +9,22 @@ import { useRecoilState } from 'recoil';
 import { modalState } from '../../atoms/modalAtom';
 
 interface DocListItemWithClickHandler extends DocListItem {
-  handleBookmark: (id: string) => void,
-  handleDelete: (id: string) => void,
+  handleBookmark: (id: string) => void;
+  handleUnbookmark: (id: string) => void;
+  handleDelete: (id: string) => void;
 }
 
-const DocListItem = ({ id, title, lastVisited, role, createdAt, handleBookmark, handleDelete}: DocListItemWithClickHandler) => {
+const DocListItem = ({
+  id,
+  title,
+  lastVisited,
+  role,
+  createdAt,
+  isBookmarked,
+  handleBookmark,
+  handleUnbookmark,
+  handleDelete
+}: DocListItemWithClickHandler) => {
   const [modalData, setModalData] = useRecoilState(modalState);
   const docListItemStyles = {
     fill: '#A5A5A5',
@@ -26,33 +37,52 @@ const DocListItem = ({ id, title, lastVisited, role, createdAt, handleBookmark, 
       <Link to={`../${id}`}>
         <Title>{title}</Title>
         <LowerLayout>
-          <LastVisited>최근 방문일: {lastVisited.slice(0, 11)}</LastVisited>
+          <DateInfo>
+            <DateText>최근 방문일: {lastVisited.slice(0, 10)}</DateText>
+            <DateText>문서 생성일: {createdAt.slice(0, 10)}</DateText>
+          </DateInfo>
           <IconGroup>
             <li>
               {role === 'owner' && (
-                <IconButton {...docListItemStyles} hover={COLOR_CAUTION} clickHandler={(e) => {
-                  e.preventDefault();
-                  setModalData({
-                    type: 'DELETE',
-                    clickHandler: () => {
-                      handleDelete(id);
-                    },
-                  });
-                }}>
+                <IconButton
+                  {...docListItemStyles}
+                  hover={COLOR_CAUTION}
+                  clickHandler={(e) => {
+                    e.preventDefault();
+                    setModalData({
+                      type: 'DELETE',
+                      clickHandler: () => {
+                        handleDelete(id);
+                      }
+                    });
+                  }}>
                   <TrashIcon />
                 </IconButton>
               )}
             </li>
             <li>
-              <IconButton {...docListItemStyles} hover={COLOR_ACTIVE} clickHandler={(e) => {
+              <IconButton
+                {...docListItemStyles}
+                fill={isBookmarked ? '#3a7dff' : '#A5A5A5'}
+                hover={COLOR_ACTIVE}
+                clickHandler={(e) => {
                   e.preventDefault();
+                  if (!isBookmarked) {
+                    setModalData({
+                      type: 'BOOKMARK',
+                      clickHandler: () => {
+                        handleBookmark(id);
+                      }
+                    });
+                    return;
+                  }
                   setModalData({
-                    type: 'BOOKMARK',
+                    type: 'UNBOOKMARK',
                     clickHandler: () => {
-                      handleBookmark(id);
-                    },
+                      handleUnbookmark(id);
+                    }
                   });
-              }}>
+                }}>
                 <BookmarkIcon />
               </IconButton>
             </li>
@@ -84,14 +114,21 @@ const Title = styled.div`
 const LowerLayout = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding-top: 1.5rem;
+  align-items: center;
+  padding-top: 0.5rem;
 `;
 
-const LastVisited = styled.div`
+const DateInfo = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const DateText = styled.li`
   font-weight: 300;
   font-size: 10px;
   color: #a5a5a5;
+  margin-top: 0.25rem;
 `;
 
 const IconGroup = styled.ul`

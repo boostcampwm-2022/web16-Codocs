@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-const useDebounce = () =>  {
+const useDebounce = () => {
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout>();
 
   useEffect(() => {
-    return (() => {
+    return () => {
       clearTimeout(debounceTimer);
-    });
+    };
   }, [debounceTimer]);
 
   return [setDebounceTimer];

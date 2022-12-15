@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { SiteLogo } from '../siteLogo';
 import useTitle from '../../hooks/useTitle';
 import useToast from '../../hooks/useToast';
-import { OnlinePeople } from '../../components/onlinePeople';
+import { OnlineUser } from '../../components/onlineUser/OnlineUser';
 
 interface EditorHeaderProps {
   titleProp: string;
@@ -22,7 +22,7 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
     navigator.clipboard
       .writeText(url)
       .then(() => {
-        alertToast('INFO', '성공! 공유해보세요.');
+        alertToast('INFO', '링크 복사 성공! 공유해보세요!');
       })
       .catch(() => {
         alertToast('WARNING', '실패!');
@@ -33,12 +33,17 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
     <>
       <HeaderContainer>
         <SiteLogo />
-        <DocumentTitle type="text" value={title ?? ''} onChange={onTitleChange} onBlur={onTitleUpdate} />
+        <DocumentTitle
+          type="text"
+          value={title ?? ''}
+          onChange={onTitleChange}
+          onBlur={onTitleUpdate}
+        />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={handleCopyURL}>
             Share
           </ShareButton>
-          <OnlinePeople />
+          <OnlineUser />
         </RightButtonWrapper>
       </HeaderContainer>
     </>
@@ -86,6 +91,5 @@ const ShareButton = styled.button`
   line-height: 1rem;
   color: #ffffff;
 `;
-
 
 export { EditorHeader };

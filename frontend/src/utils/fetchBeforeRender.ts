@@ -1,26 +1,15 @@
 import { worker } from '../mocks/worker';
-const { REACT_APP_NODE_ENV, NODE_ENV } = process.env;
-
-let requestDomain: string;
+const { REACT_APP_NODE_ENV, REACT_APP_API_URL } = process.env;
 
 if (REACT_APP_NODE_ENV === 'mock') {
   worker.start({
-    onUnhandledRequest: 'bypass',
+    onUnhandledRequest: 'bypass'
   });
-  requestDomain = 'http://localhost:3000';
-} else if (REACT_APP_NODE_ENV === 'test') {
-  requestDomain = 'http://localhost:3000';
-} else if (REACT_APP_NODE_ENV === 'development') {
-  requestDomain = 'http://localhost:8000';
-} else {
-  requestDomain = 'http://www.codocs.site';
-} 
-console.log(REACT_APP_NODE_ENV);
-console.log(requestDomain);
+}
+
 const fetchDataFromPath = (path: string) => {
-  console.log(`${requestDomain}${path}`);
   try {
-    const data = fetch(`${requestDomain}${path}`, {
+    const data = fetch(`${REACT_APP_API_URL}${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

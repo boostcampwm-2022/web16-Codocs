@@ -24,7 +24,10 @@ export class Document {
   @Column('text', { default: null })
   content: string;
 
-  @OneToMany(() => UserDocument, (userDocument) => userDocument.document)
+  @OneToMany(() => UserDocument, (userDocument) => userDocument.document, {
+    onDelete: 'CASCADE',
+    cascade: true
+  })
   userRelations: UserDocument[];
 
   @CreateDateColumn({ name: 'created_at' })

@@ -3,36 +3,22 @@ import styled from 'styled-components';
 import DropdownOption from '../dropdownOption/DropdownOption';
 import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as OnlineIcon } from '../../assets/online.svg';
+import { useRecoilState } from 'recoil';
+import { onlineUserState } from '../../atoms/onlineUserAtom';
 
-interface OnlinePeopleState {
-  id: string,
-  name: string,
-  color: string,
+interface OnlineUserState {
+  id: string;
+  name: string;
+  color: string;
 }
 
 interface OptionOpenedProps {
-  isOptionOpened : boolean;
+  isOptionOpened: boolean;
 }
 
-const OnlinePeople = () => {
+const OnlineUser = () => {
   const [isOptionOpened, setIsOptionOpened] = useState<boolean>(false);
-  const [onlinePeopleInfo, setOnlinePeopleInfo] = useState<OnlinePeopleState[]>([
-    {
-      id: 'test1',
-      name: 'J001',
-      color: '#770287'
-    },
-    {
-      id: 'test2',
-      name: 'J128',
-      color: '#778589'
-    }, 
-    {
-      id: 'test3',
-      name: 'J164',
-      color: '#F39B2B'
-    },
-  ]);
+  const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
 
   const handleOpenOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -40,35 +26,33 @@ const OnlinePeople = () => {
   };
 
   return (
-    <OnlinePeopleWrapper>
-      <OnlinePeopleCount onClick={handleOpenOption}>
-        <TogetherIcon fill={'#000'}/>
-        <BtnNumber>{onlinePeopleInfo.length}</BtnNumber>
-      </OnlinePeopleCount>
-      <OnlinePeopleList isOptionOpened={isOptionOpened}>
-      {
-        onlinePeopleInfo.map(person => {
+    <OnlineUserWrapper>
+      <OnlineUserCount onClick={handleOpenOption}>
+        <TogetherIcon fill={'#000'} />
+        <BtnNumber>{onlineUserInfo.length}</BtnNumber>
+      </OnlineUserCount>
+      <OnlineUserList isOptionOpened={isOptionOpened}>
+        {onlineUserInfo.map((person: OnlineUserState) => {
           return (
             <li key={person.id}>
               <DropdownOption optionTitle={person.name} optionValue={person.id}>
-                <OnlineIcon fill={person.color}/>
+                <OnlineIcon fill={person.color} />
               </DropdownOption>
             </li>
           );
-        })
-      }
-      </OnlinePeopleList>
-    </OnlinePeopleWrapper>
+        })}
+      </OnlineUserList>
+    </OnlineUserWrapper>
   );
 };
 
-const OnlinePeopleWrapper = styled.div`
+const OnlineUserWrapper = styled.div`
   width: 140px;
   z-index: 500;
   cursor: pointer;
 `;
 
-const OnlinePeopleCount = styled.span`
+const OnlineUserCount = styled.span`
   display: flex;
   align-items: center;
 `;
@@ -80,7 +64,7 @@ const BtnNumber = styled.span`
   margin-left: 0.5rem;
 `;
 
-const OnlinePeopleList = styled('ul')<OptionOpenedProps>`
+const OnlineUserList = styled('ul')<OptionOpenedProps>`
   width: 140px;
   list-style-type: none;
   position: absolute;
@@ -90,7 +74,7 @@ const OnlinePeopleList = styled('ul')<OptionOpenedProps>`
   padding: 0 0.25rem;
   margin: 0;
   background-color: #222;
-  display: ${(props) => props.isOptionOpened ? 'block' : 'none'};
+  display: ${(props) => (props.isOptionOpened ? 'block' : 'none')};
 `;
 
-export { OnlinePeople };
+export { OnlineUser };

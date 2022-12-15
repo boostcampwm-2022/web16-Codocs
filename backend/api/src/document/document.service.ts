@@ -119,12 +119,16 @@ export class DocumentService {
         this.redis.hset(id, left.id, JSON.stringify(left));
         this.redis.hset(id, right.id, JSON.stringify(right));
       } catch (e) {
-        throw new HttpException('Insert Error', 400);
+        // throw new HttpException('Insert Error', 400);
       }
     });
   }
 
-  remove(id: string) {
-    return this.documentRepository.softDelete(id);
+  async remove(id: string) {
+    const document = await this.documentRepository.findOne({
+      relations: ['userRelations'],
+      where: { id }
+    });
+    return this.documentRepository.softRemove(document);
   }
 }

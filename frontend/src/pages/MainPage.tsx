@@ -6,6 +6,7 @@ import usePageName from '../hooks/usePageName';
 import useToast from '../hooks/useToast';
 import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
+const { REACT_APP_API_URL } = process.env;
 
 const MainPage = () => {
   const { pageName } = usePageName();
@@ -15,7 +16,7 @@ const MainPage = () => {
   const handleCreateNewDocument = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_DEV_URL}/document`, {
+      const response = await fetch(`${REACT_APP_API_URL}/document`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -38,8 +39,8 @@ const MainPage = () => {
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
       </ContentHeaderGroup>
-      <Suspense fallback={<Spinner/>}>
-        <DocList documentType={'recent'} sortOption={'lastVisited'}/>
+      <Suspense fallback={<Spinner />}>
+        <DocList documentType={'recent'} sortOption={'lastVisited'} />
       </Suspense>
     </ContentWrapper>
   );

@@ -8,15 +8,15 @@ import { Dropdown } from '../components/dropdown';
 const SharedPage = () => {
   const { pageName } = usePageName();
   const [selectedOption, setSelectedOption] = useState<string>('lastVisited');
-  
+
   return (
     <ContentWrapper>
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
-        <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption}/>
+        <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption} />
       </ContentHeaderGroup>
-      <Suspense fallback={<Spinner/>}>
-        <DocList documentType={'recent'} sortOption={selectedOption} />
+      <Suspense fallback={<Spinner />}>
+        <DocList documentType={'shared'} sortOption={selectedOption} />
       </Suspense>
     </ContentWrapper>
   );

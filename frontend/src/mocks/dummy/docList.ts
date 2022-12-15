@@ -12,7 +12,7 @@ const roleEnumMock: roleEnumObj = {
 
 const getRandomDate = () => {
   const date = new Date().getTime();
-  return new Date(date - Math.floor(Math.random() * 10000000000 ));
+  return new Date(date - Math.floor(Math.random() * 10000000000));
 };
 
 const createDocumentList = (counts: number): DocListItem[] => {
@@ -25,6 +25,7 @@ const createDocumentList = (counts: number): DocListItem[] => {
         lastVisited: new Date(getRandomDate()).getTime().toString(),
         role: roleEnumMock[Math.floor(Math.random() * 3 + 1)],
         createdAt: new Date(getRandomDate()).getTime().toString(),
+        isBookmarked: false
       };
     });
 };

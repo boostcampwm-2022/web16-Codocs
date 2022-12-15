@@ -60,6 +60,34 @@ export class UserDocumentService {
     return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
   }
 
+  async getBookmarkDocuments(nodeId: string) {
+    const userDocuments = await this.userDocumentRepository.find({
+      relations: ['document', 'user'],
+      where: { user: { nodeId }, isBookmarked: true },
+      order: { lastVisited: 'DESC' }
+    });
+
+    return userDocuments.map((userDocument) => new UserDocumentResponseDTO(userDocument));
+  }
+
+  async bookmark(id: string) {
+    const userDocument = await this.userDocumentRepository.findOne({
+      relations: ['document'],
+      where: { document: { id } }
+    });
+    userDocument.isBookmarked = true;
+    this.userDocumentRepository.save(userDocument);
+  }
+
+  async unBookmark(id: string) {
+    const userDocument = await this.userDocumentRepository.findOne({
+      relations: ['document'],
+      where: { document: { id } }
+    });
+    userDocument.isBookmarked = false;
+    this.userDocumentRepository.save(userDocument);
+  }
+
   findOne(id: string) {
     const entity = this.userDocumentRepository.findOneBy({ id });
     return plainToClass(UserDocumentResponseDTO, entity);

@@ -21,7 +21,6 @@
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "no-var": "error",
-    "object-property-newline": "error",
     "object-shorthand": ["error", "always"],
     "lines-between-class-members": ["error", "always"],
     "prefer-arrow-callback": "error",

@@ -55,6 +55,36 @@ export class UserdocumentController {
   getSharedDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
     return this.userDocumentService.getSharedDocuments(req.user.nodeId);
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('bookmark')
+  @ApiOperation({
+    summary: '북마크 API',
+    description: '북마크된 문서들을 반환한다.'
+  })
+  @ApiResponse({ description: '문서' })
+  getBookmarkDocuments(@Req() req): Promise<UserDocumentResponseDTO[]> {
+    return this.userDocumentService.getBookmarkDocuments(req.user.nodeId);
+  }
+
+  @Post(':id/bookmark')
+  @ApiOperation({
+    summary: '북마크',
+    description: '해당 uuid 유저문서 북마크'
+  })
+  @ApiCreatedResponse({ description: '북마크 완료' })
+  bookmark(@Param('id') id: string) {
+    return this.userDocumentService.bookmark(id);
+  }
+
+  @Post(':id/unbookmark')
+  @ApiOperation({
+    summary: '북마크 해제',
+    description: '해당 uuid 유저문서 북마크 해제'
+  })
+  @ApiCreatedResponse({ description: '북마크 해제 완료' })
+  unBookmark(@Param('id') id: string) {
+    return this.userDocumentService.unBookmark(id);
+  }
 
   @Get(':id')
   @ApiOperation({

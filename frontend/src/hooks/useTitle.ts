@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 import { titleState } from '../atoms/titleAtom';
 import useToast from '../hooks/useToast';
 import { useParams } from 'react-router-dom';
+const { REACT_APP_API_URL } = process.env;
 
 const useTitle = () => {
   const [title, setTitle] = useRecoilState(titleState);
@@ -15,7 +16,7 @@ const useTitle = () => {
 
   const saveNewTitle = async (title: string) => {
     try {
-      await fetch(`${process.env.REACT_APP_DEV_URL}/document/${document_id}/save-title`, {
+      await fetch(`${REACT_APP_API_URL}/document/${document_id}/save-title`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,7 +41,7 @@ const useTitle = () => {
     return () => {
       socket.removeAllListeners();
     };
-  }, []);
+  }, [title]);
 
   return {
     title,
