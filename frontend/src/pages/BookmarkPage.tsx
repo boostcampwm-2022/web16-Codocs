@@ -26,6 +26,11 @@ const ContentWrapper = styled.section`
   flex: 1;
   margin: 3rem 3.5rem;
   overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ContentHeaderGroup = styled.div`
