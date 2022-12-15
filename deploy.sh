@@ -49,7 +49,6 @@ do
     echo "> Health check: ${response_frontend}"
     echo "> Health check: ${response_api}"
     echo "> Health check 연결 실패. 재시도..."
-    docker-compose -p codocs-${AFTER_COMPOSE_COLOR} -f docker-compose.${AFTER_COMPOSE_COLOR}.yaml down
     sleep 1
   fi
 
@@ -57,6 +56,7 @@ do
   then
     echo "> Health check 실패. "
     echo "> Nginx에 연결하지 않고 배포를 종료합니다."
+    docker-compose -p codocs-${AFTER_COMPOSE_COLOR} -f docker-compose.${AFTER_COMPOSE_COLOR}.yaml down
     exit 1
   fi
   
