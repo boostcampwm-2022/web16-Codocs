@@ -76,7 +76,7 @@ export class DocumentService {
     if (content == undefined) {
       throw new Error('no content');
     }
-    content.forEach((char) => {
+    content.forEach(async (char) => {
       this.redis.hset(id, char.id, JSON.stringify(char));
     });
   }
@@ -95,17 +95,30 @@ export class DocumentService {
     if (content == undefined) {
       throw new HttpException('no content', 400);
     }
-
     if ((await this.redis.hget(id, 'HEAD')) == null) {
       this.redis.hset(
         id,
         'HEAD',
-        JSON.stringify({ id: 'HEAD', leftId: 'START', rightId: 'TAIL', siteId: '', value: '' })
+        JSON.stringify({
+          id: 'HEAD',
+          leftId: 'START',
+          rightId: 'TAIL',
+          siteId: '',
+          value: '',
+          tombstone: true
+        })
       );
       this.redis.hset(
         id,
         'TAIL',
-        JSON.stringify({ id: 'TAIL', leftId: 'HEAD', rightId: 'END', siteId: '', value: '' })
+        JSON.stringify({
+          id: 'TAIL',
+          leftId: 'HEAD',
+          rightId: 'END',
+          siteId: '',
+          value: '',
+          tombstone: true
+        })
       );
     }
 

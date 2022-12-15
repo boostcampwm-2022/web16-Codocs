@@ -52,12 +52,26 @@ io.on('connection', (client: SocketCustomClient) => {
   });
   client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
-    console.log('ROOMNAME : ', roomName);
     try {
       await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
         content: data
       });
       client.to(roomName).emit('remote-delete', data);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  client.on('local-replace', async (data) => {
+    const roomName = Array.from(client.rooms)[1];
+    console.log(data);
+    try {
+      // console.log(data);
+      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+        content: [data]
+      });
+      console.log('replace');
+      client.to(roomName).emit('remote-replace', data);
+      //client.to(roomName).emit('remote-replace', data);
     } catch (e) {
       console.log(e);
     }

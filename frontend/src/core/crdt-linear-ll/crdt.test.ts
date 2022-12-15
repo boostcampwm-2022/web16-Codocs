@@ -6,9 +6,8 @@ describe('searchInsertIndex() Test:', () => {
   let crdt: CRDT;
   beforeEach(() => {
     crdt = new CRDT();
-    crdt.charMap = {...crdt.charMap,
-      ['uuid0']:new Char('HEAD', 'TAIL', 'siteID', 'A', 'uuid0')};
-    
+    crdt.charMap = { ...crdt.charMap, ['uuid0']: new Char('HEAD', 'TAIL', 'siteID', 'A', 'uuid0') };
+
     //insert 함수 만들어야함
     crdt.charMap[crdt.charMap['uuid0'].leftId].rightId = 'uuid0';
     crdt.charMap[crdt.charMap['uuid0'].rightId].leftId = 'uuid0';
@@ -18,7 +17,7 @@ describe('searchInsertIndex() Test:', () => {
     expect(crdt.searchInsertPosition(0)).toEqual([crdt.head, crdt.charMap[crdt.head.rightId]]);
   });
 
-  it('2. searchInsertIndex(1) : 사이에 삽입하는 경우 ', () => { 
+  it('2. searchInsertIndex(1) : 사이에 삽입하는 경우 ', () => {
     expect(crdt.searchInsertPosition(1)).toEqual([crdt.charMap['uuid0'], crdt.tail]);
   });
 
@@ -35,17 +34,17 @@ describe('localInsert() Test:', () => {
     crdt.localInsert(1, 'B');
     crdt.localInsert(2, 'C');
   });
-  
+
   it('1. localInsert(0, "H") 테스트 : 맨 앞에 삽입', () => {
     crdt.localInsert(0, 'H');
     expect(crdt.toString()).toEqual('HABC');
   });
-  
+
   it('2. localInsert(3, "D") 테스트 : 맨 뒤에 삽입', () => {
     crdt.localInsert(3, 'D');
     expect(crdt.toString()).toEqual('ABCD');
   });
-  
+
   it('3. localInsert(1, "F") 테스트 : 사이에 삽입', () => {
     crdt.localInsert(1, 'F');
     expect(crdt.toString()).toEqual('AFBC');
@@ -67,7 +66,7 @@ describe('localInsert() Test:', () => {
   });
 });
 
-describe('remoteInsert() Test:', () => { 
+describe('remoteInsert() Test:', () => {
   let crdt: CRDT;
   let A: Char, B: Char, C: Char;
   let editor: CodeMirror.Editor;
@@ -91,15 +90,36 @@ describe('remoteInsert() Test:', () => {
     expect(crdt.toString()).toEqual('ABCD');
   });
   it('4. remoteInsert : 여러 개를 맨 뒤에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char(C.id, 'E_id', 'siteId', 'D', 'D_id'), new Char('D_id', 'F_id', 'siteId', 'E', 'E_id'), new Char('E_id', crdt.tail.id, 'siteId', 'F', 'F_id')],  editor);
+    crdt.remoteInsert(
+      [
+        new Char(C.id, 'E_id', 'siteId', 'D', 'D_id'),
+        new Char('D_id', 'F_id', 'siteId', 'E', 'E_id'),
+        new Char('E_id', crdt.tail.id, 'siteId', 'F', 'F_id')
+      ],
+      editor
+    );
     expect(crdt.toString()).toEqual('ABCDEF');
   });
   it('5. remoteInsert : 여러 개 사이에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char(A.id, 'E_id', 'siteId', 'D', 'D_id'), new Char('D_id', 'F_id', 'siteId', 'E', 'E_id'), new Char('E_id', B.id, 'siteId', 'F', 'F_id')], editor);
+    crdt.remoteInsert(
+      [
+        new Char(A.id, 'E_id', 'siteId', 'D', 'D_id'),
+        new Char('D_id', 'F_id', 'siteId', 'E', 'E_id'),
+        new Char('E_id', B.id, 'siteId', 'F', 'F_id')
+      ],
+      editor
+    );
     expect(crdt.toString()).toEqual('ADEFBC');
   });
   it('6. remoteInsert : 여러 개 맨 앞에 입력하는 경우', () => {
-    crdt.remoteInsert([new Char(crdt.head.id, 'E_id', '123', 'D', 'D_id'), new Char('D_id', 'F_id', '123', 'E', 'E_id'), new Char('D_id', A.id, '123', 'F', 'F_id')], editor);
+    crdt.remoteInsert(
+      [
+        new Char(crdt.head.id, 'E_id', '123', 'D', 'D_id'),
+        new Char('D_id', 'F_id', '123', 'E', 'E_id'),
+        new Char('D_id', A.id, '123', 'F', 'F_id')
+      ],
+      editor
+    );
     expect(crdt.toString()).toEqual('DEFABC');
   });
   it('7. remoteInsert : localInsertRange 로 글자 사이에 입력', () => {
@@ -139,11 +159,10 @@ describe('localDelete() Test:', () => {
   });
 });
 
-
 describe('remoteDelete() Test:', () => {
   let crdt: CRDT;
   let A: Char, B: Char, C: Char;
-  let doc: CodeMirror.Doc;
+  let doc: CodeMirror.Editor;
 
   beforeEach(() => {
     crdt = new CRDT();
