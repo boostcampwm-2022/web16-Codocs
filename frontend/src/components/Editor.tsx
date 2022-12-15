@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import { CRDT } from '../core/crdt-linear-ll/crdt';
-import socket from '../core/sockets/sockets';
 import { Cursor } from '../core/cursor/cursor';
 import useDebounce from '../hooks/useDebounce';
 import useProfile from '../hooks/useProfile';
 import { useRecoilState } from 'recoil';
 import { onlineUserState } from '../atoms/onlineUserAtom';
+import socket from '../core/sockets/sockets';
+import { useParams } from 'react-router-dom';
+import { CRDT } from '../core/crdt-linear-ll/crdt';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -23,8 +23,8 @@ const Editor = ({ content }: EditorProps) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [cursorDebounce] = useDebounce();
   const { profile } = useProfile();
-  const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const { document_id } = useParams();
+  const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const [crdt] = useState<CRDT>(new CRDT());
   const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
 
@@ -37,7 +37,6 @@ const Editor = ({ content }: EditorProps) => {
       document_id,
       profile,
       (users: { id: string; name: string; color: string }[]) => {
-        console.log(users);
         setOnlineUserInfo(users);
       }
     );
@@ -47,7 +46,7 @@ const Editor = ({ content }: EditorProps) => {
   }, []);
 
   useEffect(() => {
-    if (!editor) {
+    if (!editor || !crdt) {
       return;
     }
 
@@ -57,27 +56,36 @@ const Editor = ({ content }: EditorProps) => {
           content[key] = JSON.parse(content[key]);
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       crdt.syncDocument(content);
       editor.setValue(crdt.toString());
       editor.focus();
     }
+  }, [editor]);
 
-    socket.on('new-user', (user) => {
-      console.log(user);
+  useEffect(() => {
+    if (!editor || !crdt) {
+      return;
+    }
+
+    socket?.on('new-user', (user) => {
       setOnlineUserInfo((onlineUserInfo) => [...onlineUserInfo, user]);
     });
 
-    socket.on('remote-insert', (data) => {
+    socket?.on('remote-insert', (data) => {
       crdt.remoteInsert(data, editor);
     });
 
-    socket.on('remote-delete', (data) => {
-      crdt.remoteDelete(data, editor.getDoc());
+    socket?.on('remote-delete', (data) => {
+      crdt.remoteDelete(data, editor);
     });
 
-    socket.on('remote-cursor', (data) => {
+    socket?.on('remote-replace', (data) => {
+      crdt.remoteReplace(data, editor);
+    });
+
+    socket?.on('remote-cursor', (data) => {
       const { id, profile, cursorPosition } = data;
       if (!cursorMap.current.has(id)) {
         cursorMap.current.set(id, new Cursor(profile.color, profile.name));
@@ -85,7 +93,7 @@ const Editor = ({ content }: EditorProps) => {
       cursorMap.current.get(id)?.updateCursor(editor, cursorPosition);
     });
 
-    socket.on('delete-cursor', (data) => {
+    socket?.on('delete-cursor', (data) => {
       const { id } = data;
       cursorMap.current.get(id)?.removeCursor();
       cursorMap.current.delete(id);
@@ -99,7 +107,7 @@ const Editor = ({ content }: EditorProps) => {
   }, [editor, onlineUserInfo]);
 
   useEffect(() => {
-    if (!editor) {
+    if (!editor || !crdt) {
       return;
     }
 
@@ -107,7 +115,6 @@ const Editor = ({ content }: EditorProps) => {
       if (change.origin === 'setValue' || change.origin === 'remote') {
         return;
       }
-      console.log('BEFORECHANGE');
 
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
@@ -124,13 +131,13 @@ const Editor = ({ content }: EditorProps) => {
           eventName = 'local-insert';
           break;
         case '*compose':
-          char = crdt.localDelete(fromIdx, toIdx);
-          socket.emit('local-delete', char);
-          if (content === '') {
-            return;
+          if (fromIdx === toIdx) {
+            char = crdt.localInsertRange(fromIdx, content);
+            eventName = 'local-insert';
+          } else {
+            char = crdt.localReplace(fromIdx, content);
+            eventName = 'local-replace';
           }
-          char = crdt.localInsertRange(fromIdx, content);
-          eventName = 'local-insert';
           break;
         case '+delete':
           char = crdt.localDelete(fromIdx, toIdx);
@@ -145,19 +152,25 @@ const Editor = ({ content }: EditorProps) => {
             eventName = 'local-delete';
           }
       }
-      // console.log('EVENT_NAME :', change.origin);
-      // console.log('from : ', fromIdx);
-      // console.log('to : ', toIdx);
-      // console.log('EVENT Value :', change.text);
-      socket.emit(eventName, char);
+      console.log(
+        'EVENT_NAME :',
+        change.origin,
+        'from : ',
+        fromIdx,
+        'to : ',
+        toIdx,
+        'EVENT Value :',
+        change.text
+      );
+
+      socket?.emit(eventName, char);
     });
 
     editor.on('cursorActivity', () => {
       cursorDebounce(
         setTimeout(() => {
           const cursorPosition = editor.getCursor();
-          console.log('CURSOR MOVE');
-          socket.emit('cursor-moved', {
+          socket?.emit('cursor-moved', {
             cursorPosition,
             profile
           });

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import CodeMirror from 'codemirror';
 import Char from './char';
 
 interface CharMap {
@@ -52,7 +53,6 @@ class CRDT {
   }
 
   searchInsertPosition(index: number) {
-    // editor index => CRDT Position
     let counter = 0;
     let currentNode = this.head;
 
@@ -78,6 +78,7 @@ class CRDT {
     let currentIndex = 0;
     let currentNode = this.head;
 
+    //console.log('=========DELETE WHILE START========');
     while (currentNode.rightId !== 'END') {
       if (currentNode.tombstone) {
         currentNode = this.charMap[currentNode.rightId];
@@ -88,13 +89,22 @@ class CRDT {
       }
       if (currentIndex >= startIndex) {
         currentNode.tombstone = true;
+
+        //console.log(currentIndex, currentNode);
         deletedChars.push(currentNode);
       }
       currentIndex++;
       currentNode = this.charMap[currentNode.rightId];
     }
-
     return deletedChars;
+  }
+
+  localReplace(index: number, value: string) {
+    const [leftChar] = this.searchInsertPosition(index);
+    const replaceChar = this.charMap[leftChar.rightId];
+    replaceChar.value = value;
+
+    return replaceChar;
   }
 
   remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
@@ -110,7 +120,7 @@ class CRDT {
 
     const index = this.searchIndexByChar(firstChar);
     const position = editor?.getDoc().posFromIndex(index);
-    editor?.replaceRange(chars.map((char) => char.value).join(''), position, position, 'remote');
+    this.addChange(editor, position, position, chars.map((char) => char.value).join(''));
   }
 
   searchIndexByChar(char: Char): number {
@@ -134,7 +144,7 @@ class CRDT {
     );
   }
 
-  remoteDelete(chars: Char[], doc: CodeMirror.Doc) {
+  remoteDelete(chars: Char[], editor: CodeMirror.Editor) {
     let currentNode = this.head;
     let deleteStartIndex = 0;
     let currentIndex = 0;
@@ -157,22 +167,78 @@ class CRDT {
       this.charMap[char.id].tombstone = true;
     });
 
-    const positionFrom = doc?.posFromIndex(deleteStartIndex);
-    const positionTo = doc?.posFromIndex(deleteEndIndex);
+    const positionFrom = editor.getDoc().posFromIndex(deleteStartIndex);
+    const positionTo = editor.getDoc().posFromIndex(deleteEndIndex);
 
-    doc?.replaceRange('', positionFrom, positionTo, 'remote');
+    this.addChange(editor, positionFrom, positionTo, '');
 
     return [deleteStartIndex, deleteEndIndex];
+  }
+
+  remoteReplace(char: Char, editor: CodeMirror.Editor) {
+    const replaceChar = this.charMap[char.id];
+    replaceChar.value = char.value;
+
+    const index = this.searchIndexByChar(char);
+    const from = editor?.getDoc().posFromIndex(index);
+    const to = editor?.getDoc().posFromIndex(index + 1);
+    this.addChange(editor, from, to, char.value);
+
+    console.log('==========remoteReplace==========');
+    console.log(replaceChar);
+    console.log('==========remoteReplace==========');
+    return replaceChar;
+  }
+
+  // source : https://github.com/codemirror/codemirror5/pull/5619
+  addChange(
+    editor: CodeMirror.Editor,
+    from: CodeMirror.Position,
+    to: CodeMirror.Position,
+    text: string
+  ) {
+    if (!editor) {
+      return;
+    }
+    const adjust = editor
+      .getDoc()
+      .listSelections()
+      .findIndex(({ anchor, head }) => {
+        return CodeMirror.cmpPos(anchor, head) == 0 && CodeMirror.cmpPos(anchor, from) == 0;
+      });
+    editor.operation(() => {
+      editor.getDoc().replaceRange(text, from, to, 'remote');
+      if (adjust > -1) {
+        const range = editor.getDoc().listSelections()[adjust];
+        if (
+          range &&
+          CodeMirror.cmpPos(range.head, CodeMirror.changeEnd({ from, to, text: [text] })) == 0
+        ) {
+          const ranges: CodeMirror.Range[] = editor.getDoc().listSelections().slice();
+          ranges[adjust] = {
+            ...ranges[adjust],
+            anchor: from,
+            head: to
+          };
+          editor.getDoc().setSelections(ranges);
+        }
+      }
+    });
   }
 
   toString(): string {
     let str = '';
     let currentNode = this.head;
-    while (currentNode.rightId !== 'END') {
-      if (!currentNode.tombstone) {
-        str += currentNode.value;
+    try {
+      while (currentNode.rightId !== 'END') {
+        if (!currentNode.tombstone) {
+          str += currentNode.value;
+        }
+
+        currentNode = this.charMap[currentNode.rightId];
       }
-      currentNode = this.charMap[currentNode.rightId];
+    } catch (e) {
+      // console.log('Tostring 에러!!!: ', currentNode);
     }
 
     return str;
@@ -181,6 +247,7 @@ class CRDT {
   getAllNode(): Char[] {
     const nodeList = [];
     let currentNode = this.head;
+
     while (currentNode.rightId !== 'END') {
       nodeList.push(currentNode);
       currentNode = this.charMap[currentNode.rightId];
