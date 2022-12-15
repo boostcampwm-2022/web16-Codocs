@@ -32,12 +32,16 @@
 
 ## 팀원 소개 
 
+<div align="center">
+
 #### Team. 부스트캠프로5행시해보겠습니다
 
 |J001 강보석|J128 윤기석|J164 이현빈|
 |:-:|:-:|:-:|
 |<img src="https://avatars.githubusercontent.com/u/78531103?v=4" width=200>|<img src="https://avatars.githubusercontent.com/u/20081840?v=4" width=200>|<img src="https://avatars.githubusercontent.com/u/31645195?v=4" width=200>|
 |[@komplamoose](https://github.com/komplamoose)|[@kiseoky](https://github.com/kiseoky)|[@iyu88](https://github.com/iyu88)|
+
+</div>
 
 <br />
 
@@ -105,13 +109,21 @@
 
 ## 아키텍쳐
 
+<div align="center">
+
 <img src="https://user-images.githubusercontent.com/31645195/207783810-a6480464-d7f4-41d2-989f-95ed7bcc7c4f.png" width=80%>
+
+</div>
 
 <br />
 
 ## 기술 스택 
 
+<div align="center">
+
 <img src="https://user-images.githubusercontent.com/31645195/207773388-96f8e435-d1eb-4662-a50d-5f4dd7d707ef.png" width=80%>
+
+</div>
 
 ## 링크
 
