@@ -5,8 +5,8 @@ const createUserProfile = (counts: number): UserProfile[] => {
     .fill(null)
     .map((_) => {
       return {
-        profileImgURL: 'https://picsum.photos/200',
-        userName: uuidv1().slice(0, 8)
+        profileURL: 'https://picsum.photos/200',
+        name: uuidv1().slice(0, 8)
       };
     });
 };
