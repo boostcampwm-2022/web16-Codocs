@@ -1,16 +1,22 @@
-# ✍️ 함께 쓰는 공동 문서
+<div align="center">
+
+# ✍️ 함께 쓰는 공동 문서, Codocs
 
 <h3>CRDT 기반 실시간 공동 문서 편집 웹 어플리케이션</h3>
 
-<center>
+
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm-2022%2Fweb16-Codocs&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
+
+</div>
+
+
+<div align="center">
 
 |<img src="https://user-images.githubusercontent.com/31645195/207751710-f5bd53d0-13d8-42b4-9ce1-728e63fca1ae.png" width=80%>|
 |:--:|
 |<h3>[www.codocs.site](http://www.codocs.site)</h3>|
 
-</center>
-
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fboostcampwm-2022%2Fweb16-Codocs&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
+</div>
 
 ## 프로젝트 소개 
 
