@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: ['dev']
     paths:
-      - './backend/api/**'
+      - 'backend/api/**'
   workflow_dispatch:
 
 jobs:

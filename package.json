@@ -1,0 +1,24 @@
+{
+  "name": "codocs",
+  "version": "1.0.0",
+  "description": "함께 🤝, 코드 👨‍💻, 문서 📝를 작성하세요. Codocs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start ecosystem.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boostcampwm-2022/web16-Codocs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/boostcampwm-2022/web16-Codocs/issues"
+  },
+  "homepage": "https://github.com/boostcampwm-2022/web16-Codocs#readme",
+  "devDependencies": {
+    "pm2": "^5.2.2"
+  }
+}
