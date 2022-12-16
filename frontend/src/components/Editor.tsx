@@ -152,16 +152,7 @@ const Editor = ({ content }: EditorProps) => {
             eventName = 'local-delete';
           }
       }
-      console.log(
-        'EVENT_NAME :',
-        change.origin,
-        'from : ',
-        fromIdx,
-        'to : ',
-        toIdx,
-        'EVENT Value :',
-        change.text
-      );
+    
 
       socket?.emit(eventName, char);
     });
