@@ -20,11 +20,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const adapterHost = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
+  //  app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
   app.use(cookieParser());
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ limit: '50mb', extended: true }));
-  app.enableCors({ origin: ['http://localhost:3000', 'http://codocs.site'], credentials: true });
+  app.enableCors({ origin: ['http://localhost:3000', 'http://codocs.site', 'http://www.codocs.site'], credentials: true });
 
   await app.listen(8000);
 }

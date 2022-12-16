@@ -1,13 +1,26 @@
 import * as express from 'express';
 import { Server, Socket } from 'socket.io';
 import { createServer } from 'http';
+import cors = require('cors');
+
 import axios from 'axios';
 
 const app = express();
+app.use(cors({ origin: 'http://codocs.site', credentials: true }));
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: { origin: '*' },
-  transports: ['websocket', 'polling']
+  cors: { origin: 'http://codocs.site' },
+  path: '/socket'
+});
+
+io.engine.on('initial_headers', (headers, req) => {
+  headers['Access-Control-Allow-Origin'] = 'http://codocs.site';
+  headers['Access-Control-Allow-Credentials'] = true;
+});
+
+io.engine.on('headers', (headers, req) => {
+  headers['Access-Control-Allow-Origin'] = 'http://codocs.site';
+  headers['Access-Control-Allow-Credentials'] = true;
 });
 
 interface SocketCustomClient extends Socket {
@@ -42,7 +55,7 @@ io.on('connection', (client: SocketCustomClient) => {
     const roomName = Array.from(client.rooms)[1];
 
     try {
-      await axios.post(`http://localhost:8000/document/${roomName}/save-content`, {
+      await axios.post(`http://codocs.site/api/document/${roomName}/save-content`, {
         content: data
       });
       client.to(roomName).emit('remote-insert', data);
@@ -53,7 +66,7 @@ io.on('connection', (client: SocketCustomClient) => {
   client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
     try {
-      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+      await axios.post(`http://codocs.site/api/document/${roomName}/update-content`, {
         content: data
       });
       client.to(roomName).emit('remote-delete', data);
@@ -66,7 +79,7 @@ io.on('connection', (client: SocketCustomClient) => {
     console.log(data);
     try {
       // console.log(data);
-      await axios.post(`http://localhost:8000/document/${roomName}/update-content`, {
+      await axios.post(`http://codocs.site/api/document/${roomName}/update-content`, {
         content: [data]
       });
       console.log('replace');

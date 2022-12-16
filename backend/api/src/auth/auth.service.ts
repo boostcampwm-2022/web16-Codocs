@@ -34,7 +34,6 @@ export class AuthService {
     res.cookie('access_token', accessToken, {
       expires: new Date(Date.now() + 100 * 12 * 30 * 24 * 3600000),
       httpOnly: true,
-      secure: true
     });
 
     return entity;
