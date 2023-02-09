@@ -9,7 +9,7 @@ if (REACT_APP_NODE_ENV === 'mock') {
 
 const fetchDataFromPath = (path: string) => {
   try {
-    const data = fetch(`${REACT_APP_API_URL}${path}`, {
+    const data = fetch(`${path}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
