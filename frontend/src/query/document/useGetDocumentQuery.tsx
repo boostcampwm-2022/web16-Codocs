@@ -4,7 +4,7 @@ import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
 
 const { REACT_APP_API_URL } = process.env;
 
-const useGetDocumentMutation = (documentType: string) => {
+const useGetDocumentQuery = (documentType: string) => {
   const { alertToast } = useToast();
 
   return useQuery(
@@ -19,4 +19,4 @@ const useGetDocumentMutation = (documentType: string) => {
   );
 };
 
-export default useGetDocumentMutation;
+export default useGetDocumentQuery;

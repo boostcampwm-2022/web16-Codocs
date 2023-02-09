@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { DocListItem } from '../docListItem';
-import useGetDocumentMutation from '../../query/document/useGetDocumentMutation';
+import useGetDocumentQuery from '../../query/document/useGetDocumentQuery';
 import useDeleteDocumentMutation from '../../query/document/useDeleteDocumentMutation';
 import useAddDocumentBookmarkMutation from '../../query/document/useAddDocumentBookmarkMutation';
 import useRemoveDocumentBookmarkMutation from '../../query/document/useRemoveDocumentBookmarkMutation';
@@ -15,7 +15,7 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
   const { mutate: deleteMutate } = useDeleteDocumentMutation(documentType);
   const { mutate: bookmarkMutate } = useAddDocumentBookmarkMutation(documentType);
   const { mutate: unbookmarkMutate } = useRemoveDocumentBookmarkMutation(documentType);
-  const { data: docList } = useGetDocumentMutation(documentType);
+  const { data: docList } = useGetDocumentQuery(documentType);
 
   const sortDocListByOption = (prev: DocListItem, next: DocListItem) => {
     if (sortOption === 'title') {
