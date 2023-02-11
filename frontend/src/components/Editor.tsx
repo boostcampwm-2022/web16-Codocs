@@ -5,12 +5,13 @@ import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
 import { Cursor } from '../core/cursor/cursor';
 import useDebounce from '../hooks/useDebounce';
-import useProfile from '../hooks/useProfile';
+import useGetProfileQuery from '../query/profile/useGetProfileQuery';
 import { useRecoilState } from 'recoil';
 import { onlineUserState } from '../atoms/onlineUserAtom';
 import socket from '../core/sockets/sockets';
 import { useParams } from 'react-router-dom';
 import { CRDT } from '../core/crdt-linear-ll/crdt';
+import { getRandomColor } from '../utils/utils';
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
@@ -22,7 +23,9 @@ interface EditorProps {
 const Editor = ({ content }: EditorProps) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
   const [cursorDebounce] = useDebounce();
-  const { profile } = useProfile();
+  const { data: cachedProfile } = useGetProfileQuery();
+  const RANDOM_COLOR = getRandomColor();
+  const profile = Object.assign(cachedProfile, {color: RANDOM_COLOR});
   const { document_id } = useParams();
   const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const [crdt] = useState<CRDT>(new CRDT());
