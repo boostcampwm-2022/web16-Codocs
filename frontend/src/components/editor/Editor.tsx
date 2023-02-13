@@ -9,9 +9,10 @@ import useGetProfileQuery from '../../query/profile/useGetProfileQuery';
 import { useRecoilState } from 'recoil';
 import { onlineUserState } from '../../atoms/onlineUserAtom';
 import { useParams } from 'react-router-dom';
-import { CRDT } from '../../core/crdt-linear-ll/crdt';
+import CRDT from '../../core/crdt-linear-ll/crdt';
 import { getRandomColor } from '../../utils/utils';
 import { io } from 'socket.io-client';
+import {remoteReplaceOnEditor, remoteDeleteOnEditor, remoteInsertOnEditor} from '../../core/editorWithCRDT/editorWithCRDT';
 
 const { REACT_APP_SOCKET_URL } = process.env;
 
@@ -36,7 +37,6 @@ const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
   
   useEffect(() => {
     socket.connect();
-  
     socket.emit(
       'joinroom',
       document_id,
@@ -70,15 +70,21 @@ const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
       });
 
       socket.on('remote-insert', (data) => {
-        crdt.remoteInsert(data, editor);
+        remoteInsertOnEditor(...crdt.remoteInsert(data), editor);
+        // crdt.remoteInsert(data, editor);
       });
 
       socket.on('remote-delete', (data) => {
-        crdt.remoteDelete(data, editor);
+        const [deleteStartIndex, deleteEndIndex] = crdt.remoteDelete(data);
+        if (deleteStartIndex !== null && deleteEndIndex !== null) {
+          remoteDeleteOnEditor(deleteStartIndex, deleteEndIndex, editor);
+        }
+        // crdt.remoteDelete(data, editor);
       });
 
       socket.on('remote-replace', (data) => {
-        crdt.remoteReplace(data, editor);
+        remoteReplaceOnEditor(...crdt.remoteReplace(data), editor);
+        // crdt.remoteReplace(data, editor);
       });
 
       socket.on('remote-cursor', (data) => {
