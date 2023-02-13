@@ -27,10 +27,9 @@ const addChangeOnEditor = (editor: CodeMirror.Editor, from: CodeMirror.Position,
     });
 };
 
-const remoteReplaceOnEditor = (replacedIndex: number, replacedChar: string, editor: CodeMirror.Editor) => {
-  const positionFrom = editor.getDoc().posFromIndex(replacedIndex);
-  const positionTo = editor.getDoc().posFromIndex(replacedIndex + 1);
-  addChangeOnEditor(editor, positionFrom, positionTo, replacedChar);
+const remoteInsertOnEditor = (insertedIndex: number, insertedChars: string, editor: CodeMirror.Editor) => {
+  const position = editor.getDoc().posFromIndex(insertedIndex);
+  addChangeOnEditor(editor, position, position, insertedChars);
 };
 
 const remoteDeleteOnEditor = (deleteStartIndex: number, deleteEndIndex: number, editor: CodeMirror.Editor) => {
@@ -39,9 +38,10 @@ const remoteDeleteOnEditor = (deleteStartIndex: number, deleteEndIndex: number, 
   addChangeOnEditor(editor, positionFrom, positionTo, '');
 };
 
-const remoteInsertOnEditor = (insertedIndex: number, insertedChars: string, editor: CodeMirror.Editor) => {
-  const position = editor.getDoc().posFromIndex(insertedIndex);
-  addChangeOnEditor(editor, position, position, insertedChars);
+const remoteReplaceOnEditor = (replacedIndex: number, replacedChar: string, editor: CodeMirror.Editor) => {
+  const positionFrom = editor.getDoc().posFromIndex(replacedIndex);
+  const positionTo = editor.getDoc().posFromIndex(replacedIndex + 1);
+  addChangeOnEditor(editor, positionFrom, positionTo, replacedChar);
 };
 
-export {addChangeOnEditor, remoteReplaceOnEditor, remoteDeleteOnEditor, remoteInsertOnEditor};
+export {remoteInsertOnEditor, remoteDeleteOnEditor, remoteReplaceOnEditor};
