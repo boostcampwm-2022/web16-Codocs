@@ -1,108 +1,99 @@
-import React, { useCallback, useLayoutEffect, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import SimpleMDEReact from 'react-simplemde-editor';
 import SimpleMDE from 'easymde';
 import CodeMirror from 'codemirror';
 import 'easymde/dist/easymde.min.css';
-import { Cursor } from '../../core/cursor/cursor';
-import useDebounce from '../../hooks/useDebounce';
-import useGetProfileQuery from '../../query/profile/useGetProfileQuery';
 import { useRecoilState } from 'recoil';
 import { onlineUserState } from '../../atoms/onlineUserAtom';
-import { useParams } from 'react-router-dom';
-import CRDT from '../../core/crdt-linear-ll/crdt';
+import useDebounce from '../../hooks/useDebounce';
+import useGetProfileQuery from '../../query/profile/useGetProfileQuery';
 import { getRandomColor } from '../../utils/utils';
-import { io } from 'socket.io-client';
+import socket from '../../core/sockets/sockets';
+import CRDT from '../../core/crdt-linear-ll/crdt';
+import { Cursor } from '../../core/cursor/cursor';
 import {remoteInsertOnEditor, remoteDeleteOnEditor, remoteReplaceOnEditor} from '../../core/editorWithCRDT/editorWithCRDT';
 
-const { REACT_APP_SOCKET_URL } = process.env;
-
-const crdt = new CRDT();
-
-const socket = io(String(REACT_APP_SOCKET_URL), {
-  path: '/socket/socket',
-});
+type CursorInfo = {
+  id: string, 
+  profile: {color:string, name: string}, 
+  cursorPosition: CodeMirror.Position
+};
 
 const NAVBAR_HEIGHT = 70;
 const WIDGET_HEIGHT = 70;
+const crdt = new CRDT();
 
 const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
   const [editor, setEditor] = useState<CodeMirror.Editor | null>(null);
-  const [cursorDebounce] = useDebounce();
+  const { document_id } = useParams();
   const { data: cachedProfile } = useGetProfileQuery();
   const RANDOM_COLOR = getRandomColor();
   const profile = Object.assign(cachedProfile, {color: RANDOM_COLOR});
-  const { document_id } = useParams();
+  const [cursorDebounce] = useDebounce();
   const cursorMap = useRef<Map<string, Cursor>>(new Map());
   const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
-  
+
   useEffect(() => {
     socket.connect();
-    socket.emit(
-      'joinroom',
-      document_id,
-      profile,
-      setOnlineUserInfo
-    );
+    socket.emit('joinroom', document_id, profile, setOnlineUserInfo);
     
     return () => {
       socket.disconnect();
     };
   }, []);
 
-  useLayoutEffect(() => {
-    if (editor) {
-      if (Object.keys(documentContent).length > 0) {
-        Object.keys(documentContent).forEach((key) => {
-          documentContent[key] = JSON.parse(documentContent[key].toString());
-        });
-      crdt.syncDocument(documentContent);
-      editor.setValue(crdt.toString());
-      editor.focus();
-    }
-  }
-  }, [editor]);
-
   useEffect(() => {
     if (editor) {
-
-      socket.on('new-user', (user) => {
-        setOnlineUserInfo((onlineUserInfo) => [...onlineUserInfo, user]);
-      });
-
-      socket.on('remote-insert', (data) => {
-        remoteInsertOnEditor(...crdt.remoteInsert(data), editor);
-      });
-
-      socket.on('remote-delete', (data) => {
-        const [deleteStartIndex, deleteEndIndex] = crdt.remoteDelete(data);
+      const addNewUser = (newUser: OnlineUserType) => setOnlineUserInfo((onlineUserInfo) => [...onlineUserInfo, newUser]);
+      const emitRemoteInsert = (chars: Char[]) => remoteInsertOnEditor(...crdt.remoteInsert(chars), editor);
+      const emitRemoteReplace = (char: Char) => remoteReplaceOnEditor(...crdt.remoteReplace(char), editor);
+      const emitRemoteDelete = (chars: Char[]) => {
+        const [deleteStartIndex, deleteEndIndex] = crdt.remoteDelete(chars);
         if (deleteStartIndex !== null && deleteEndIndex !== null) {
           remoteDeleteOnEditor(deleteStartIndex, deleteEndIndex, editor);
         }
-      });
-
-      socket.on('remote-replace', (data) => {
-        remoteReplaceOnEditor(...crdt.remoteReplace(data), editor);
-      });
-
-      socket.on('remote-cursor', (data) => {
-        const { id, profile, cursorPosition } = data;
+      };
+      const emitCursorPosition = (cursorInfo: CursorInfo ) => {
+        const { id, profile, cursorPosition } = cursorInfo;
         if (!cursorMap.current.has(id)) {
           cursorMap.current.set(id, new Cursor(profile.color, profile.name));
         }
         cursorMap.current.get(id)?.updateCursor(editor, cursorPosition);
-      });
-
-      socket.on('delete-cursor', (data) => {
-        const { id } = data;
+      };
+      const emitDeleteCursor = (userId: { id: string }) => {
+        const { id } = userId;
         cursorMap.current.get(id)?.removeCursor();
         cursorMap.current.delete(id);
         const leftUser = onlineUserInfo.filter((user) => user.id !== id);
         setOnlineUserInfo(() => [...leftUser]);
-      });
+      };
+      
+      socket.on('new-user', addNewUser);
+      socket.on('remote-insert', emitRemoteInsert);
+      socket.on('remote-replace', emitRemoteReplace);
+      socket.on('remote-delete', emitRemoteDelete);
+      socket.on('remote-cursor', emitCursorPosition);
+      socket.on('delete-cursor', emitDeleteCursor);
     }
     return () => {
       socket.removeAllListeners();
     };
+  }, [editor]);
+
+  useEffect(() => {
+    if (editor) {
+      const contentKeys = Object.keys(documentContent);
+      const isDocumentContent = contentKeys.length > 0; 
+      if (isDocumentContent) {
+        contentKeys.forEach((key) => {
+          documentContent[key] = JSON.parse(documentContent[key].toString());
+        });
+        crdt.syncDocument(documentContent);
+        editor.setValue(crdt.toString());
+        editor.focus();
+      }
+    }
   }, [editor]);
 
   useEffect(() => {
@@ -115,39 +106,23 @@ const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
       const fromIdx = editor.indexFromPos(change.from);
       const toIdx = editor.indexFromPos(change.to);
       const content = change.text.join('\n');
-      let eventName = '';
-      let char;
-      switch (change.origin) {
-        case 'paste':
-          char = crdt.localInsertRange(fromIdx, content);
-          eventName = 'local-insert';
-          break;
-        case '+input':
-          char = crdt.localInsertRange(fromIdx, content);
-          eventName = 'local-insert';
-          break;
-        case '*compose':
-          if (fromIdx === toIdx) {
-            char = crdt.localInsertRange(fromIdx, content);
-            eventName = 'local-insert';
-          } else {
-            char = crdt.localReplace(fromIdx, content);
-            eventName = 'local-replace';
-          }
-          break;
-        case '+delete':
-          char = crdt.localDelete(fromIdx, toIdx);
-          eventName = 'local-delete';
-          break;
-        default:
-          if (fromIdx === toIdx) {
-            char = crdt.localInsertRange(fromIdx, content);
-            eventName = 'local-insert';
-          } else {
-            char = crdt.localDelete(fromIdx, toIdx);
-            eventName = 'local-delete';
-          }
-      }
+
+      const [eventName, char] = (function (editorEvent) {
+        if (editorEvent === 'paste' || editorEvent === '+input') {
+          return ['local-insert', crdt.localInsertRange(fromIdx, content)];
+        } 
+        if (editorEvent === '+delete') {
+          return ['local-delete', crdt.localDelete(fromIdx, toIdx)];
+        }
+        if (editorEvent === '*compose') {
+          return fromIdx === toIdx 
+            ? ['local-insert', crdt.localInsertRange(fromIdx, content)] 
+            : ['local-replace', crdt.localReplace(fromIdx, content)];
+        }
+        return fromIdx === toIdx 
+          ? ['local-insert', crdt.localInsertRange(fromIdx, content)]
+          : ['local-delete', crdt.localDelete(fromIdx, toIdx)];
+      })(change.origin);
 
       socket.emit(eventName, char);
     });
@@ -156,10 +131,7 @@ const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
       cursorDebounce(
         setTimeout(() => {
           const cursorPosition = editor.getCursor();
-          socket.emit('cursor-moved', {
-            cursorPosition,
-            profile
-          });
+          socket.emit('cursor-moved', { cursorPosition, profile });
         }, 100)
       );
     });
@@ -187,9 +159,7 @@ const Editor = ({ documentContent }: { documentContent: CharMap } ) => {
   }, []);
 
   return (
-    <>
-      <SimpleMDEReact options={editorOptions} getCodemirrorInstance={getCmInstanceCallback} />
-    </>
+    <SimpleMDEReact options={editorOptions} getCodemirrorInstance={getCmInstanceCallback} />
   );
 };
 
