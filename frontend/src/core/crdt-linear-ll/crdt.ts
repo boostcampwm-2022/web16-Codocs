@@ -1,10 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import CodeMirror from 'codemirror';
 import Char from './char';
-
-interface CharMap {
-  [key: string]: Char;
-}
 
 class CRDT {
   siteId: string;
@@ -34,8 +29,10 @@ class CRDT {
     this.tail = this.charMap['TAIL'];
   }
 
-  localInsertRange(index: number, value: string): Char[] {
-    return value.split('').map((c, i) => this.localInsert(index + i, c));
+  insertChar(insertedChar: Char, leftChar: Char, rightChar: Char) {
+    this.charMap[insertedChar.id] = insertedChar;
+    leftChar.rightId = insertedChar.id;
+    rightChar.leftId = insertedChar.id;
   }
 
   localInsert(index: number, value: string): Char {
@@ -46,10 +43,8 @@ class CRDT {
     return insertedChar;
   }
 
-  insertChar(insertedChar: Char, leftChar: Char, rightChar: Char) {
-    this.charMap[insertedChar.id] = insertedChar;
-    leftChar.rightId = insertedChar.id;
-    rightChar.leftId = insertedChar.id;
+  localInsertRange(index: number, value: string): Char[] {
+    return value.split('').map((c, i) => this.localInsert(index + i, c));
   }
 
   searchInsertPosition(index: number) {
@@ -57,12 +52,12 @@ class CRDT {
     let currentNode = this.head;
 
     if (index === 0) {
-      return [this.head, this.charMap[this.head.rightId]]; // 맨 앞
+      return [this.head, this.charMap[this.head.rightId]];
     }
 
     while (currentNode.rightId !== 'END') {
       if (counter === index) {
-        return [this.charMap[currentNode.leftId], currentNode]; // 글자 사이면 이전 노드와 현재 노드를 반환, 현재 노드 앞에 삽입
+        return [this.charMap[currentNode.leftId], currentNode];
       }
       if (!currentNode.tombstone) {
         counter++;
@@ -70,7 +65,7 @@ class CRDT {
       currentNode = this.charMap[currentNode.rightId];
     }
 
-    return [this.charMap[this.tail.leftId], this.tail]; // 맨 뒤
+    return [this.charMap[this.tail.leftId], this.tail];
   }
 
   localDelete(startIndex: number, endIndex: number): Char[] {
@@ -78,7 +73,6 @@ class CRDT {
     let currentIndex = 0;
     let currentNode = this.head;
 
-    //console.log('=========DELETE WHILE START========');
     while (currentNode.rightId !== 'END') {
       if (currentNode.tombstone) {
         currentNode = this.charMap[currentNode.rightId];
@@ -90,7 +84,6 @@ class CRDT {
       if (currentIndex >= startIndex) {
         currentNode.tombstone = true;
 
-        //console.log(currentIndex, currentNode);
         deletedChars.push(currentNode);
       }
       currentIndex++;
@@ -107,7 +100,7 @@ class CRDT {
     return replaceChar;
   }
 
-  remoteInsert(chars: Char[], editor: CodeMirror.Editor) {
+  remoteInsert(chars: Char[]): [number, string] {
     const charsLen = chars.length;
     const [firstChar, lastChar] = [chars[0], chars[charsLen - 1]];
 
@@ -118,38 +111,18 @@ class CRDT {
       this.charMap[chars[i].id] = chars[i];
     }
 
-    const index = this.searchIndexByChar(firstChar);
-    const position = editor?.getDoc().posFromIndex(index);
-    this.addChange(editor, position, position, chars.map((char) => char.value).join(''));
+    const insertedIndex = this.searchIndexByChar(firstChar);
+    const insertedChars = chars.map((char) => char.value).join('');
+
+    return [insertedIndex, insertedChars];
   }
 
-  searchIndexByChar(char: Char): number {
-    let currentNode = this.head;
-    let currentIndex = 0;
-
-    while (currentNode.rightId !== 'END') {
-      if (currentNode.tombstone) {
-        currentNode = this.charMap[currentNode.rightId];
-        continue;
-      }
-      if (currentNode.id === char.id) {
-        return currentIndex;
-      }
-      currentIndex++;
-      currentNode = this.charMap[currentNode.rightId];
-    }
-
-    throw new Error(
-      'Error: Can not find Index. That is Huge Error Case. Please report it to our GitHub.'
-    );
-  }
-
-  remoteDelete(chars: Char[], editor: CodeMirror.Editor) {
+  remoteDelete(chars: Char[]): null[] | number[] {
     let currentNode = this.head;
     let deleteStartIndex = 0;
     let currentIndex = 0;
     if (chars.length === 0) {
-      return -1;
+      return [null, null];
     }
     while (currentNode.rightId !== 'END') {
       if (chars[0].id === currentNode.id) {
@@ -167,78 +140,45 @@ class CRDT {
       this.charMap[char.id].tombstone = true;
     });
 
-    const positionFrom = editor?.getDoc().posFromIndex(deleteStartIndex);
-    const positionTo = editor?.getDoc().posFromIndex(deleteEndIndex);
-
-    this.addChange(editor, positionFrom, positionTo, '');
-
     return [deleteStartIndex, deleteEndIndex];
   }
 
-  remoteReplace(char: Char, editor: CodeMirror.Editor) {
+  remoteReplace(char: Char): [number, string] {
     const replaceChar = this.charMap[char.id];
     replaceChar.value = char.value;
-
-    const index = this.searchIndexByChar(char);
-    const from = editor?.getDoc().posFromIndex(index);
-    const to = editor?.getDoc().posFromIndex(index + 1);
-    this.addChange(editor, from, to, char.value);
-
-    console.log('==========remoteReplace==========');
-    console.log(replaceChar);
-    console.log('==========remoteReplace==========');
-    return replaceChar;
+    
+    return [this.searchIndexByChar(char), replaceChar.value];
   }
 
-  // source : https://github.com/codemirror/codemirror5/pull/5619
-  addChange(
-    editor: CodeMirror.Editor,
-    from: CodeMirror.Position,
-    to: CodeMirror.Position,
-    text: string
-  ) {
-    if (!editor) {
-      return;
-    }
-    const adjust = editor
-      .getDoc()
-      .listSelections()
-      .findIndex(({ anchor, head }) => {
-        return CodeMirror.cmpPos(anchor, head) == 0 && CodeMirror.cmpPos(anchor, from) == 0;
-      });
-    editor.operation(() => {
-      editor.getDoc().replaceRange(text, from, to, 'remote');
-      if (adjust > -1) {
-        const range = editor.getDoc().listSelections()[adjust];
-        if (
-          range &&
-          CodeMirror.cmpPos(range.head, CodeMirror.changeEnd({ from, to, text: [text] })) == 0
-        ) {
-          const ranges: CodeMirror.Range[] = editor.getDoc().listSelections().slice();
-          ranges[adjust] = {
-            ...ranges[adjust],
-            anchor: from,
-            head: to
-          };
-          editor.getDoc().setSelections(ranges);
-        }
+  searchIndexByChar(char: Char): number {
+    let currentNode = this.head;
+    let currentIndex = 0;
+
+    while (currentNode.rightId !== 'END') {
+      if (currentNode.tombstone) {
+        currentNode = this.charMap[currentNode.rightId];
+        continue;
       }
-    });
+      if (currentNode.id === char.id) {
+        break;
+      }
+      currentIndex++;
+      currentNode = this.charMap[currentNode.rightId];
+    }
+
+    return currentIndex;
   }
 
   toString(): string {
     let str = '';
     let currentNode = this.head;
-    try {
-      while (currentNode.rightId !== 'END') {
-        if (!currentNode.tombstone) {
-          str += currentNode.value;
-        }
 
-        currentNode = this.charMap[currentNode.rightId];
+    while (currentNode.rightId !== 'END') {
+      if (!currentNode.tombstone) {
+        str += currentNode.value;
       }
-    } catch (e) {
-      // console.log('Tostring 에러!!!: ', currentNode);
+
+      currentNode = this.charMap[currentNode.rightId];
     }
 
     return str;
@@ -257,6 +197,4 @@ class CRDT {
   }
 }
 
-const crdt = new CRDT();
-
-export { crdt, CRDT };
+export default CRDT;
