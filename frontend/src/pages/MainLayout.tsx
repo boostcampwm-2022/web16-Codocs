@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import useGetProfileQuery from '../query/profile/useGetProfileQuery';
 import { Header } from '../components/header';
 import { SideBar } from '../components/sideBar';
 import { Outlet } from 'react-router-dom';
-import useProfile from '../hooks/useProfile';
 
 const MainLayout = () => {
-  // const { profile } = useProfile();
-  // if (profile.name === undefined) {
-  //   window.location.href = '/';
-  // }
+  const { data: profile } = useGetProfileQuery();
+  if (profile.name === undefined) {
+    window.location.href = '/';
+  }
 
   return (
     <>

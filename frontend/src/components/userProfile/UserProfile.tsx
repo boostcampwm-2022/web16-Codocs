@@ -1,14 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import useProfile from '../../hooks/useProfile';
+import { useQueryClient } from 'react-query';
+
+interface cachedProfile {
+  name: string,
+  profileURL: string,
+}
 
 const UserProfile = () => {
-  const { profile } = useProfile();
+  const queryClient = useQueryClient();
+  const profile: cachedProfile | undefined = queryClient.getQueryData(['userProfile']);
 
   return (
     <ProfileWrapper>
-      <UserName>{profile.name}</UserName>
-      <ProfileImg src={profile.profileURL} alt="사용자 프로필 이미지" />
+      <UserName>{profile?.name}</UserName>
+      <ProfileImg src={profile?.profileURL} alt="사용자 프로필 이미지" />
     </ProfileWrapper>
   );
 };
