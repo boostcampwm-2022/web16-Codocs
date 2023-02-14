@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import useDocumentDataQuery from '../query/document/useDocumentDataQuery';
-import Editor from '../components/Editor';
 import { EditorHeader } from '../components/editorHeader';
+import { Editor } from '../components/editor/Editor';
 import { Spinner } from '../components/spinner';
 
 const DocumentPage = () => {
@@ -11,8 +11,8 @@ const DocumentPage = () => {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <EditorHeader titleProp={documentData.title} />
-      <Editor content={documentData.content} /> 
+      <EditorHeader fetchedTitle={documentData.title} />
+      <Editor documentContent={documentData.content} /> 
     </Suspense>
   );
 };

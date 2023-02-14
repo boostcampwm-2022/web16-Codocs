@@ -1,32 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { SiteLogo } from '../siteLogo';
-import useTitle from '../../hooks/useTitle';
+import { useParams } from 'react-router-dom';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useToast from '../../hooks/useToast';
-import { OnlineUser } from '../../components/onlineUser/OnlineUser';
+import { SiteLogo } from '../siteLogo';
+import { OnlineUser } from '../onlineUser/OnlineUser';
 
-interface EditorHeaderProps {
-  titleProp: string;
-}
-
-const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
-  const { title, onTitleChange, onTitleUpdate, setTitle } = useTitle();
+const EditorHeader = ({ fetchedTitle }: {fetchedTitle: string}) => {
+  const { documentTitle, setDocumentTitle, updateDocumentTitle } = useDocumentTitle(fetchedTitle);
+  const { document_id } = useParams();
   const { alertToast } = useToast();
 
-  useEffect(() => {
-    setTitle(titleProp);
-  }, []);
-
   const handleCopyURL = () => {
-    const url = window.location.href;
+    const document_URL = window.location.href;
     navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        alertToast('INFO', '링크 복사 성공! 공유해보세요!');
-      })
-      .catch(() => {
-        alertToast('WARNING', '실패!');
-      });
+      .writeText(document_URL)
+      .then(() => alertToast('INFO', '링크를 복사했어요! 공유해보세요!'))
+      .catch(() => alertToast('WARNING', '링크 복사에 실패했어요!'));
+  };
+
+  const handleTitleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setDocumentTitle(e.target.value);
+  };
+
+  const handleTitleUpdate = () => {
+    updateDocumentTitle(String(document_id));
   };
 
   return (
@@ -35,9 +33,9 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
         <SiteLogo />
         <DocumentTitle
           type="text"
-          value={title ?? ''}
-          onChange={onTitleChange}
-          onBlur={onTitleUpdate}
+          value={documentTitle}
+          onChange={handleTitleChange}
+          onBlur={handleTitleUpdate}
         />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={handleCopyURL}>
@@ -75,11 +73,11 @@ const DocumentTitle = styled.input`
 `;
 
 const RightButtonWrapper = styled.div`
+height: 1.5rem;
   width: 9rem;
-  height: 1.5rem;
+  gap: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
 `;
 
 const ShareButton = styled.button`
