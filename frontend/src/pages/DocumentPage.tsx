@@ -11,7 +11,7 @@ const DocumentPage = () => {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <EditorHeader documentTitle={documentData.title} />
+      <EditorHeader fetchedTitle={documentData.title} />
       <Editor documentContent={documentData.content} /> 
     </Suspense>
   );

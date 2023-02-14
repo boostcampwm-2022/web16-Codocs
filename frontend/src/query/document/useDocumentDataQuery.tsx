@@ -10,6 +10,7 @@ const useDocumentDataQuery = (documentId: string) => {
     {
       cacheTime: 0,
       suspense: true,
+      refetchOnWindowFocus: false,
     }
   );
 };
