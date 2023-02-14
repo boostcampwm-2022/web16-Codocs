@@ -17,7 +17,7 @@ const Dropdown = ({value, onClick, options}: DropdownProps) => {
   return (
     <DropdownWrapper>
       <DropdownTrigger value={options[value]} onClick={setIsOpened} icon={<AngleDownIcon fill={'#fff'}/>} />
-      <DropdownMenu display={isOpened}>
+      <DropdownMenu isOpened={isOpened}>
         {
           Object.keys(options).map((option, index) => (
               <DropdownItem key={index} text={options[option]} value={option} onClick={onClick}/>

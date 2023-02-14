@@ -2,17 +2,17 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 
 interface DropdownMenuProps {
-  display: boolean,
+  isOpened: boolean,
   children: ReactNode,
 }
 
 interface MenuProps {
-  display: boolean,
+  isOpened: boolean,
 }
 
-const DropdownMenu = ({display, children}: DropdownMenuProps) => {
+const DropdownMenu = ({isOpened, children}: DropdownMenuProps) => {
   return (
-    <Dropdown_Menu display={display}>
+    <Dropdown_Menu isOpened={isOpened}>
       {children}
     </Dropdown_Menu>
   );
@@ -26,7 +26,7 @@ const Dropdown_Menu = styled('ul')<MenuProps>`
   padding: 0 0.25rem;
   margin: 0;
   background-color: #222;
-  display: ${(props) => props.display ? 'block' : 'none'};
+  display: ${(props) => props.isOpened ? 'block' : 'none'};
 `;
 
 export { DropdownMenu };
