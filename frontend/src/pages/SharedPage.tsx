@@ -1,22 +1,27 @@
-import React, { useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import usePageName from '../hooks/usePageName';
+import useSortOption from '../hooks/useSortOption';
 import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
 import { Dropdown } from '../components/dropdown';
 
 const SharedPage = () => {
   const { pageName } = usePageName();
-  const [selectedOption, setSelectedOption] = useState<string>('lastVisited');
+  const {option, optionList, setOption} = useSortOption('lastVisited');
 
   return (
     <ContentWrapper>
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
-        <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption} />
+        <Dropdown
+          value={option}
+          onClick={setOption}
+          options={optionList}
+        />
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner />}>
-        <DocList documentType={'shared'} sortOption={selectedOption} />
+        <DocList documentType={'shared'} sortOption={option} />
       </Suspense>
     </ContentWrapper>
   );
