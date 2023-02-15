@@ -5,7 +5,7 @@ import MODAL_CONTENT from '../../constants/modalContent';
 interface ModalFormProps {
   type: string;
   actionHandler: () => void;
-  cancelHandler: (state: boolean) => void;
+  cancelHandler: () => void;
 }
 
 interface AnswerBtnProps {
@@ -23,15 +23,12 @@ const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
       <AnswerGroup>
         <AnswerBtn 
           backgroundColor={'#A5A5A5'} 
-          onClick={() => cancelHandler(false)}>
+          onClick={cancelHandler}>
           취소
         </AnswerBtn>
         <AnswerBtn
           backgroundColor={'#FF5757'}
-          onClick={() => {
-            actionHandler();
-            cancelHandler(false);
-          }}>
+          onClick={actionHandler}>
           확인
         </AnswerBtn>
       </AnswerGroup>
@@ -39,7 +36,7 @@ const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
   );
 };
 
-const ModalFormWrapper = styled.form`
+const ModalFormWrapper = styled.div`
   width: 550px;
   min-height: 450px;
   border-radius: 10px;

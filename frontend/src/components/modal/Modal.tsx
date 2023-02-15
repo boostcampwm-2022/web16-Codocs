@@ -4,14 +4,14 @@ import ModalPortal from './ModalPortal';
 
 interface ModalProps {
   children: ReactNode,
-  setOnModal: (state: boolean) => void,
+  toggleModal: () => void,
 }
 
-const Modal = ({children, setOnModal}: ModalProps) => {
+const Modal = ({children, toggleModal}: ModalProps) => {
 
   return (
     <ModalPortal>
-      <Dimmed onClick={() => setOnModal(false)}>
+      <Dimmed onClick={toggleModal}>
           {children}
       </Dimmed>
     </ModalPortal>
