@@ -33,22 +33,17 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
 
   return (
     <DocListWrapper>
-      {docList?.sort(sortDocListByOption).map((doc: DocListItem) => {
-        return (
+      {docList?.sort(sortDocListByOption).map((doc: DocListItem) =>
+        (
           <DocListItem
             key={doc.id}
-            id={doc.id}
-            title={doc.title}
-            lastVisited={doc.lastVisited}
-            role={doc.role}
-            createdAt={doc.createdAt}
-            isBookmarked={doc.isBookmarked}
-            handleBookmark={bookmarkMutate}
-            handleUnbookmark={unbookmarkMutate}
-            handleDelete={deleteMutate}
+            bookmarkMutate={bookmarkMutate}
+            unbookmarkMutate={unbookmarkMutate}
+            deleteMutate={deleteMutate}
+            {...doc}
           />
-        );
-      })}
+        )
+      )}
     </DocListWrapper>
   );
 };
