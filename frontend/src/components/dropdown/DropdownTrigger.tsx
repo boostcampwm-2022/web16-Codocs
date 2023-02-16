@@ -32,8 +32,10 @@ const Dropdown_Trigger = styled.button`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0.75rem;
-  color: #fff;
-  border-bottom: 1px solid #fff;
+  border-radius: 10px;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.reverseText};
+  color: ${({ theme }) => theme.reverseText};
 `;
 
 const SelectedOption = styled.span`

@@ -15,8 +15,10 @@ const DropdownItem = ({text, value, onClick}: DropdownItemProps) => {
   };
 
   return (
-    <Dropdown_Item onClick={handleItemSelection} data-value={value}>
-      {text}
+    <Dropdown_Item 
+      onClick={handleItemSelection} 
+      data-value={value}>
+        {text}
     </Dropdown_Item>
   );
 };
@@ -26,10 +28,12 @@ const Dropdown_Item = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0.75rem;
-  color: #fff;
-  border-bottom: 1px solid #fff;
   cursor: pointer;
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.reverseText};
+  color: ${({ theme }) => theme.reverseText};
+  background-color: ${({ theme }) => theme.reverseBackground};
 `;
 
 export { DropdownItem };
