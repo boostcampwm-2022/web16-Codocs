@@ -23,7 +23,7 @@ const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
       </QuestionGroup>
       <AnswerGroup>
         <AnswerBtn 
-          backgroundColor={theme.gray} 
+          backgroundColor={theme.border} 
           onClick={cancelHandler}>
           취소
         </AnswerBtn>
@@ -38,21 +38,25 @@ const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
 };
 
 const ModalFormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   width: 550px;
-  min-height: 450px;
+  min-height: 300px;
   border-radius: 10px;
   padding: 3rem 2rem;
   margin: 0 auto;
   margin-top: 4rem;
-  background-color: #dfdfdf;
+  background-color: ${({ theme }) => theme.gray};
 `;
 
 const QuestionGroup = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin: 3rem 4rem;
+  margin: 2rem 4rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 const Title = styled.h2`
@@ -69,6 +73,7 @@ const Description = styled.p`
 const AnswerGroup = styled.div`
   display: flex;
   justify-content: space-between;
+  margin: 1rem 0;
 `;
 
 const AnswerBtn = styled('button')<AnswerBtnProps>`
