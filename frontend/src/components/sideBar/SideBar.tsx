@@ -6,6 +6,7 @@ import { ReactComponent as LockIcon } from '../../assets/lock.svg';
 import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
+import { devices } from '../../constants/breakpoints';
 
 const SideBar = () => {
   const theme = useTheme();
@@ -54,6 +55,17 @@ const SideBarWrapper = styled.nav`
   flex-direction: column;
   border-right: 1px solid;
   border-color: ${({ theme }) => theme.border};
+
+  @media ${devices.mobile} {
+    position: static;
+    height: auto;
+    padding: 0;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border-right: none;
+    border-bottom: 1px solid;
+    border-color: ${({ theme }) => theme.border};
+  }
 `;
 
 const NavMenu = styled(NavLink)`
