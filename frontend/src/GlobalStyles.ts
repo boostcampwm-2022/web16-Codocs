@@ -50,8 +50,13 @@ const GlobalStyles = createGlobalStyle`
     .EasyMDEContainer {
       div, p {
         color: ${({ theme }) => theme.text};
-        background-color: ${({ theme }) => theme.background};
+        background-color: 
       }
+    }
+
+    .editor-preview {
+      padding: 0 !important;
+      background-color: ${({ theme }) => `${theme.background} !important`};
     }
 
     .CodeMirror div.CodeMirror-cursor {
