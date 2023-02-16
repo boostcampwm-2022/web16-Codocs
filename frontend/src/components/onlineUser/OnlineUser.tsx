@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import DropdownOption from '../dropdownOption/DropdownOption';
 import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as OnlineIcon } from '../../assets/online.svg';
@@ -19,6 +19,7 @@ interface OptionOpenedProps {
 const OnlineUser = () => {
   const [isOptionOpened, setIsOptionOpened] = useState<boolean>(false);
   const [onlineUserInfo, setOnlineUserInfo] = useRecoilState(onlineUserState);
+  const theme = useTheme();
 
   const handleOpenOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -28,19 +29,20 @@ const OnlineUser = () => {
   return (
     <OnlineUserWrapper>
       <OnlineUserCount onClick={handleOpenOption}>
-        <TogetherIcon fill={'#000'} />
-        <BtnNumber>{onlineUserInfo.length}</BtnNumber>
+        <TogetherIcon fill={theme.text} />
+        <BtnNumber>
+          {onlineUserInfo.length}
+        </BtnNumber>
       </OnlineUserCount>
       <OnlineUserList isOptionOpened={isOptionOpened}>
-        {onlineUserInfo.map((person: OnlineUserState) => {
-          return (
-            <li key={person.id}>
-              <DropdownOption optionTitle={person.name} optionValue={person.id}>
-                <OnlineIcon fill={person.color} />
-              </DropdownOption>
-            </li>
-          );
-        })}
+        {onlineUserInfo.map((person: OnlineUserState) =>
+          <DropdownOption 
+            key={person.id} 
+            optionTitle={person.name} 
+            optionValue={person.id}>
+              <OnlineIcon fill={person.color} />
+          </DropdownOption>
+        )}
       </OnlineUserList>
     </OnlineUserWrapper>
   );
@@ -59,9 +61,10 @@ const OnlineUserCount = styled.span`
 
 const BtnNumber = styled.span`
   font-weight: 500;
-  font-size: 20px;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: 1.5rem;
   margin-left: 0.5rem;
+  color: ${({ theme }) => theme.text};
+  text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};
 `;
 
 const OnlineUserList = styled('ul')<OptionOpenedProps>`
@@ -73,8 +76,12 @@ const OnlineUserList = styled('ul')<OptionOpenedProps>`
   border-radius: 10px;
   padding: 0 0.25rem;
   margin: 0;
-  background-color: #222;
+  background-color: ${({ theme }) => theme.reverseBackground};
   display: ${(props) => (props.isOptionOpened ? 'block' : 'none')};
+
+  li:last-child {
+    border: none;
+  }
 `;
 
 export { OnlineUser };

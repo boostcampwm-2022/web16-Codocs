@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import MODAL_CONTENT from '../../constants/modalContent';
 
 interface ModalFormProps {
@@ -13,6 +13,7 @@ interface AnswerBtnProps {
 }
 
 const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
+  const theme = useTheme();
 
   return (
     <ModalFormWrapper>
@@ -22,12 +23,12 @@ const ModalForm = ({type, actionHandler, cancelHandler}: ModalFormProps) => {
       </QuestionGroup>
       <AnswerGroup>
         <AnswerBtn 
-          backgroundColor={'#A5A5A5'} 
+          backgroundColor={theme.gray} 
           onClick={cancelHandler}>
           취소
         </AnswerBtn>
         <AnswerBtn
-          backgroundColor={'#FF5757'}
+          backgroundColor={theme.caution}
           onClick={actionHandler}>
           확인
         </AnswerBtn>
@@ -40,10 +41,10 @@ const ModalFormWrapper = styled.div`
   width: 550px;
   min-height: 450px;
   border-radius: 10px;
-  background-color: #dfdfdf;
   padding: 3rem 2rem;
   margin: 0 auto;
   margin-top: 4rem;
+  background-color: #dfdfdf;
 `;
 
 const QuestionGroup = styled.div`
@@ -71,10 +72,10 @@ const AnswerGroup = styled.div`
 `;
 
 const AnswerBtn = styled('button')<AnswerBtnProps>`
-  font-size: 20px;
+  font-size: 1.5rem;
   border-radius: 10px;
   padding: 1rem 6rem;
-  color: white;
+  color: ${({ theme }) => theme.text};
   background-color: ${(props) => props.backgroundColor};
 `;
 
