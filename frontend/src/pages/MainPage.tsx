@@ -67,36 +67,40 @@ const ContentHeaderGroup = styled.div`
 const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 const NewDocBtn = styled.button`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid #3a7dff;
-  background-color: #3a7dff;
-  padding: 1.25rem 2rem 1.25rem 1.5rem;
+  border: 1px solid;
   margin-bottom: 2rem;
+  padding: 1.25rem 2rem 1.25rem 1.5rem;
+  border-color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme }) => theme.primary};
+
   svg {
-    fill: #fff;
+    fill: ${({ theme }) => theme.white};;
   }
+
   &:hover {
     span {
-      color: #3a7dff;
+      color: ${({ theme }) => theme.primary};;
     }
     svg {
-      fill: #3a7dff;
+      fill: ${({ theme }) => theme.primary};;
     }
-    background-color: #ffffff;
+    background-color: ${({ theme }) => theme.background};;
   }
 `;
 
 const BtnText = styled.span`
   font-weight: 500;
-  font-size: 20px;
-  color: #ffffff;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: 1.5rem;
   margin-left: 0.5rem;
+  color: ${({ theme }) => theme.white};
+  text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};
 `;
 
 export default MainPage;

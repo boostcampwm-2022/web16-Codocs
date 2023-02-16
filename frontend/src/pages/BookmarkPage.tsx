@@ -48,6 +48,7 @@ const ContentHeaderGroup = styled.div`
 const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 export default BookmarkPage;

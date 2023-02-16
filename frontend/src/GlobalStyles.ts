@@ -12,6 +12,7 @@ const GlobalStyles = createGlobalStyle`
     body {
         height: 100%;
         font-family: 'Inter', sans-serif;
+        background-color: ${({ theme }) => theme.background};
     } 
     a{
         text-decoration: none;
