@@ -38,6 +38,7 @@ const Title = styled.span`
   font-weight: 700;
   font-size: 4rem;
   align-self: center;
+  text-align: center;
   padding: 2rem;
   color: ${({ theme }) => theme.text};
 `;
