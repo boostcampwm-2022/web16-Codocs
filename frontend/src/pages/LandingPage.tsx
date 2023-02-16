@@ -4,6 +4,7 @@ import debugImage from '../assets/background-1.svg';
 import talkingImage from '../assets/background-2.svg';
 import { LoginButton } from '../components/loginButton';
 import { SiteLogo } from '../components/siteLogo';
+import { devices } from '../constants/breakpoints';
 
 const LandingPage = () => {
   return (
@@ -27,6 +28,11 @@ const PageWrapper = styled.div`
   justify-content: space-evenly;
   align-items: center;
   padding: 2rem;
+
+  @media screen and ${devices.mobile} {
+    justify-content: space-between;
+    padding: 1rem;
+  }
 `;
 
 const LogoWrapper = styled.div`
@@ -41,6 +47,12 @@ const Title = styled.span`
   text-align: center;
   padding: 2rem;
   color: ${({ theme }) => theme.text};
+
+  @media screen and ${devices.mobile} {
+    font-size: 2.25rem;
+    text-align: center;
+    padding: 0;
+  }
 `;
 
 const DebugImage = styled.img`
@@ -48,6 +60,11 @@ const DebugImage = styled.img`
   width: 30vw;
   height: 30vh;
   align-self: flex-end;
+
+  @media screen and ${devices.mobile} {
+    width: auto;
+    height: 25vh;
+  }
 `;
 
 const TalkingImage = styled.img`
@@ -55,6 +72,11 @@ const TalkingImage = styled.img`
   width: 30vw;
   height: 30vh;
   align-self: flex-start;
+
+  @media screen and ${devices.mobile} {
+    width: auto;
+    height: 25vh;
+  }
 `;
 
 export default LandingPage;

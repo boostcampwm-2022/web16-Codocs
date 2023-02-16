@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import githubIcon from '../../assets/github.svg';
+import { devices } from '../../constants/breakpoints';
 
 const LoginButton = () => {
   const handleGithubOAuth = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,6 +39,20 @@ const GitHubButton = styled.button`
     text-align: center;
 
     color: ${({ theme }) => theme.white};
+  }
+
+  @media screen and ${devices.mobile} {
+    padding: 0.75rem 1rem;
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    span {
+      font-weight: 500;
+      font-size: 1rem;
+    }
   }
 `;
 
