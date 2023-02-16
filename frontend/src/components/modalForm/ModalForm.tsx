@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import MODAL_CONTENT from '../../constants/modalContent';
+import { devices } from '../../constants/breakpoints';
 
 interface ModalFormProps {
   type: string;
@@ -41,13 +42,21 @@ const ModalFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  width: 550px;
-  min-height: 300px;
+  width: 35rem;
+  min-height: 18rem;
   border-radius: 10px;
   padding: 3rem 2rem;
   margin: 0 auto;
-  margin-top: 4rem;
+  margin-top: 6rem;
   background-color: ${({ theme }) => theme.gray};
+
+  @media ${devices.mobile} {
+    width: 20rem;
+    min-height: 16rem;
+    padding: 2rem 1rem;
+    margin: 0 auto;
+    margin-top: 14rem;
+  }
 `;
 
 const QuestionGroup = styled.div`
@@ -57,17 +66,31 @@ const QuestionGroup = styled.div`
   align-items: center;
   margin: 2rem 4rem;
   color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    margin: 2rem 0.25rem;
+  }
 `;
 
 const Title = styled.h2`
   font-size: 2rem;
   font-weight: 700;
+
+  @media ${devices.mobile} {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
 `;
 
 const Description = styled.p`
-  max-width: 330px;
+  max-width: 20rem;
   word-break: keep-all;
-  margin-top: 0;
+  margin-top: 1rem;
+
+  @media ${devices.mobile} {
+    max-width: 16rem;
+    text-align: start;
+  }
 `;
 
 const AnswerGroup = styled.div`
@@ -82,6 +105,11 @@ const AnswerBtn = styled('button')<AnswerBtnProps>`
   padding: 1rem 6rem;
   color: ${({ theme }) => theme.text};
   background-color: ${(props) => props.backgroundColor};
+
+  @media ${devices.mobile} {
+    font-size: 1rem;
+    padding: 1rem 3.5rem;
+  }
 `;
 
 export { ModalForm };
