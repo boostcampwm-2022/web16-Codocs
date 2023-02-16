@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { toastMsgState } from '../../atoms/toastMsgAtom';
 import { ReactComponent as CheckIcon } from '../../assets/check.svg';
 import { ReactComponent as ExclamationIcon } from '../../assets/exclamation.svg';
+import { devices } from '../../constants/breakpoints';
 
 const ToastMsg = () => {
   const theme = useTheme();
@@ -37,21 +38,21 @@ const ToastMsg = () => {
 
 const toggleVisibility = keyframes`
   0% { visibility: visible; }
-  10% { transform: translate(-50%, 96px); }
-  90% { transform: translate(-50%, 96px); }
-  99% { transform: translate(-50%, -70px); }
+  10% { transform: translate(-50%, 6rem); }
+  90% { transform: translate(-50%, 6rem); }
+  99% { transform: translate(-50%, -4.5rem); }
   100% { visibility: hidden; }
 `;
 
 const ToastMsgWrapper = styled.div`
   position: fixed;
-  top: -70px;
+  top: -4.5rem;
   left: 50%;
   display: flex;
   align-items: center;
-  max-width: 640px;
+  max-width: 40rem;
   margin: auto;
-  padding: 1.2rem 1rem;
+  padding: 1.25rem 1rem;
   border-radius: 10px;
   z-index: 99;
   visibility: hidden;
@@ -59,6 +60,10 @@ const ToastMsgWrapper = styled.div`
   border: 2px solid ${(props) => props.color};
   background-color: ${({ theme }) => theme.background};
   animation: ${toggleVisibility} 3s 1;
+  
+  @media ${devices.mobile} {
+    min-width: 15rem;
+  }
 `;
 
 const ToastText = styled.span`
@@ -68,6 +73,11 @@ const ToastText = styled.span`
   margin-left: 0.5rem;
   color: ${(props) => props.color};
   text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};;
+
+  @media ${devices.mobile} {
+    font-weight: 400;
+    font-size: 1rem;
+  }
 `;
 
 export { ToastMsg };
