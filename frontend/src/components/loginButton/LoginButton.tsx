@@ -36,7 +36,6 @@ const GitHubButton = styled.button`
     font-size: 1.5rem;
     line-height: 1.75rem;
     text-align: center;
-    letter-spacing: -0.04em;
 
     color: ${({ theme }) => theme.white};
   }

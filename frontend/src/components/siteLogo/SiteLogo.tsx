@@ -7,8 +7,8 @@ const SiteLogo = () => {
   const theme = useTheme();
 
   return (
-    <LogoWrapper to="/document/main">
-      <LogoIcon fill={theme.text} />    
+    <LogoWrapper to="/document/main" tabIndex={-1}>
+      <LogoIcon fill={theme.text} />
       <LogoTitle>Codocs</LogoTitle>
     </LogoWrapper>
   );
