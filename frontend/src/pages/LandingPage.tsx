@@ -27,7 +27,6 @@ const PageWrapper = styled.div`
   justify-content: space-evenly;
   align-items: center;
   padding: 2rem;
-  background-color: ${({ theme }) => theme.background};
 `;
 
 const LogoWrapper = styled.div`
