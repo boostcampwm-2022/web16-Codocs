@@ -58,22 +58,21 @@ const HeaderContainer = styled.header`
 const DocumentTitle = styled.input`
   width: 16rem;
   font-weight: 200;
-  font-size: 24px;
-  line-height: 29px;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
   text-align: center;
   border: none;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.background};
 
-  :focus {
-    border: 1px solid #222222;
-  }
-
-  :hover {
-    border: 1px solid #3a7dff;
+  :hover, :focus {
+    border: 1px solid;
+    border-color: ${({ theme }) => theme.primary};
   }
 `;
 
 const RightButtonWrapper = styled.div`
-height: 1.5rem;
+  height: 1.5rem;
   width: 9rem;
   gap: 0.5rem;
   display: flex;
@@ -81,13 +80,13 @@ height: 1.5rem;
 `;
 
 const ShareButton = styled.button`
-  padding: 0.5rem 1.5rem;
-  background: #3a7dff;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 1rem;
   line-height: 1rem;
-  color: #ffffff;
+  border-radius: 10px;
+  padding: 0.5rem 1.5rem;
+  background: ${({ theme }) => theme.primary};;
+  color: ${({ theme }) => theme.white};
 `;
 
 export { EditorHeader };

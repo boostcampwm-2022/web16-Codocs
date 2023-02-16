@@ -22,11 +22,20 @@ const Dropdown_Menu = styled('ul')<MenuProps>`
   width: 140px;
   list-style-type: none;
   position: absolute;
-  border-radius: 10px;
-  padding: 0 0.25rem;
+  padding: 0;
   margin: 0;
-  background-color: #222;
+  background-color: ${({ theme }) => theme.background};
   display: ${(props) => props.isOpened ? 'block' : 'none'};
+
+  li:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  li:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 `;
 
 export { DropdownMenu };

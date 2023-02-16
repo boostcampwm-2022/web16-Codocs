@@ -1,12 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { NavLink } from 'react-router-dom';
-import siteLogoIcon from '../../assets/logo.svg';
+import { ReactComponent as LogoIcon } from '../../assets/logo.svg';
 
 const SiteLogo = () => {
+  const theme = useTheme();
+
   return (
-    <LogoWrapper to="/document/main">
-      <LogoImg src={siteLogoIcon} alt="사이트 로고 아이콘" />
+    <LogoWrapper to="/document/main" tabIndex={-1}>
+      <LogoIcon fill={theme.text} />
       <LogoTitle>Codocs</LogoTitle>
     </LogoWrapper>
   );
@@ -17,15 +19,11 @@ const LogoWrapper = styled(NavLink)`
   align-items: center;
 `;
 
-const LogoImg = styled.img`
-  width: 2rem;
-  height: 2rem;
-`;
-
 const LogoTitle = styled.span`
   font-size: 1.5rem;
   font-weight: 700;
   padding: 0.5rem;
+  color: ${({ theme }) => theme.text};
 `;
 
 export { SiteLogo };

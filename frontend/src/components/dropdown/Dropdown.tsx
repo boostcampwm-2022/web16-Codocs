@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { DropdownTrigger } from './DropdownTrigger';
 import { DropdownMenu } from './DropdownMenu';
 import { DropdownItem } from './DropdownItem';
@@ -13,14 +13,24 @@ interface DropdownProps {
 
 const Dropdown = ({value, onClick, options}: DropdownProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false); 
+  const theme = useTheme();
 
   return (
     <DropdownWrapper>
-      <DropdownTrigger value={options[value]} onClick={setIsOpened} icon={<AngleDownIcon fill={'#fff'}/>} />
+      <DropdownTrigger 
+        value={options[value]}
+        onClick={setIsOpened} 
+        icon={
+          <AngleDownIcon 
+            fill={theme.reverseText}/>} />
       <DropdownMenu isOpened={isOpened}>
         {
           Object.keys(options).map((option, index) => (
-              <DropdownItem key={index} text={options[option]} value={option} onClick={onClick}/>
+              <DropdownItem 
+                key={index} 
+                value={option} 
+                text={options[option]} 
+                onClick={onClick}/>
             )
           )
         }
@@ -32,7 +42,7 @@ const Dropdown = ({value, onClick, options}: DropdownProps) => {
 const DropdownWrapper = styled.div`
   width: 140px;
   border-radius: 10px;
-  background-color: #222;
+  background-color: ${({ theme }) => theme.reverseBackground};
 `;
 
 export { Dropdown };

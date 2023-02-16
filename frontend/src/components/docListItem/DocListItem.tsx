@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
+// import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
@@ -9,11 +9,6 @@ import { Modal } from '../modal';
 import { ModalForm } from '../modalForm';
 import useModal from '../../hooks/useModal';
 
-const LIST_ITEM_STYLE = {
-  fill: '#A5A5A5',
-  width: '0.75',
-  height: '0.75'
-};
 
 interface DocListItemProps extends DocListItem {
   bookmarkMutate: MutateProp,
@@ -24,6 +19,13 @@ interface DocListItemProps extends DocListItem {
 const DocListItem = (props: DocListItemProps) => {
   const {bookmarkMutate, unbookmarkMutate, deleteMutate, ...document} = props;
   const {onModal, toggleModal, modalData, setupModalData} = useModal();
+  const theme = useTheme();
+
+  const LIST_ITEM_STYLE = {
+    fill: theme.gray,
+    width: '0.75',
+    height: '0.75'
+  };
 
   const getActionHandler = (modalType: string) => {
     switch (modalType) {
@@ -67,7 +69,7 @@ const DocListItem = (props: DocListItemProps) => {
               {document.role === 'owner' && 
                 <IconButton
                   {...LIST_ITEM_STYLE}
-                  hover={COLOR_CAUTION}
+                  hover={theme.caution}
                   dataset="DELETE"
                   clickHandler={handleDocumentAction}>
                   <TrashIcon />
@@ -76,14 +78,14 @@ const DocListItem = (props: DocListItemProps) => {
               {document.isBookmarked 
                 ? <IconButton
                     {...LIST_ITEM_STYLE}
-                    fill={'#3A7DFF'}
+                    fill={theme.primary}
                     dataset="UNBOOKMARK"
                     clickHandler={handleDocumentAction}>
                     <BookmarkIcon />
                   </IconButton> 
                 : <IconButton
                     {...LIST_ITEM_STYLE}
-                    hover={COLOR_ACTIVE}
+                    hover={theme.primary}
                     dataset="BOOKMARK"
                     clickHandler={handleDocumentAction}>
                     <BookmarkIcon />
@@ -106,20 +108,21 @@ const DocListItem = (props: DocListItemProps) => {
 
 const ListItemWrapper = styled.div`
   width: 15rem;
-  height: 4.5rem;
+  height: 5.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0.75rem;
-  border: 1px solid #b6b6b6;
+  border: 1px solid;
   border-radius: 10px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-color: ${({ theme }) => theme.border};
+  background-color: ${({ theme }) => theme.background};
+  box-shadow: ${({ theme }) => `0px 4px 4px ${theme.border}`};
 `;
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 12px;
-  color: #222222;
+  color: ${({ theme }) => theme.text};
 `;
 
 const LowerLayout = styled.div`
@@ -137,9 +140,9 @@ const DateGroup = styled.ul`
 
 const DateText = styled.li`
   font-weight: 300;
-  font-size: 10px;
-  color: #a5a5a5;
+  font-size: 0.75rem;
   margin-top: 0.25rem;
+  color: ${({ theme }) => theme.gray};
 `;
 
 const IconGroup = styled.div`

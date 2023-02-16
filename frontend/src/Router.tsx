@@ -1,5 +1,4 @@
 import React, { lazy, Suspense } from 'react';
-import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Spinner } from './components/spinner';
 import { ToastMsg } from './components/toastMsg';
@@ -16,7 +15,6 @@ const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 const Router = () => {
   return (
     <BrowserRouter>
-      <GlobalStyles />
       <ToastMsg />
       <Suspense fallback={<Spinner />}>
         <Routes>
