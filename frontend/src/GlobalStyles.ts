@@ -23,11 +23,6 @@ const GlobalStyles = createGlobalStyle`
       font-family: 'Inter', sans-serif;
       background-color: ${({ theme }) => theme.background};
     }
-
-    div, p {
-      color: ${({ theme }) => theme.text};
-      background-color: ${({ theme }) => theme.background};
-    }
     
     a {
       text-decoration: none;
@@ -50,6 +45,13 @@ const GlobalStyles = createGlobalStyle`
       background: none;
       padding: 0;
       cursor: pointer;
+    }
+
+    .EasyMDEContainer {
+      div, p {
+        color: ${({ theme }) => theme.text};
+        background-color: ${({ theme }) => theme.background};
+      }
     }
 
     .CodeMirror div.CodeMirror-cursor {
