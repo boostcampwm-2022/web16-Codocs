@@ -10,7 +10,7 @@ export interface TYPE_QUESTION_MAP {
 const MODAL_CONTENT: TYPE_QUESTION_MAP = {
   'DELETE': {
     title: '정말로 삭제하시겠습니까?',
-    description: '한 번 삭제한 문서는 복원할 수 없습니다. 그래도 진행하시겠습니까?'
+    description: '한 번 삭제한 문서는 복원할 수 없습니다. 진행하시겠습니까?'
   },
   'BOOKMARK': {
     title: '북마크에 등록하시겠습니까?',

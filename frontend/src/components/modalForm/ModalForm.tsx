@@ -42,7 +42,7 @@ const ModalFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  width: 35rem;
+  width: 30rem;
   min-height: 18rem;
   border-radius: 10px;
   padding: 3rem 2rem;
@@ -64,7 +64,7 @@ const QuestionGroup = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin: 2rem 4rem;
+  margin: 2rem 0;
   color: ${({ theme }) => theme.text};
 
   @media ${devices.mobile} {
@@ -83,8 +83,7 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
-  max-width: 20rem;
-  word-break: keep-all;
+  word-break: break-all;
   margin-top: 1rem;
 
   @media ${devices.mobile} {
@@ -96,19 +95,19 @@ const Description = styled.p`
 const AnswerGroup = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 1rem 0;
+  margin: 1rem 1rem;
 `;
 
 const AnswerBtn = styled('button')<AnswerBtnProps>`
   font-size: 1.5rem;
   border-radius: 10px;
-  padding: 1rem 6rem;
+  padding: 1rem 4rem;
   color: ${({ theme }) => theme.text};
   background-color: ${(props) => props.backgroundColor};
 
   @media ${devices.mobile} {
     font-size: 1rem;
-    padding: 1rem 3.5rem;
+    padding: 1rem 2.5rem;
   }
 `;
 

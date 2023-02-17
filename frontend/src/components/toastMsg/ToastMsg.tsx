@@ -50,9 +50,9 @@ const ToastMsgWrapper = styled.div`
   left: 50%;
   display: flex;
   align-items: center;
-  max-width: 40rem;
+  min-width: 20rem;
   margin: auto;
-  padding: 1.25rem 1rem;
+  padding: 1.25rem;
   border-radius: 10px;
   z-index: 3000;
   visibility: hidden;
@@ -66,11 +66,12 @@ const ToastMsgWrapper = styled.div`
   }
 `;
 
-const ToastText = styled.span`
+const ToastText = styled.p`
   font-weight: 500;
   font-size: 1.5rem;
+  text-align: center;
   word-break: break-all;
-  margin-left: 0.5rem;
+  margin: auto;
   color: ${(props) => props.color};
   text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};;
 
