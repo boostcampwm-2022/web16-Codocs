@@ -1,14 +1,12 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { Link } from 'react-router-dom';
-// import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
 import { Modal } from '../modal';
 import { ModalForm } from '../modalForm';
 import useModal from '../../hooks/useModal';
-
 
 interface DocListItemProps extends DocListItem {
   bookmarkMutate: MutateProp,
@@ -40,8 +38,8 @@ const DocListItem = (props: DocListItemProps) => {
 
   const handleDocumentAction = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const target = e.target as HTMLButtonElement;
-    const modalType = target.dataset['value'];
+    const target = e.currentTarget.closest('button');
+    const modalType = target?.dataset['value'];
     if (!modalType) {
       return;
     }
