@@ -54,7 +54,7 @@ const ToastMsgWrapper = styled.div`
   margin: auto;
   padding: 1.25rem 1rem;
   border-radius: 10px;
-  z-index: 99;
+  z-index: 3000;
   visibility: hidden;
   transform: translate(-50%);
   border: 2px solid ${(props) => props.color};

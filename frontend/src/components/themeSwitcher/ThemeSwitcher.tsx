@@ -29,7 +29,7 @@ const ThemeSwitchButton = styled('button')<ThemeSwitchButtonProps>`
   border: 1px solid;
   border-radius: 50%;
   transition: 0.2s all ease-in;
-  z-index: 500;
+  z-index: 2000;
   border-color: ${({ theme }) => theme.border};
   background-color: ${({ theme }) => theme.background};
 

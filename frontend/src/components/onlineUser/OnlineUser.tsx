@@ -50,7 +50,7 @@ const OnlineUser = () => {
 };
 
 const OnlineUserWrapper = styled.div`
-  z-index: 500;
+  z-index: 1000;
   cursor: pointer;
 `;
 
