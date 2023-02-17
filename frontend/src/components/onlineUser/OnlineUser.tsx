@@ -5,6 +5,7 @@ import { ReactComponent as TogetherIcon } from '../../assets/together.svg';
 import { ReactComponent as OnlineIcon } from '../../assets/online.svg';
 import { useRecoilState } from 'recoil';
 import { onlineUserState } from '../../atoms/onlineUserAtom';
+import { devices } from '../../constants/breakpoints';
 
 interface OnlineUserState {
   id: string;
@@ -49,7 +50,6 @@ const OnlineUser = () => {
 };
 
 const OnlineUserWrapper = styled.div`
-  width: 140px;
   z-index: 500;
   cursor: pointer;
 `;
@@ -65,6 +65,10 @@ const BtnNumber = styled.span`
   margin-left: 0.5rem;
   color: ${({ theme }) => theme.text};
   text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 const OnlineUserList = styled('ul')<OptionOpenedProps>`
