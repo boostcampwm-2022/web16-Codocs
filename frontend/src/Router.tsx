@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Spinner } from './components/spinner';
-import { ToastMsg } from './components/toastMsg';
+import ToastPortal from './components/toastMsg/ToastPortal';
 import MainLayout from './pages/MainLayout';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -15,7 +15,7 @@ const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 const Router = () => {
   return (
     <BrowserRouter>
-      <ToastMsg />
+      <ToastPortal />
       <Suspense fallback={<Spinner />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
