@@ -4,7 +4,8 @@ const toastMsgState = atom({
   key: 'toastMsg',
   default: {
     type: 'INIT', 
-    msg: ''
+    msg: '',
+    key: 0,
   }
 });
 
