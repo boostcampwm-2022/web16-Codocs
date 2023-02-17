@@ -8,17 +8,17 @@ import { devices } from '../../constants/breakpoints';
 
 const ToastMsg = () => {
   const theme = useTheme();
-  const toastMsg = useRecoilValue(toastMsgState);
+  const {type, msg, key} = useRecoilValue(toastMsgState);
   
   const ICON_SIZE = 24;
-  const TOAST_COLOR = toastMsg.type === 'INFO' 
+  const TOAST_COLOR = type === 'INFO' 
                         ? theme.primary 
                         : theme.caution;
 
-  if (toastMsg.type !== 'INIT') {
+  if (type !== 'INIT') {
     return (
-      <ToastMsgWrapper key={+new Date()} color={TOAST_COLOR}>
-        {toastMsg.type === 'INFO' 
+      <ToastMsgWrapper key={key} color={TOAST_COLOR}>
+        {type === 'INFO' 
           ? <CheckIcon 
               width={ICON_SIZE}
               height={ICON_SIZE} 
@@ -28,7 +28,7 @@ const ToastMsg = () => {
               height={ICON_SIZE} 
               fill={TOAST_COLOR} />
         }
-        <ToastText color={TOAST_COLOR}>{toastMsg.msg}</ToastText>
+        <ToastText color={TOAST_COLOR}>{msg}</ToastText>
       </ToastMsgWrapper>
     );
   } else {
