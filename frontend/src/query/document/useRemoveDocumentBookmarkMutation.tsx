@@ -22,7 +22,7 @@ const useRemoveDocumentBookmarkMutation = (documentType: string) => {
         alertToast('INFO', '북마크를 해제했습니다.');
       },
       onError: () => {
-        alertToast('WARNING', '북마크를 해제하지 못했습니다. 다시 시도해주세요.');
+        alertToast('WARNING', '북마크 해제에 실패했습니다. 다시 시도해주세요.');
       }
     }
   );

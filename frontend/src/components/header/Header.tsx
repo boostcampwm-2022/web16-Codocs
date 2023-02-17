@@ -23,7 +23,7 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.border};
 `;

@@ -6,6 +6,8 @@ import usePageName from '../hooks/usePageName';
 import useToast from '../hooks/useToast';
 import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
+import { devices } from '../constants/breakpoints';
+
 const { REACT_APP_API_URL } = process.env;
 
 const MainPage = () => {
@@ -55,6 +57,10 @@ const ContentWrapper = styled.section`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media ${devices.mobile} {
+    margin: 0;
+  }
 `;
 
 const ContentHeaderGroup = styled.div`
@@ -68,6 +74,10 @@ const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
   color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 const NewDocBtn = styled.button`
@@ -93,6 +103,12 @@ const NewDocBtn = styled.button`
     }
     background-color: ${({ theme }) => theme.background};;
   }
+
+  @media ${devices.mobile} {
+    margin: auto;
+    margin-top: 2rem;
+    padding: 1rem 1.75rem 1rem 1.5rem;
+  }
 `;
 
 const BtnText = styled.span`
@@ -101,6 +117,10 @@ const BtnText = styled.span`
   margin-left: 0.5rem;
   color: ${({ theme }) => theme.white};
   text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};
+
+  @media ${devices.mobile} {
+    font-weight: 400;
+  }
 `;
 
 export default MainPage;

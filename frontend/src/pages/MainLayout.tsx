@@ -4,6 +4,7 @@ import useGetProfileQuery from '../query/profile/useGetProfileQuery';
 import { Header } from '../components/header';
 import { SideBar } from '../components/sideBar';
 import { Outlet } from 'react-router-dom';
+import { devices } from '../constants/breakpoints';
 
 const MainLayout = () => {
   const { data: profile } = useGetProfileQuery();
@@ -24,6 +25,10 @@ const MainLayout = () => {
 
 const Container = styled.main`
   display: flex;
+
+  @media ${devices.mobile} {
+    flex-direction: column;
+  }
 `;
 
 export default MainLayout;

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useQueryClient } from 'react-query';
+import { devices } from '../../constants/breakpoints';
 
 interface cachedProfile {
   name: string,
@@ -40,6 +41,10 @@ const UserName = styled.span`
   padding: 0.5rem;
   color: ${({ theme }) => theme.text};
   text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};;
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 export { UserProfile };

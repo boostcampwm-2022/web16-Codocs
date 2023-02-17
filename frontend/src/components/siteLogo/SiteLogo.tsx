@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { ReactComponent as LogoIcon } from '../../assets/logo.svg';
+import { devices } from '../../constants/breakpoints';
 
 const SiteLogo = () => {
   const theme = useTheme();
@@ -22,8 +23,12 @@ const LogoWrapper = styled(NavLink)`
 const LogoTitle = styled.span`
   font-size: 1.5rem;
   font-weight: 700;
-  padding: 0.5rem;
+  padding: 0 0.5rem;
   color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 export { SiteLogo };

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import ErrorIcon from '../assets/404.svg';
 import { useNavigate } from 'react-router-dom';
+import { devices } from '../constants/breakpoints';
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
@@ -52,16 +53,29 @@ const ErrorMessage = styled.strong`
   font-size: 3rem;
   line-height: 4rem;
   color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    font-size: 2rem;
+  }
 `;
 
 const PageDescription = styled.span`
   font-size: 2rem;
   line-height: 6rem;
   color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    font-size: 1.5rem;
+  }
 `;
 
 const ErrorImage = styled.img`
   width: 30vw;
+
+  @media ${devices.mobile} {
+    width: auto;
+    height: 30vh;
+  }
 `;
 
 const ReplaceButton = styled.button`
@@ -71,6 +85,12 @@ const ReplaceButton = styled.button`
   padding: 1rem 3rem;
   color: ${({ theme }) => theme.white};
   background-color: ${({ theme }) => theme.primary};
+
+  @media ${devices.mobile} {
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+  }
 `;
 
 export default NotFoundPage;

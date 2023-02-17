@@ -10,14 +10,6 @@ const GlobalStyles = createGlobalStyle`
       box-sizing: border-box;
     }
 
-    html {
-      height: 100%;
-    }
-
-    #root {
-      height: 100%;
-    }
-
     body {
       height: 100%;
       font-family: 'Inter', sans-serif;

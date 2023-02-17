@@ -25,7 +25,7 @@ const Dimmed = styled.div`
   top: 0;
   left: 0;
   background-color: rgba(30, 30, 30, 0.9);
-  z-index: 1000;
+  z-index: 5000;
 `;
 
 export { Modal };
