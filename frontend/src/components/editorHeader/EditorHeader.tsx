@@ -57,7 +57,7 @@ const HeaderContainer = styled.header`
 `;
 
 const DocumentTitle = styled.input`
-  width: 16rem;
+  width: 12rem;
   font-weight: 200;
   font-size: 1.5rem;
   line-height: 1.75rem;

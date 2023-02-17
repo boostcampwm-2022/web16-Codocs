@@ -41,7 +41,7 @@ const GitHubButton = styled.button`
     color: ${({ theme }) => theme.white};
   }
 
-  @media screen and ${devices.mobile} {
+  @media ${devices.mobile} {
     padding: 0.75rem 1rem;
 
     img {

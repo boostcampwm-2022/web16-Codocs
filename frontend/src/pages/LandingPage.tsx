@@ -29,7 +29,7 @@ const PageWrapper = styled.div`
   align-items: center;
   padding: 2rem;
 
-  @media screen and ${devices.mobile} {
+  @media ${devices.mobile} {
     justify-content: space-between;
     padding: 1rem;
   }
@@ -48,7 +48,7 @@ const Title = styled.span`
   padding: 2rem;
   color: ${({ theme }) => theme.text};
 
-  @media screen and ${devices.mobile} {
+  @media ${devices.mobile} {
     font-size: 2.25rem;
     text-align: center;
     padding: 0;
@@ -61,7 +61,7 @@ const DebugImage = styled.img`
   height: 30vh;
   align-self: flex-end;
 
-  @media screen and ${devices.mobile} {
+  @media ${devices.mobile} {
     width: auto;
     height: 25vh;
   }
@@ -73,7 +73,7 @@ const TalkingImage = styled.img`
   height: 30vh;
   align-self: flex-start;
 
-  @media screen and ${devices.mobile} {
+  @media ${devices.mobile} {
     width: auto;
     height: 25vh;
   }
