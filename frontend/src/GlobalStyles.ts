@@ -8,6 +8,7 @@ const GlobalStyles = createGlobalStyle`
       padding: 0;
       margin: 0;
       box-sizing: border-box;
+      transition: color, background-color 0.2s ease-out;
     }
 
     body {
