@@ -1,5 +1,7 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    icon: './src/assets/codocs'
+  },
   rebuildConfig: {},
   makers: [
     {
@@ -9,6 +11,9 @@ module.exports = {
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
+      config: {
+        icon: './src/assets/codocs.icns',
+      }
     },
     {
       name: '@electron-forge/maker-deb',
