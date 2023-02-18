@@ -16,13 +16,12 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    //"indent": ["error", 2],
-    // "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "no-var": "error",
     "object-shorthand": ["error", "always"],
     "lines-between-class-members": ["error", "always"],
+    "@typescript-eslint/no-var-requires": 0,
     "prefer-arrow-callback": "error",
     "prefer-destructuring": [
       "error",
