@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Spinner } from './components/spinner';
 import ToastPortal from './components/toastMsg/ToastPortal';
 import MainLayout from './pages/MainLayout';
@@ -14,8 +14,7 @@ const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 
 const Router = () => {
   return (
-    <BrowserRouter>
-      <ToastPortal />
+    <HashRouter>
       <Suspense fallback={<Spinner />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -30,7 +29,8 @@ const Router = () => {
           <Route path="*" element={<Navigate to="/error" replace />} />;
         </Routes>
       </Suspense>
-    </BrowserRouter>
+      <ToastPortal />
+    </HashRouter>
   );
 };
 

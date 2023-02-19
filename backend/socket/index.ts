@@ -1,25 +1,26 @@
 import * as express from 'express';
 import { Server, Socket } from 'socket.io';
 import { createServer } from 'http';
+import axios from 'axios';
 import cors = require('cors');
 
-import axios from 'axios';
+const { CLIENT_HOST, HOST } = process.env;
 
 const app = express();
-app.use(cors({ origin: 'http://codocs.site', credentials: true }));
+app.use(cors({ origin: CLIENT_HOST, credentials: true }));
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: { origin: 'http://codocs.site' },
+  cors: { origin: CLIENT_HOST },
   path: '/socket'
 });
 
 io.engine.on('initial_headers', (headers, req) => {
-  headers['Access-Control-Allow-Origin'] = 'http://codocs.site';
+  headers['Access-Control-Allow-Origin'] = CLIENT_HOST;
   headers['Access-Control-Allow-Credentials'] = true;
 });
 
 io.engine.on('headers', (headers, req) => {
-  headers['Access-Control-Allow-Origin'] = 'http://codocs.site';
+  headers['Access-Control-Allow-Origin'] = CLIENT_HOST;
   headers['Access-Control-Allow-Credentials'] = true;
 });
 
@@ -55,7 +56,7 @@ io.on('connection', (client: SocketCustomClient) => {
     const roomName = Array.from(client.rooms)[1];
 
     try {
-      await axios.post(`http://codocs.site/api/document/${roomName}/save-content`, {
+      await axios.post(`${HOST}/document/${roomName}/save-content`, {
         content: data
       });
       client.to(roomName).emit('remote-insert', data);
@@ -66,7 +67,7 @@ io.on('connection', (client: SocketCustomClient) => {
   client.on('local-delete', async (data) => {
     const roomName = Array.from(client.rooms)[1];
     try {
-      await axios.post(`http://codocs.site/api/document/${roomName}/update-content`, {
+      await axios.post(`${HOST}/document/${roomName}/update-content`, {
         content: data
       });
       client.to(roomName).emit('remote-delete', data);
@@ -79,7 +80,7 @@ io.on('connection', (client: SocketCustomClient) => {
     console.log(data);
     try {
       // console.log(data);
-      await axios.post(`http://codocs.site/api/document/${roomName}/update-content`, {
+      await axios.post(`${HOST}/document/${roomName}/update-content`, {
         content: [data]
       });
       console.log('replace');
