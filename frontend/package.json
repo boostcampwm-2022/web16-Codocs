@@ -7,13 +7,14 @@
   "author": "5-line-poem",
   "private": true,
   "scripts": {
-    "start": "electron-forge start",
+    "start": "react-scripts start",
     "start:dev": "env-cmd -f .env.development react-scripts start",
     "build": "env-cmd -f .env.production react-scripts build",
     "test": "env-cmd -f .env.development react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron:dev": "concurrently 'npm run start:dev' 'wait-on http://localhost:3000 && electron .'",
+    "electron:forge": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
