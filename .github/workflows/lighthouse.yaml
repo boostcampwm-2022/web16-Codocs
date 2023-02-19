@@ -27,6 +27,7 @@ jobs:
 
       - name: Setting .env.production
         run: |
+          cd ./frontend
           echo "REACT_APP_GITHUB_OAUTH=${{ secrets.REACT_APP_GITHUB_OAUTH_PROD }}" >> .env.production
           echo "REACT_APP_NODE_ENV=${{ secrets.REACT_APP_NODE_ENV_PROD }}" >> .env.production
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_PROD }}" >> .env.production
