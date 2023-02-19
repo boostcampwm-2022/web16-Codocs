@@ -24,10 +24,10 @@ jobs:
           
       - name: Setting .env
         run: |
-          echo "REACT_APP_GITHUB_OAUTH=${{ secrets.REACT_APP_GITHUB_OAUTH_DEV }}" >> .env
-          echo "REACT_APP_NODE_ENV=${{ secrets.REACT_APP_NODE_ENV_DEV }}" >> .env
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env
-          echo "REACT_APP_SOCKET_URL=${{ secrets.REACT_APP_SOCKET_URL_DEV }}" >> .env
+          echo "REACT_APP_GITHUB_OAUTH=${{ secrets.REACT_APP_GITHUB_OAUTH_DEV }}" >> .env.development
+          echo "REACT_APP_NODE_ENV=${{ secrets.REACT_APP_NODE_ENV_DEV }}" >> .env.development
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env.development
+          echo "REACT_APP_SOCKET_URL=${{ secrets.REACT_APP_SOCKET_URL_DEV }}" >> .env.development
           echo "BROWSER=${{ secrets.BROWSER }}" >> .env
           cat .env
 
