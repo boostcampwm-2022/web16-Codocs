@@ -31,7 +31,7 @@ jobs:
           echo "REACT_APP_SOCKET_URL=${{ secrets.REACT_APP_SOCKET_URL_DEV }}" >> .env.development
           echo "BROWSER=${{ secrets.BROWSER }}" >> .env.development
           cat .env.development
-          
+
       - name: Install and Test
         run: |
           cd ./frontend
