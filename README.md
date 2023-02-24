@@ -30,6 +30,39 @@
 
 <br />
 
+## 실행 방법 
+
+#### frontend 
+```
+npm run start:dev 
+```
+
+#### backend/socket 
+```
+npm run start:dev
+```
+
+#### backend/api
+```
+npm run start:dev
+```
+
+#### .env.development 파일 모음 
+[Gist - Frontend](https://gist.github.com/iyu88/89185a3e9ceba9e87668136d7677f6ad)
+<br />
+[Gist - Backend/Socket](https://gist.github.com/iyu88/8789203658a4df9b0d4ebaed8659e97c)
+<br />
+[Gist - Backend/API](https://gist.github.com/iyu88/801af1a705b4bd87d0418b4bb9248ba0)
+<br />
+
+#### Electron (macOS) 데스크탑 앱 설치
+
+Release 를 참고해주세요
+<br />
+[GitHub - Release](https://github.com/boostcampwm-2022/web16-Codocs/releases)
+
+<br />
+
 ## 팀원 소개 
 
 <div align="center">
