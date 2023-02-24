@@ -1,22 +1,28 @@
-import React, { useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import usePageName from '../hooks/usePageName';
+import useSortOption from '../hooks/useSortOption';
 import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
 import { Dropdown } from '../components/dropdown';
+import { devices } from '../constants/breakpoints';
 
 const PrivatePage = () => {
   const { pageName } = usePageName();
-  const [selectedOption, setSelectedOption] = useState<string>('lastVisited');
+  const {option, optionList, setOption} = useSortOption('lastVisited');
 
   return (
     <ContentWrapper>
       <ContentHeaderGroup>
         <PageName>{pageName}</PageName>
-        <Dropdown selectedOption={selectedOption} selectedOptionSetter={setSelectedOption} />
+        <Dropdown
+          value={option}
+          onClick={setOption}
+          options={optionList}
+        />
       </ContentHeaderGroup>
       <Suspense fallback={<Spinner />}>
-        <DocList documentType={'private'} sortOption={selectedOption} />
+        <DocList documentType={'private'} sortOption={option} />
       </Suspense>
     </ContentWrapper>
   );
@@ -31,6 +37,13 @@ const ContentWrapper = styled.section`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media ${devices.mobile} {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 `;
 
 const ContentHeaderGroup = styled.div`
@@ -38,11 +51,20 @@ const ContentHeaderGroup = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+
+  @media ${devices.mobile} {
+    margin-top: 2rem;
+  }
 `;
 
 const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
+  color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 export default PrivatePage;

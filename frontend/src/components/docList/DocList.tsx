@@ -1,42 +1,21 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { DocListItem } from '../docListItem';
-import { fetchDataFromPath } from '../../utils/fetchBeforeRender';
-import { useQueryClient, useQuery, useMutation } from 'react-query';
-import useToast from '../../hooks/useToast';
-
-const { REACT_APP_API_URL } = process.env;
+import useGetDocumentQuery from '../../query/document/useGetDocumentQuery';
+import useDeleteDocumentMutation from '../../query/document/useDeleteDocumentMutation';
+import useAddDocumentBookmarkMutation from '../../query/document/useAddDocumentBookmarkMutation';
+import useRemoveDocumentBookmarkMutation from '../../query/document/useRemoveDocumentBookmarkMutation';
 
 interface DocListProps {
   documentType: string;
   sortOption: string;
 }
 
-interface RequestPathMap {
-  [key: string]: string;
-}
-
 const DocList = ({ documentType, sortOption }: DocListProps) => {
-  const { alertToast } = useToast();
-  const reqPathByDocumentType: RequestPathMap = {
-    recent: '/user-document/recent',
-    private: '/user-document/private',
-    shared: '/user-document/shared',
-    bookmark: '/user-document/bookmark'
-  };
-  const queryClient = useQueryClient();
-
-  const { data: docList } = useQuery(
-    `${documentType}`,
-    () => fetchDataFromPath(`${reqPathByDocumentType[documentType]}`),
-    {
-      cacheTime: 0,
-      suspense: true,
-      onError: (e) => {
-        console.log(e);
-      }
-    }
-  );
+  const { mutate: deleteMutate } = useDeleteDocumentMutation(documentType);
+  const { mutate: bookmarkMutate } = useAddDocumentBookmarkMutation(documentType);
+  const { mutate: unbookmarkMutate } = useRemoveDocumentBookmarkMutation(documentType);
+  const { data: docList } = useGetDocumentQuery(documentType);
 
   const sortDocListByOption = (prev: DocListItem, next: DocListItem) => {
     if (sortOption === 'title') {
@@ -52,87 +31,19 @@ const DocList = ({ documentType, sortOption }: DocListProps) => {
     }
   };
 
-  const deleteMutation = useMutation(
-    async (id: string) => {
-      return await fetch(`${REACT_APP_API_URL}/document/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(`${documentType}`);
-        alertToast('INFO', '성공적으로 삭제했습니다.');
-      },
-      onError: () => {
-        alertToast('WARNING', '문서 삭제에 실패했습니다. 다시 시도해주세요.');
-      }
-    }
-  );
-
-  const bookmarkMutation = useMutation(
-    async (id: string) => {
-      return await fetch(`${REACT_APP_API_URL}/user-document/${id}/bookmark`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(`${documentType}`);
-        alertToast('INFO', '북마크에 추가되었습니다.');
-      },
-      onError: () => {
-        alertToast('WARNING', '북마크 추가에 실패했습니다. 다시 시도해주세요.');
-      }
-    }
-  );
-
-  const unbookmarkMutation = useMutation(
-    async (id: string) => {
-      return await fetch(`${REACT_APP_API_URL}/user-document/${id}/unbookmark`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(`${documentType}`);
-        alertToast('INFO', '북마크를 해제했습니다.');
-      },
-      onError: () => {
-        alertToast('WARNING', '북마크를 해제하지 못했습니다. 다시 시도해주세요.');
-      }
-    }
-  );
-
   return (
     <DocListWrapper>
-      {docList?.sort(sortDocListByOption).map((doc: DocListItem) => {
-        return (
+      {docList?.sort(sortDocListByOption).map((doc: DocListItem) =>
+        (
           <DocListItem
             key={doc.id}
-            id={doc.id}
-            title={doc.title}
-            lastVisited={doc.lastVisited}
-            role={doc.role}
-            createdAt={doc.createdAt}
-            isBookmarked={doc.isBookmarked}
-            handleBookmark={bookmarkMutation.mutate}
-            handleUnbookmark={unbookmarkMutation.mutate}
-            handleDelete={deleteMutation.mutate}
+            bookmarkMutate={bookmarkMutate}
+            unbookmarkMutate={unbookmarkMutate}
+            deleteMutate={deleteMutate}
+            {...doc}
           />
-        );
-      })}
+        )
+      )}
     </DocListWrapper>
   );
 };

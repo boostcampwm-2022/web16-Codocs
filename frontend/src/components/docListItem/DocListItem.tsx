@@ -1,114 +1,126 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { COLOR_ACTIVE, COLOR_CAUTION } from '../../constants/styled';
 import { ReactComponent as TrashIcon } from '../../assets/trash.svg';
 import { ReactComponent as BookmarkIcon } from '../../assets/bookmark.svg';
 import { IconButton } from '../iconButton';
-import { useRecoilState } from 'recoil';
-import { modalState } from '../../atoms/modalAtom';
+import { Modal } from '../modal';
+import { ModalForm } from '../modalForm';
+import useModal from '../../hooks/useModal';
 
-interface DocListItemWithClickHandler extends DocListItem {
-  handleBookmark: (id: string) => void;
-  handleUnbookmark: (id: string) => void;
-  handleDelete: (id: string) => void;
+interface DocListItemProps extends DocListItem {
+  bookmarkMutate: MutateProp,
+  unbookmarkMutate: MutateProp,
+  deleteMutate: MutateProp,
 }
 
-const DocListItem = ({
-  id,
-  title,
-  lastVisited,
-  role,
-  createdAt,
-  isBookmarked,
-  handleBookmark,
-  handleUnbookmark,
-  handleDelete
-}: DocListItemWithClickHandler) => {
-  const [modalData, setModalData] = useRecoilState(modalState);
-  const docListItemStyles = {
-    fill: '#A5A5A5',
+const DocListItem = (props: DocListItemProps) => {
+  const {bookmarkMutate, unbookmarkMutate, deleteMutate, ...document} = props;
+  const {onModal, toggleModal, modalData, setupModalData} = useModal();
+  const theme = useTheme();
+
+  const LIST_ITEM_STYLE = {
+    fill: theme.gray,
     width: '0.75',
     height: '0.75'
   };
 
+  const getActionHandler = (modalType: string) => {
+    switch (modalType) {
+      case 'BOOKMARK' :
+        return bookmarkMutate;
+      case 'UNBOOKMARK' :
+        return unbookmarkMutate;
+      default: // DELETE
+        return deleteMutate;
+    }
+  };
+
+  const handleDocumentAction = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const target = e.currentTarget.closest('button');
+    const modalType = target?.dataset['value'];
+    if (!modalType) {
+      return;
+    }
+    setupModalData(
+      modalType, 
+      () => getActionHandler(modalType)(document.id)
+    );
+    toggleModal();
+  };
+
   return (
-    <DocListItemWrapper>
-      <Link to={`../${id}`}>
-        <Title>{title}</Title>
+    <ListItemWrapper>
+      <Link to={`../${document.id}`}>
+        <Title>{document.title}</Title>
         <LowerLayout>
-          <DateInfo>
-            <DateText>최근 방문일: {lastVisited.slice(0, 10)}</DateText>
-            <DateText>문서 생성일: {createdAt.slice(0, 10)}</DateText>
-          </DateInfo>
+          <DateGroup>
+            <DateText>
+              최근 방문일: {document.lastVisited.slice(0, 10)}
+            </DateText>
+            <DateText>
+              문서 생성일: {document.createdAt.slice(0, 10)}
+            </DateText>
+          </DateGroup>
           <IconGroup>
-            <li>
-              {role === 'owner' && (
+              {document.role === 'owner' && 
                 <IconButton
-                  {...docListItemStyles}
-                  hover={COLOR_CAUTION}
-                  clickHandler={(e) => {
-                    e.preventDefault();
-                    setModalData({
-                      type: 'DELETE',
-                      clickHandler: () => {
-                        handleDelete(id);
-                      }
-                    });
-                  }}>
+                  {...LIST_ITEM_STYLE}
+                  hover={theme.caution}
+                  dataset="DELETE"
+                  clickHandler={handleDocumentAction}>
                   <TrashIcon />
                 </IconButton>
-              )}
-            </li>
-            <li>
-              <IconButton
-                {...docListItemStyles}
-                fill={isBookmarked ? '#3a7dff' : '#A5A5A5'}
-                hover={COLOR_ACTIVE}
-                clickHandler={(e) => {
-                  e.preventDefault();
-                  if (!isBookmarked) {
-                    setModalData({
-                      type: 'BOOKMARK',
-                      clickHandler: () => {
-                        handleBookmark(id);
-                      }
-                    });
-                    return;
-                  }
-                  setModalData({
-                    type: 'UNBOOKMARK',
-                    clickHandler: () => {
-                      handleUnbookmark(id);
-                    }
-                  });
-                }}>
-                <BookmarkIcon />
-              </IconButton>
-            </li>
+              }
+              {document.isBookmarked 
+                ? <IconButton
+                    {...LIST_ITEM_STYLE}
+                    fill={theme.primary}
+                    dataset="UNBOOKMARK"
+                    clickHandler={handleDocumentAction}>
+                    <BookmarkIcon />
+                  </IconButton> 
+                : <IconButton
+                    {...LIST_ITEM_STYLE}
+                    hover={theme.primary}
+                    dataset="BOOKMARK"
+                    clickHandler={handleDocumentAction}>
+                    <BookmarkIcon />
+                  </IconButton>
+              }
           </IconGroup>
         </LowerLayout>
       </Link>
-    </DocListItemWrapper>
+      {onModal &&
+        <Modal toggleModal={toggleModal}>
+          <ModalForm 
+            type={modalData.modalType as string}
+            cancelHandler={toggleModal} 
+            actionHandler={modalData.actionHandler as WrappedHandler} />
+        </Modal>
+      }
+    </ListItemWrapper>
   );
 };
 
-const DocListItemWrapper = styled.div`
+const ListItemWrapper = styled.div`
   width: 15rem;
-  height: 4.5rem;
+  height: 5.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0.75rem;
-  border: 1px solid #b6b6b6;
+  border: 1px solid;
   border-radius: 10px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-color: ${({ theme }) => theme.border};
+  background-color: ${({ theme }) => theme.background};
+  box-shadow: ${({ theme }) => `0px 4px 4px ${theme.border}`};
 `;
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 12px;
-  color: #222222;
+  color: ${({ theme }) => theme.text};
 `;
 
 const LowerLayout = styled.div`
@@ -118,7 +130,7 @@ const LowerLayout = styled.div`
   padding-top: 0.5rem;
 `;
 
-const DateInfo = styled.ul`
+const DateGroup = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -126,18 +138,15 @@ const DateInfo = styled.ul`
 
 const DateText = styled.li`
   font-weight: 300;
-  font-size: 10px;
-  color: #a5a5a5;
+  font-size: 0.75rem;
   margin-top: 0.25rem;
+  color: ${({ theme }) => theme.gray};
 `;
 
-const IconGroup = styled.ul`
-  list-style-type: none;
-  margin: 0;
+const IconGroup = styled.div`
   display: flex;
-  li {
-    margin-left: 0.4rem;
-  }
+  margin: 0;
+  gap: 0.4rem;
 `;
 
 export { DocListItem };

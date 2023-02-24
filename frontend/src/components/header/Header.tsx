@@ -23,13 +23,15 @@ const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1rem;
-  border-bottom: 1px solid #bbbbbb;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.border};
 `;
 
 const PageName = styled.span`
   font-size: 1rem;
   font-weight: 500;
+  color: ${({ theme }) => theme.text};
 `;
 
 export { Header };

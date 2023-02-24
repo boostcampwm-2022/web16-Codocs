@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import githubIcon from '../../assets/github.svg';
+import { devices } from '../../constants/breakpoints';
 
 const LoginButton = () => {
   const handleGithubOAuth = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -17,15 +18,14 @@ const LoginButton = () => {
 };
 
 const GitHubButton = styled.button`
-  padding: 1.25rem 1.5rem;
-
-  background: #3a7dff;
-  border-radius: 1.25rem;
-
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
+
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
+  background: ${({ theme }) => theme.primary};;
 
   img {
     width: 2.5rem;
@@ -37,9 +37,22 @@ const GitHubButton = styled.button`
     font-size: 1.5rem;
     line-height: 1.75rem;
     text-align: center;
-    letter-spacing: -0.04em;
 
-    color: #ffffff;
+    color: ${({ theme }) => theme.white};
+  }
+
+  @media ${devices.mobile} {
+    padding: 0.75rem 1rem;
+
+    img {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    span {
+      font-weight: 500;
+      font-size: 1rem;
+    }
   }
 `;
 

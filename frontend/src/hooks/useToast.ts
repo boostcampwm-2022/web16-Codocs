@@ -7,7 +7,8 @@ const useToast = () => {
   const alertToast = (type: string, msg: string) => {
     setToastMsg({
       type,
-      msg
+      msg,
+      key: +new Date(),
     });
   };
 

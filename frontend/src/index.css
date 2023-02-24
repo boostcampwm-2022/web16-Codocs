@@ -19,9 +19,28 @@
 }
 
 .editor-preview-side {
-  max-height: calc(100vh - 120px);
+  padding: 0 !important;
+  max-height: calc(100vh - 140px) !important;
+}
+
+.editor-preview-active {
+  display: none;
 }
 
 .editor-toolbar {
   z-index: 0;
+}
+
+.fullscreen {
+  z-index: 500 !important;
+}
+
+.CodeMirror {
+  padding: 0 !important;
+  background-color: transparent !important;
+}
+
+.CodeMirror-scroll {
+  padding: 0 !important;
+  max-height: calc(100vh - 140px) !important;
 }

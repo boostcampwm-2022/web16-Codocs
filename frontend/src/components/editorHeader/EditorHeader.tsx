@@ -1,32 +1,31 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { SiteLogo } from '../siteLogo';
-import useTitle from '../../hooks/useTitle';
+import { useParams } from 'react-router-dom';
+import useDocumentTitle from '../../hooks/useDocumentTitle';
 import useToast from '../../hooks/useToast';
-import { OnlineUser } from '../../components/onlineUser/OnlineUser';
+import { SiteLogo } from '../siteLogo';
+import { OnlineUser } from '../onlineUser/OnlineUser';
+import { devices } from '../../constants/breakpoints';
 
-interface EditorHeaderProps {
-  titleProp: string;
-}
-
-const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
-  const { title, onTitleChange, onTitleUpdate, setTitle } = useTitle();
+const EditorHeader = ({ fetchedTitle }: {fetchedTitle: string}) => {
+  const { documentTitle, setDocumentTitle, updateDocumentTitle } = useDocumentTitle(fetchedTitle);
+  const { document_id } = useParams();
   const { alertToast } = useToast();
 
-  useEffect(() => {
-    setTitle(titleProp);
-  }, []);
-
   const handleCopyURL = () => {
-    const url = window.location.href;
+    const document_URL = window.location.href;
     navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        alertToast('INFO', '링크 복사 성공! 공유해보세요!');
-      })
-      .catch(() => {
-        alertToast('WARNING', '실패!');
-      });
+      .writeText(document_URL)
+      .then(() => alertToast('INFO', '링크를 복사했어요!'))
+      .catch(() => alertToast('WARNING', '링크 복사에 실패했어요!'));
+  };
+
+  const handleTitleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setDocumentTitle(e.target.value);
+  };
+
+  const handleTitleUpdate = () => {
+    updateDocumentTitle(String(document_id));
   };
 
   return (
@@ -35,9 +34,9 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
         <SiteLogo />
         <DocumentTitle
           type="text"
-          value={title ?? ''}
-          onChange={onTitleChange}
-          onBlur={onTitleUpdate}
+          value={documentTitle}
+          onChange={handleTitleChange}
+          onBlur={handleTitleUpdate}
         />
         <RightButtonWrapper>
           <ShareButton type="button" onClick={handleCopyURL}>
@@ -51,45 +50,53 @@ const EditorHeader = ({ titleProp }: EditorHeaderProps) => {
 };
 
 const HeaderContainer = styled.header`
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
 const DocumentTitle = styled.input`
-  width: 16rem;
+  width: 12rem;
   font-weight: 200;
-  font-size: 24px;
-  line-height: 29px;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
   text-align: center;
   border: none;
+  color: ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.background};
 
-  :focus {
-    border: 1px solid #222222;
+  :hover, :focus {
+    border: 1px solid;
+    border-color: ${({ theme }) => theme.primary};
   }
 
-  :hover {
-    border: 1px solid #3a7dff;
+  @media ${devices.mobile} {
+    width: 10rem;
+    margin-left: 2rem;
   }
 `;
 
 const RightButtonWrapper = styled.div`
-  width: 9rem;
-  height: 1.5rem;
-  display: flex;
-  align-items: center;
   gap: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const ShareButton = styled.button`
-  padding: 0.5rem 1.5rem;
-  background: #3a7dff;
-  border-radius: 10px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 1rem;
   line-height: 1rem;
-  color: #ffffff;
+  border-radius: 10px;
+  padding: 0.5rem 1.5rem;
+  background: ${({ theme }) => theme.primary};;
+  color: ${({ theme }) => theme.white};
+
+  @media ${devices.mobile} {
+    font-weight: 400;
+    padding: 0.5rem;
+  }
 `;
 
 export { EditorHeader };

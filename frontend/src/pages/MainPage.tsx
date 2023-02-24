@@ -6,6 +6,8 @@ import usePageName from '../hooks/usePageName';
 import useToast from '../hooks/useToast';
 import { DocList } from '../components/docList';
 import { Spinner } from '../components/spinner';
+import { devices } from '../constants/breakpoints';
+
 const { REACT_APP_API_URL } = process.env;
 
 const MainPage = () => {
@@ -55,6 +57,10 @@ const ContentWrapper = styled.section`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media ${devices.mobile} {
+    margin: 0;
+  }
 `;
 
 const ContentHeaderGroup = styled.div`
@@ -67,36 +73,54 @@ const ContentHeaderGroup = styled.div`
 const PageName = styled.h1`
   font-weight: 800;
   font-size: 2rem;
+  color: ${({ theme }) => theme.text};
+
+  @media ${devices.mobile} {
+    display: none;
+  }
 `;
 
 const NewDocBtn = styled.button`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  border: 1px solid #3a7dff;
-  background-color: #3a7dff;
-  padding: 1.25rem 2rem 1.25rem 1.5rem;
+  border: 1px solid;
   margin-bottom: 2rem;
+  padding: 1.25rem 2rem 1.25rem 1.5rem;
+  border-color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme }) => theme.primary};
+
   svg {
-    fill: #fff;
+    fill: ${({ theme }) => theme.white};;
   }
+
   &:hover {
     span {
-      color: #3a7dff;
+      color: ${({ theme }) => theme.primary};;
     }
     svg {
-      fill: #3a7dff;
+      fill: ${({ theme }) => theme.primary};;
     }
-    background-color: #ffffff;
+    background-color: ${({ theme }) => theme.background};;
+  }
+
+  @media ${devices.mobile} {
+    margin: auto;
+    margin-top: 2rem;
+    padding: 1rem 1.75rem 1rem 1.5rem;
   }
 `;
 
 const BtnText = styled.span`
   font-weight: 500;
-  font-size: 20px;
-  color: #ffffff;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-size: 1.5rem;
   margin-left: 0.5rem;
+  color: ${({ theme }) => theme.white};
+  text-shadow: ${({ theme }) => `0px 4px 4px ${theme.defaultShadow}`};
+
+  @media ${devices.mobile} {
+    font-weight: 400;
+  }
 `;
 
 export default MainPage;

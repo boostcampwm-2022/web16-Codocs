@@ -24,6 +24,7 @@ jobs:
           
       - name: Setting .env.development
         run: |
+          cd ./frontend
           echo "REACT_APP_GITHUB_OAUTH=${{ secrets.REACT_APP_GITHUB_OAUTH_DEV }}" >> .env.development
           echo "REACT_APP_NODE_ENV=${{ secrets.REACT_APP_NODE_ENV_DEV }}" >> .env.development
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL_DEV }}" >> .env.development

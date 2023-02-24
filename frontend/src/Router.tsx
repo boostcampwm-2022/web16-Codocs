@@ -1,9 +1,7 @@
 import React, { lazy, Suspense } from 'react';
-import GlobalStyles from './GlobalStyles';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Spinner } from './components/spinner';
-import { ToastMsg } from './components/toastMsg';
-import { Modal } from './components/modal';
+import ToastPortal from './components/toastMsg/ToastPortal';
 import MainLayout from './pages/MainLayout';
 import NotFoundPage from './pages/NotFoundPage';
 
@@ -17,9 +15,6 @@ const DocumentPage = lazy(() => import('./pages/DocumentPage'));
 const Router = () => {
   return (
     <BrowserRouter>
-      <GlobalStyles />
-      <ToastMsg />
-      <Modal />
       <Suspense fallback={<Spinner />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -34,6 +29,7 @@ const Router = () => {
           <Route path="*" element={<Navigate to="/error" replace />} />;
         </Routes>
       </Suspense>
+      <ToastPortal />
     </BrowserRouter>
   );
 };
