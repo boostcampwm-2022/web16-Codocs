@@ -14,7 +14,7 @@
 
 |<img src="https://user-images.githubusercontent.com/31645195/207751710-f5bd53d0-13d8-42b4-9ce1-728e63fca1ae.png" width=80%>|
 |:--:|
-|<h3>[www.codocs.site](https://codocs.site)</h3>|
+|<h3>[codocs.site](https://codocs.site)</h3>|
 
 </div>
 
